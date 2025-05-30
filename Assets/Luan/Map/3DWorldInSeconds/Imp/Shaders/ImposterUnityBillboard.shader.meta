@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: be8eaac78c7e85e41856442b84a399dd
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213441
+  packageName: Bridges In Seconds Prototyping Pack
+  packageVersion: 1.1
+  assetPath: Assets/3DWorldInSeconds/Imp/Shaders/ImposterUnityBillboard.shader
+  uploadId: 492868
