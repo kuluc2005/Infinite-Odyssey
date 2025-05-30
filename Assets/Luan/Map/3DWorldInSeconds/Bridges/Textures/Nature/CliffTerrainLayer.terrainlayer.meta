@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8d2840225612a5448845febf8835dd3c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213441
+  packageName: Bridges In Seconds Prototyping Pack
+  packageVersion: 1.1
+  assetPath: Assets/3DWorldInSeconds/Bridges/Textures/Nature/CliffTerrainLayer.terrainlayer
+  uploadId: 492868

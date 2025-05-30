@@ -34,6 +34,7 @@ namespace Invector.vCharacterController.AI
             StartCoroutine(StateRoutine());
             StartCoroutine(FindTarget());
             StartCoroutine(DestinationBehaviour());
+
         }
 
         protected void FixedUpdate()

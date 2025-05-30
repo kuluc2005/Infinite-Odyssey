@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: db7ecf650f4a38242a471be3d39debf0
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213441
+  packageName: Bridges In Seconds Prototyping Pack
+  packageVersion: 1.1
+  assetPath: Assets/3DWorldInSeconds/Bridges/Shaders/DoubleSidedSurfaceShader.shader
+  uploadId: 492868

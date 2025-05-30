@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 9a2a558a3286bbc409d4ac3b1d04973a
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213441
+  packageName: Bridges In Seconds Prototyping Pack
+  packageVersion: 1.1
+  assetPath: Assets/3DWorldInSeconds/Imp/Shaders/ImposterStandard.shader
+  uploadId: 492868
