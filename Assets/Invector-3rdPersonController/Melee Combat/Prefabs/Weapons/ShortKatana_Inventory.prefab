@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 114000011309261918}
   - component: {fileID: 114182861652408014}
   - component: {fileID: 121151705054556182}
+  - component: {fileID: 5258258053290631661}
   m_Layer: 2
   m_Name: ShortKatana_Inventory
   m_TagString: Weapon
@@ -102,7 +103,7 @@ Transform:
   m_GameObject: {fileID: 1000011247033104}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.267, z: 0}
+  m_LocalPosition: {x: 0, y: 0.267, z: 0.028}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -315,6 +316,33 @@ MonoBehaviour:
   onDefense:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5258258053290631661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011247033104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff4f5a8991d7fa47baed5c5ff25979f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: ae721c767fcd6664ca1cf46b36bb56b7, type: 2}
+  duration: 0.1
+  corner: 1
+  loop: 0
+  points:
+  - {x: -0.007937647, y: 0, z: 0.08244069}
+  - {x: 0.004466504, y: 0, z: 0.1700591}
+  - {x: 0.004466504, y: 0, z: 0.2504383}
+  - {x: 0.0032262504, y: 0, z: 0.31941408}
+  - {x: -0.0003657788, y: 0, z: 0.39723903}
+  - {x: -0.0069356635, y: 0, z: 0.4779526}
+  - {x: -0.01679141, y: 0, z: 0.5690464}
+  - {x: -0.024196677, y: 0, z: 0.63182366}
+  - {x: -0.03609185, y: 0, z: 0.7045366}
+  - {x: -0.047119766, y: 0, z: 0.7606862}
 --- !u!1 &1000012375494104
 GameObject:
   m_ObjectHideFlags: 0

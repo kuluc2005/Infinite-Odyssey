@@ -549,6 +549,32 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-3810686185023454417
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9058122f6ec699438581f28f117350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startDamage: 0.05
+  endDamage: 0.9
+  damageMultiplier: 0
+  recoilID: 0
+  reactionID: 0
+  meleeAttackType: 1
+  damageType: 
+  bodyParts:
+  - RightLowerArm
+  ignoreDefense: 0
+  activeRagdoll: 0
+  senselessTime: 0
+  resetAttackTrigger: 0
+  debug: 0
 --- !u!114 &-3691459511894782959
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14470,7 +14496,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -3810686185023454417}
   m_AnyStatePosition: {x: 48, y: 72, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 600, y: 48, z: 0}
@@ -24874,8 +24901,7 @@ AnimatorStateTransition:
     m_ConditionEvent: IsGrounded
     m_EventTreshold: 0.8
   m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: 1102259912433111600, guid: cbd1db45c75e5b948a5befe9ecb80421,
-    type: 2}
+  m_DstState: {fileID: 1102259912433111600, guid: cbd1db45c75e5b948a5befe9ecb80421, type: 2}
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 0
@@ -25144,8 +25170,7 @@ AnimatorStateTransition:
     m_ConditionEvent: InputHorizontal
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: 1102129722683554212, guid: cbd1db45c75e5b948a5befe9ecb80421,
-    type: 2}
+  m_DstState: {fileID: 1102129722683554212, guid: cbd1db45c75e5b948a5befe9ecb80421, type: 2}
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 0
