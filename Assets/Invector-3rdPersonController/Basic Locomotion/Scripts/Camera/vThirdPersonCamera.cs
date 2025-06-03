@@ -15,7 +15,7 @@ namespace Invector.vCamera
             {
                 if (_instance == null)
                 {
-                    _instance = GameObject.FindObjectOfType<vThirdPersonCamera>();
+                    _instance = FindFirstObjectByType<vThirdPersonCamera>();
 
                     //Tell unity not to destroy this object when loading a new scene!
                     //DontDestroyOnLoad(_instance.gameObject);
