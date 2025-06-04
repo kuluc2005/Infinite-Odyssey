@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: NPCLines_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: e4677a00fa0eae144aefa4ec715e87d4, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 364369477632
+    m_Localized: '"You have come... The chaotic waves of lost souls have heralded
+      the arrival of a brave traveler. You seek me, do you?"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1861639536640
+    m_Localized: '"Greetings, Master. Yes, I have heard of your wisdom. I am on a
+      journey to find my family, and it is said that you may have a clue."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2160303341568
+    m_Localized: '"Family... A thread of fate binds you to this journey. The Curse
+      of the wicked has torn space and time apart, scattering not only lands but
+      also souls. Searching in the chaos is a hopeless task."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2575438774272
+    m_Localized: '"I have fought with hideous monsters so I know this path is not
+      easy at all. I am ready to face any challenge."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3540762034176
+    m_Localized: '"Brave, but sometimes bravery alone is not enough. You carry an
+      item... a tooth. It may help you on the road ahead, but remember, true strength
+      comes from understanding and adaptability."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3926466035712
+    m_Localized: '"Thank you, sir. So, my family... where are they?"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4390326697984
+    m_Localized: '"They are in another world, this piece of map... it''s not just
+      a guide, it''s part of a larger whole. Go look for it in the Desert world."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5665600634880
+    m_Localized: '"Thank you, sir."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139116584960
+    m_Localized: '"Good luck."'
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
