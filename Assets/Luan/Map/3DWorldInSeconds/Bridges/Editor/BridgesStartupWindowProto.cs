@@ -28,32 +28,32 @@ namespace WorldInSeconds3DProto
         private PathProviderProto pathProvider;
         private int scrollHeight;
 
-        [MenuItem("Window/3D World In Seconds/About Bridges (Prototype)", false, 0)]
-        public static void MenuStartupInit()
-        {
-            BridgesStartupWindowProto.Open();
-        }
-        [MenuItem("Help/3D World In Seconds/About Bridges (Prototype)", false, 0)]
-        public static void MenuStartupHelpInit()
-        {
-            BridgesStartupWindowProto.Open();
-        }
+        //[MenuItem("Window/3D World In Seconds/About Bridges (Prototype)", false, 0)]
+        //public static void MenuStartupInit()
+        //{
+        //    BridgesStartupWindowProto.Open();
+        //}
+        //[MenuItem("Help/3D World In Seconds/About Bridges (Prototype)", false, 0)]
+        //public static void MenuStartupHelpInit()
+        //{
+        //    BridgesStartupWindowProto.Open();
+        //}
         
 
-        public static void Open()
-        {
+        //public static void Open()
+        //{
 
 
 
-            BridgesStartupWindowProto window = ScriptableObject.CreateInstance(typeof(BridgesStartupWindowProto)) as BridgesStartupWindowProto;
-            window = EditorWindow.GetWindow<BridgesStartupWindowProto>(true, "About 3D World In Seconds", true);
-            Vector2 size = new Vector2(530, 670);
-            window.minSize = size;
-            window.maxSize = size;
-            window.ShowUtility();
+        //    BridgesStartupWindowProto window = ScriptableObject.CreateInstance(typeof(BridgesStartupWindowProto)) as BridgesStartupWindowProto;
+        //    window = EditorWindow.GetWindow<BridgesStartupWindowProto>(true, "About 3D World In Seconds", true);
+        //    Vector2 size = new Vector2(530, 670);
+        //    window.minSize = size;
+        //    window.maxSize = size;
+        //    window.ShowUtility();
 
 
-        }
+        //}
 
         void OnEnable()
         {
