@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 066a1fc5855a6344ab3f09c8d50442ca
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Materials/Terrain/GroundLayer1B.terrainlayer
+  uploadId: 421457

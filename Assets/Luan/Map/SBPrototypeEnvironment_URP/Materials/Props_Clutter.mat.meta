@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5860e107a9c84a0458cee0e8beb2184a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Materials/Props_Clutter.mat
+  uploadId: 421457

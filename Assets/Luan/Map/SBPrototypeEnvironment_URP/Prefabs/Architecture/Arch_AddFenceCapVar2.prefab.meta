@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cb7a85b1ed0226d4ab76144352dbc51d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Prefabs/Architecture/Arch_AddFenceCapVar2.prefab
+  uploadId: 421457

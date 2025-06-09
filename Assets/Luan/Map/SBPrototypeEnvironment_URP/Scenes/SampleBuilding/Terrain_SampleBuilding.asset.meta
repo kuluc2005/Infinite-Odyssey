@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c80de676f65406d48b83198ef4db53f1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 15600000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Scenes/SampleBuilding/Terrain_SampleBuilding.asset
+  uploadId: 421457

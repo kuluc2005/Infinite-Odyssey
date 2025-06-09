@@ -1,7 +1,14 @@
 fileFormatVersion: 2
-guid: 5c6489e69bfb1834b8a4c6bac58b697f
+guid: e1520c81f6169d14c9fd24ba7138e7ab
 DefaultImporter:
   externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Scenes/SampleBuilding.unity
+  uploadId: 421457

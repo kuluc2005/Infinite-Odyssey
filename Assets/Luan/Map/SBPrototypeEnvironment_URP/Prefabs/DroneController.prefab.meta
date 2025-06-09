@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2f2ba97b024cb8045bc92a8c65200a71
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Prefabs/DroneController.prefab
+  uploadId: 421457

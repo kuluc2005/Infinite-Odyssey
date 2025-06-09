@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 40c96bc04b7b86240888ce2cbb02b37a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Prefabs/Rock/NoLOD/Env_Rock_2.prefab
+  uploadId: 421457

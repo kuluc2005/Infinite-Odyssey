@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: def58a02864179b45bb8220cb8465899
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Materials/Textures/Flora.preset
+  uploadId: 421457

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 68f7308fd554dc1408fe30f628fccddd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Prefabs/Props/Clutter_Briefcase.prefab
+  uploadId: 421457

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2812e110ac6245a458a99bfc1d4778ed
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190866
+  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
+  packageVersion: 1.0
+  assetPath: Assets/SBPrototypeEnvironment_URP/Prefabs/Kits/Kit_Light_Bulb.prefab
+  uploadId: 421457
