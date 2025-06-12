@@ -12,14 +12,17 @@ public class NPCDialogueTrigger : MonoBehaviour
     public GameObject dialoguePanel;
     public TextMeshProUGUI dialogueText;
     public GameObject continueButton;
+    public GameObject npcImage;      // UI hình NPC
+    public GameObject playerImage;   // UI hình nhân vật
 
-    [Tooltip("Danh sách key từ bảng NPCLines")]
+    [Tooltip("Key từ bảng NPCLines")]
     public string[] dialogueKeys;
 
     private int currentLine = 0;
     private bool isTalking = false;
+    private bool isTyping = false;
 
-    // Components
+    // Component
     private vThirdPersonCamera tpCamera;
     private vMeleeCombatInput combatInput;
     private vThirdPersonInput playerInput;
@@ -41,7 +44,7 @@ public class NPCDialogueTrigger : MonoBehaviour
 
     void Update()
     {
-        if (isTalking && Input.GetMouseButtonDown(0))
+        if (isTalking && Input.GetMouseButtonDown(0) && !isTyping)
         {
             NextLine();
         }
@@ -52,8 +55,12 @@ public class NPCDialogueTrigger : MonoBehaviour
         currentLine = 0;
         isTalking = true;
         dialoguePanel.SetActive(true);
+        npcImage.SetActive(true);
+        playerImage.SetActive(false);
         ShowLine(currentLine);
         LockControls();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     void ShowLine(int index)
@@ -70,11 +77,32 @@ public class NPCDialogueTrigger : MonoBehaviour
 
     IEnumerator LoadLocalizedLine(string key)
     {
+        isTyping = true;
         var table = LocalizationSettings.StringDatabase;
         var localizedString = table.GetLocalizedStringAsync("NPCLines", key);
         yield return localizedString;
 
-        dialogueText.text = localizedString.Result;
+        string fullText = localizedString.Result;
+        dialogueText.text = "";
+        for (int i = 0; i < fullText.Length; i++)
+        {
+            dialogueText.text += fullText[i];
+            yield return new WaitForSeconds(0.02f); // tốc độ gõ chữ
+        }
+
+        // Hiện đúng ảnh theo người nói
+        if (currentLine % 2 == 0)
+        {
+            npcImage.SetActive(true);
+            playerImage.SetActive(false);
+        }
+        else
+        {
+            npcImage.SetActive(false);
+            playerImage.SetActive(true);
+        }
+
+        isTyping = false;
     }
 
     void NextLine()
@@ -87,7 +115,11 @@ public class NPCDialogueTrigger : MonoBehaviour
     {
         isTalking = false;
         dialoguePanel.SetActive(false);
+        npcImage.SetActive(false);
+        playerImage.SetActive(false);
         UnlockControls();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void LockControls()
@@ -97,44 +129,26 @@ public class NPCDialogueTrigger : MonoBehaviour
         if (combatInput)
         {
             combatInput.lockInput = true;
-            combatInput.cc._rigidbody.linearVelocity = Vector3.zero;
             combatInput.cc.input = Vector2.zero;
+            combatInput.cc._rigidbody.linearVelocity = Vector3.zero;
         }
 
         if (playerInput)
             playerInput.enabled = false;
 
         if (playerRigidbody)
-            playerRigidbody.linearVelocity = Vector3.one;
+            playerRigidbody.linearVelocity = Vector3.zero;
 
-        if (playerAnimator)
-        {
-            playerAnimator.applyRootMotion = false;
-            playerAnimator.SetFloat("InputMagnitude", 0f);
-        }
         if (playerAnimator)
         {
             playerAnimator.applyRootMotion = false;
             playerAnimator.SetFloat("InputMagnitude", 0f);
             playerAnimator.SetFloat("InputHorizontal", 0f);
             playerAnimator.SetFloat("InputVertical", 0f);
-            playerAnimator.Play("Idle", 0); // đảm bảo animation không bị rơi vào Locomotion hay Walk
+            playerAnimator.Play("Idle", 0);
         }
     }
 
-    //void UnlockControls()
-    //{
-    //    if (tpCamera) tpCamera.enabled = true;
-
-    //    if (combatInput)
-    //        combatInput.lockInput = false;
-
-    //    if (playerInput)
-    //        playerInput.enabled = true;
-
-    //    if (playerAnimator)
-    //        playerAnimator.applyRootMotion = originalUseRootMotion;
-    //}
     void UnlockControls()
     {
         if (tpCamera) tpCamera.enabled = true;
@@ -151,5 +165,4 @@ public class NPCDialogueTrigger : MonoBehaviour
         if (playerAnimator)
             playerAnimator.applyRootMotion = originalUseRootMotion;
     }
-
 }
