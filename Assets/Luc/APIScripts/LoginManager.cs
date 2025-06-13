@@ -43,7 +43,7 @@ public class LoginManager : MonoBehaviour
             statusText.text = "Đăng nhập thành công!";
             Debug.Log(request.downloadHandler.text);
             // Chuyển scene
-            UnityEngine.SceneManagement.SceneManager.LoadScene("SceneMain");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelectScene");
         }
         else
         {
