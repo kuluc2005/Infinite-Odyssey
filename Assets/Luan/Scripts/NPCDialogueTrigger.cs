@@ -12,8 +12,9 @@ public class NPCDialogueTrigger : MonoBehaviour
     public GameObject dialoguePanel;
     public TextMeshProUGUI dialogueText;
     public GameObject continueButton;
-    public GameObject npcImage;      // UI hình NPC
-    public GameObject playerImage;   // UI hình nhân vật
+    public GameObject skipButton;
+    public GameObject npcImage;
+    public GameObject playerImage;
 
     [Tooltip("Key từ bảng NPCLines")]
     public string[] dialogueKeys;
@@ -21,8 +22,10 @@ public class NPCDialogueTrigger : MonoBehaviour
     private int currentLine = 0;
     private bool isTalking = false;
     private bool isTyping = false;
+    private Coroutine typingCoroutine;
+    private string currentFullText;
 
-    // Component
+    // Components
     private vThirdPersonCamera tpCamera;
     private vMeleeCombatInput combatInput;
     private vThirdPersonInput playerInput;
@@ -65,9 +68,12 @@ public class NPCDialogueTrigger : MonoBehaviour
 
     void ShowLine(int index)
     {
+        if (typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
+
         if (index < dialogueKeys.Length)
         {
-            StartCoroutine(LoadLocalizedLine(dialogueKeys[index]));
+            typingCoroutine = StartCoroutine(LoadLocalizedLine(dialogueKeys[index]));
         }
         else
         {
@@ -78,19 +84,8 @@ public class NPCDialogueTrigger : MonoBehaviour
     IEnumerator LoadLocalizedLine(string key)
     {
         isTyping = true;
-        var table = LocalizationSettings.StringDatabase;
-        var localizedString = table.GetLocalizedStringAsync("NPCLines", key);
-        yield return localizedString;
 
-        string fullText = localizedString.Result;
-        dialogueText.text = "";
-        for (int i = 0; i < fullText.Length; i++)
-        {
-            dialogueText.text += fullText[i];
-            yield return new WaitForSeconds(0.02f); // tốc độ gõ chữ
-        }
-
-        // Hiện đúng ảnh theo người nói
+        // Hiện ảnh theo nhân vật đang nói
         if (currentLine % 2 == 0)
         {
             npcImage.SetActive(true);
@@ -102,6 +97,34 @@ public class NPCDialogueTrigger : MonoBehaviour
             playerImage.SetActive(true);
         }
 
+        var table = LocalizationSettings.StringDatabase;
+        var localizedString = table.GetLocalizedStringAsync("NPCLines", key);
+        yield return localizedString;
+
+        currentFullText = localizedString.Result;
+        dialogueText.text = "";
+
+        for (int i = 0; i < currentFullText.Length; i++)
+        {
+            dialogueText.text += currentFullText[i];
+            yield return new WaitForSeconds(0.02f); // tốc độ gõ chữ
+        }
+
+        isTyping = false;
+        typingCoroutine = null;
+    }
+
+    public void SkipTyping()
+    {
+        if (!isTyping || string.IsNullOrEmpty(currentFullText)) return;
+
+        if (typingCoroutine != null)
+        {
+            StopCoroutine(typingCoroutine);
+            typingCoroutine = null;
+        }
+
+        dialogueText.text = currentFullText;
         isTyping = false;
     }
 
