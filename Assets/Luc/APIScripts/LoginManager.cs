@@ -15,6 +15,11 @@ public class LoginManager : MonoBehaviour
         StartCoroutine(LoginCoroutine());
     }
 
+    public void GoToRegisterScene()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("RegisterScene");
+    }
+
     IEnumerator LoginCoroutine()
     {
         string url = "http://localhost:5186/api/login";
