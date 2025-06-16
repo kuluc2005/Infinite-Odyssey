@@ -15,6 +15,7 @@ public class NPCDialogueTrigger : MonoBehaviour
     public GameObject skipButton;
     public GameObject npcImage;
     public GameObject playerImage;
+    public GameObject portalObject;
 
     [Tooltip("Key từ bảng NPCLines")]
     public string[] dialogueKeys;
@@ -143,6 +144,11 @@ public class NPCDialogueTrigger : MonoBehaviour
         UnlockControls();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        // ✅ Hiện cổng nếu hoàn thành nhiệm vụ
+        if (QuestManager.instance != null && QuestManager.instance.questCompleted && portalObject != null)
+        {
+            portalObject.SetActive(true);
+        }
     }
 
     void LockControls()

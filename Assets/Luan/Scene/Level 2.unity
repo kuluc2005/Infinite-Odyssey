@@ -3065,7 +3065,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  timeOfDay: 17.5
+  timeOfDay: 14
   realSecondsPerGameHour: 30
   dayProgress: 0
 --- !u!4 &1650861820
