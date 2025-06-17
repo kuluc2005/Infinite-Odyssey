@@ -16,7 +16,10 @@ public class ChaseState : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (!agent.enabled) return;
+
         agent.SetDestination(player.position);
+
 
         float distance = Vector3.Distance(player.position, animator.transform.position);
         if (distance > 15)

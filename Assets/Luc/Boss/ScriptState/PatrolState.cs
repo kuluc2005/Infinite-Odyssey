@@ -30,7 +30,9 @@ public class PatrolState : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(agent.remainingDistance <= agent.stoppingDistance)
+        if (!agent.enabled) return;
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
             agent.SetDestination(wayPointBoss[Random.Range(0, wayPointBoss.Count)].position);
         }
