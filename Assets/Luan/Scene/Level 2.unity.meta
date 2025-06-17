@@ -1,14 +1,15 @@
 fileFormatVersion: 2
-guid: e1520c81f6169d14c9fd24ba7138e7ab
+guid: 53f5a0914b195b74abc2fb43a9e2ce22
+timeCreated: 1512680243
+licenseType: Store
 DefaultImporter:
-  externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 190866
-  packageName: 'SummonBox: Prototype Enviroment Asset Pack - URP'
-  packageVersion: 1.0
-  assetPath: Assets/SBPrototypeEnvironment_URP/Scenes/SampleBuilding.unity
-  uploadId: 421457
+  productId: 107196
+  packageName: POLYDesert
+  packageVersion: 1.1
+  assetPath: Assets/Runemark Studio/Freebies/Polygon Desert Pack/DesertScene.unity
+  uploadId: 304479
