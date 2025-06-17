@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-Locales
   m_GUID: 4dba1bc1a89aecf42a63696474e77714
   m_SerializeEntries:
+  - m_GUID: 10ee8db5b061eb04ba1fbfda05e97551
+    m_Address: English (en)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4212df1c9c5a179449645f438e3e27ad
     m_Address: Vietnamese (Vietnam) (vi-VN)
     m_ReadOnly: 1
