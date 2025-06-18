@@ -40,11 +40,28 @@ public class LoginManager : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
+            string response = request.downloadHandler.text;
+            Debug.Log("📦 JSON raw từ API: " + response);
+            Debug.Log("Login response: " + response);
+
+            LoginResponse loginResult = JsonUtility.FromJson<LoginResponse>(response);
+
+            if (loginResult != null && loginResult.data != null)
+            {
+                Debug.Log($"🔥 Đã lưu PlayerId: {loginResult.data.id}");
+                PlayerPrefs.SetInt("PlayerId", loginResult.data.id);
+                PlayerPrefs.Save();
+            }
+            else
+            {
+                Debug.LogError("❌ Không giải mã được loginResult hoặc loginResult.data null");
+            }
+
             statusText.text = "Đăng nhập thành công!";
-            Debug.Log(request.downloadHandler.text);
-            // Chuyển scene
+            yield return new WaitForSeconds(1f);
             UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelectScene");
         }
+
         else
         {
             statusText.text = "Lỗi: " + request.error;
@@ -58,3 +75,21 @@ public class PlayerLogin
     public string Email;
     public string PasswordHash;
 }
+
+[System.Serializable]
+public class LoginResponse
+{
+    public bool status;
+    public string message;
+    public PlayerData data;
+}
+
+[System.Serializable]
+public class PlayerData
+{
+    public int id;
+    public string Email;
+    public string userName;
+    public string CreatedAt;
+}
+
