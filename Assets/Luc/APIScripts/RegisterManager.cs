@@ -34,6 +34,7 @@ public class RegisterManager : MonoBehaviour
         };
 
         string json = JsonUtility.ToJson(registerData);
+        Debug.Log("📤 JSON gửi đi từ Unity: " + json);  // Thêm dòng này
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
 
         UnityWebRequest request = new UnityWebRequest(url, "POST");
@@ -49,18 +50,18 @@ public class RegisterManager : MonoBehaviour
 
             if (request.downloadHandler.text.Contains("true"))
             {
-                statusText.text = "🎉 Đăng ký thành công!";
+                statusText.text = "Đăng ký thành công!";
                 yield return new WaitForSeconds(1.5f);
                 UnityEngine.SceneManagement.SceneManager.LoadScene("LoginScene");
             }
             else
             {
-                statusText.text = "❌ Đăng ký thất bại.";
+                statusText.text = "Đăng ký thất bại.";
             }
         }
         else
         {
-            statusText.text = "⚠️ Lỗi: " + request.error;
+            statusText.text = "!!!!!Lỗi: " + request.error;
         }
     }
 }

@@ -55176,6 +55176,7 @@ GameObject:
   - component: {fileID: 9147308732264466733}
   - component: {fileID: 1499029510436986785}
   - component: {fileID: 3840176866161496486}
+  - component: {fileID: -2690605302368097852}
   m_Layer: 8
   m_Name: Butterfly
   m_TagString: Player
@@ -56493,6 +56494,25 @@ MonoBehaviour:
   onLoadItems:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-2690605302368097852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8289530387979699577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50c5414c6d59ec5409e03fc5383d04ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHP: 0
+  maxHP: 0
+  currentMP: 0
+  maxMP: 0
+  level: 0
+  currentExp: 0
+  expToLevelUp: 100
 --- !u!1 &8300473908991954767
 GameObject:
   m_ObjectHideFlags: 0

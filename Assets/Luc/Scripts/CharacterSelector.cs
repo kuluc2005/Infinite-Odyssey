@@ -9,7 +9,7 @@ public class CharacterSelector : MonoBehaviour
     {
         if (ProfileManager.CurrentProfile == null)
         {
-            Debug.LogError("⚠ Profile chưa load xong!");
+            Debug.LogError("Profile chưa load xong!");
             return;
         }
 
@@ -22,7 +22,7 @@ public class CharacterSelector : MonoBehaviour
     {
         if (ProfileManager.CurrentProfile == null)
         {
-            Debug.LogError("⚠ Profile chưa load xong!");
+            Debug.LogError("Profile chưa load xong!");
             return;
         }
 
@@ -38,7 +38,7 @@ public class CharacterSelector : MonoBehaviour
         ProfileManager.CurrentProfile.mP = mp;
 
         string json = JsonUtility.ToJson(ProfileManager.CurrentProfile);
-        Debug.Log("📤 JSON gửi lên API: " + json);
+        Debug.Log("JSON gửi lên API: " + json);
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
 
         UnityWebRequest request = new UnityWebRequest("http://localhost:5186/api/update-profile", "PUT");
@@ -50,12 +50,12 @@ public class CharacterSelector : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("✅ Đã cập nhật profile thành công");
+            Debug.Log("Đã cập nhật profile thành công");
             SceneManager.LoadScene("SceneMain"); // Vào game
         }
         else
         {
-            Debug.LogError("❌ Không thể cập nhật profile: " + request.error);
+            Debug.LogError("Không thể cập nhật profile: " + request.error);
         }
     }
 

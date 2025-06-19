@@ -8,32 +8,54 @@ public class ProfileManager : MonoBehaviour
 
     void Start()
     {
-        int playerId = PlayerPrefs.GetInt("PlayerId", -1);
-        Debug.Log("📦 PlayerId từ PlayerPrefs: " + playerId);
+        int characterId = PlayerPrefs.GetInt("CharacterId", -1);
+        Debug.Log("CharacterId từ PlayerPrefs: " + characterId);
 
-        if (playerId != -1)
-            StartCoroutine(LoadProfile(playerId));
+        if (characterId != -1)
+            StartCoroutine(LoadProfile(characterId));
     }
 
-    IEnumerator LoadProfile(int playerId)
+    IEnumerator LoadProfile(int characterId)
     {
-        string url = $"http://localhost:5186/api/playerprofile/{playerId}";
+        string url = $"http://localhost:5186/api/character/profile/{characterId}";
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
         {
             string json = request.downloadHandler.text;
-            Debug.Log("📥 JSON profile nhận được: " + json);
+            Debug.Log("JSON profile nhận được: " + json);
 
             PlayerProfileWrapper wrapper = JsonUtility.FromJson<PlayerProfileWrapper>(json);
             CurrentProfile = wrapper.data;
 
-            Debug.Log($"✅ Profile loaded: Id = {CurrentProfile.id}, PlayerId = {CurrentProfile.playerId}, Class = {CurrentProfile.characterClass}");
+            Debug.Log($"Profile loaded: Id = {CurrentProfile.id}, Class = {CurrentProfile.characterClass}, Level = {CurrentProfile.level}");
         }
         else
         {
-            Debug.LogError("❌ Không thể load profile: " + request.error);
+            Debug.LogError("Không thể load profile: " + request.error);
+        }
+    }
+
+    public static IEnumerator LoadProfileStatic(int characterId)
+    {
+        string url = $"http://localhost:5186/api/character/profile/{characterId}";
+        UnityWebRequest request = UnityWebRequest.Get(url);
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            string json = request.downloadHandler.text;
+            Debug.Log("[Static] Profile JSON: " + json);
+
+            PlayerProfileWrapper wrapper = JsonUtility.FromJson<PlayerProfileWrapper>(json);
+            CurrentProfile = wrapper.data;
+
+            Debug.Log($"[Static] Loaded profile: {CurrentProfile.characterClass}, Lv: {CurrentProfile.level}");
+        }
+        else
+        {
+            Debug.LogError("[Static] Không thể load profile: " + request.error);
         }
     }
 }
@@ -62,4 +84,6 @@ public class PlayerProfile
     public string inventoryJSON;
     public string skillTreeJSON;
     public string lastScene;
+    public int maxHP;
+    public int maxMP;
 }

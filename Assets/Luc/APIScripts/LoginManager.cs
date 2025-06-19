@@ -22,6 +22,8 @@ public class LoginManager : MonoBehaviour
 
     IEnumerator LoginCoroutine()
     {
+        PlayerPrefs.DeleteAll(); 
+
         string url = "http://localhost:5186/api/login";
 
         string json = JsonUtility.ToJson(new PlayerLogin
@@ -41,27 +43,27 @@ public class LoginManager : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             string response = request.downloadHandler.text;
-            Debug.Log("📦 JSON raw từ API: " + response);
+            Debug.Log("JSON raw từ API: " + response);
             Debug.Log("Login response: " + response);
 
             LoginResponse loginResult = JsonUtility.FromJson<LoginResponse>(response);
 
             if (loginResult != null && loginResult.data != null)
             {
-                Debug.Log($"🔥 Đã lưu PlayerId: {loginResult.data.id}");
+                Debug.Log($"✅ Đã lưu PlayerId: {loginResult.data.id}");
                 PlayerPrefs.SetInt("PlayerId", loginResult.data.id);
-                PlayerPrefs.Save();
+                PlayerPrefs.SetInt("CharacterId", -1); 
+                PlayerPrefs.Save(); 
             }
             else
             {
-                Debug.LogError("❌ Không giải mã được loginResult hoặc loginResult.data null");
+                Debug.LogError("Không giải mã được loginResult hoặc loginResult.data null");
             }
 
             statusText.text = "Đăng nhập thành công!";
             yield return new WaitForSeconds(1f);
             UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelectScene");
         }
-
         else
         {
             statusText.text = "Lỗi: " + request.error;
@@ -69,7 +71,7 @@ public class LoginManager : MonoBehaviour
     }
 }
 
-[System.Serializable]
+    [System.Serializable]
 public class PlayerLogin
 {
     public string Email;
