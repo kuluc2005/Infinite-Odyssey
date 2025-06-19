@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using Invector.vCharacterController;
+using System.Reflection;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -12,9 +14,19 @@ public class PlayerStats : MonoBehaviour
     public int currentExp;
     public int expToLevelUp = 100;
 
-    private IEnumerator Start()
+    private void Awake()
     {
-        // ❗️Đợi cho đến khi profile được gán
+        StartCoroutine(InitWithDelay());
+    }
+
+    private IEnumerator InitWithDelay()
+    {
+        yield return null; // Đợi Invector chạy Start xong
+        yield return InitStatsAfterProfileLoaded();
+    }
+
+    private IEnumerator InitStatsAfterProfileLoaded()
+    {
         while (ProfileManager.CurrentProfile == null)
         {
             Debug.LogWarning("⏳ Đang đợi ProfileManager.CurrentProfile...");
@@ -26,12 +38,30 @@ public class PlayerStats : MonoBehaviour
         level = profile.level;
         maxHP = profile.maxHP;
         maxMP = profile.maxMP;
-        currentHP = profile.hP;
-        currentMP = profile.mP;
 
-        Debug.Log("✅ PlayerStats khởi tạo xong từ Profile");
+        currentHP = profile.hP <= 0 ? maxHP : profile.hP;
+        currentMP = profile.mP <= 0 ? maxMP : profile.mP;
+
+        profile.hP = currentHP;
+        profile.mP = currentMP;
+
+        var controller = GetComponent<vThirdPersonController>();
+        if (controller != null)
+        {
+            ForceUpdateStatsToInvector(controller, maxHP, maxMP, currentHP, currentMP);
+        }
+
+        if (vHUDController.instance != null)
+        {
+            vHUDController.instance.Init(controller);
+            vHUDController.instance.healthSlider.maxValue = maxHP;
+            vHUDController.instance.healthSlider.value = currentHP;
+            vHUDController.instance.staminaSlider.maxValue = maxMP;
+            vHUDController.instance.staminaSlider.value = currentMP;
+        }
+
+        Debug.Log($"✅ HP/MP đã gán: {currentHP}/{maxHP} - {currentMP}/{maxMP}");
     }
-
 
     public void AddExp(int amount)
     {
@@ -61,6 +91,56 @@ public class PlayerStats : MonoBehaviour
         profile.mP = currentMP;
 
         StartCoroutine(UpdateProfile(profile));
+
+        var controller = GetComponent<vThirdPersonController>();
+        if (controller != null)
+        {
+            ForceUpdateStatsToInvector(controller, maxHP, maxMP, currentHP, currentMP, debugFields: true);
+        }
+    }
+
+    private void ForceUpdateStatsToInvector(vThirdPersonController controller, int newMaxHP, int newMaxMP, int newCurrentHP, int newCurrentMP, bool debugFields = false)
+    {
+        var type = controller.GetType();
+
+        // Set _maxHealth
+        var maxHealthField = type.GetField("_maxHealth", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        if (maxHealthField != null)
+        {
+            maxHealthField.SetValue(controller, newMaxHP);
+            Debug.Log($"✅ [Invector] _maxHealth = {newMaxHP}");
+        }
+        else
+        {
+            Debug.LogError("❌ Không tìm thấy _maxHealth trong controller");
+        }
+
+        // Set _maxStamina
+        var maxStaminaField = type.GetField("_maxStamina", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        if (maxStaminaField != null)
+        {
+            maxStaminaField.SetValue(controller, newMaxMP);
+            Debug.Log($"✅ [Invector] _maxStamina = {newMaxMP}");
+        }
+        else
+        {
+            Debug.LogError("❌ Không tìm thấy _maxStamina trong controller");
+        }
+
+        // Set current values
+        controller.ChangeHealth(newCurrentHP);
+        controller.ChangeStamina(newCurrentMP);
+
+        // Debug thêm nếu muốn
+        if (debugFields)
+        {
+            var fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            foreach (var f in fields)
+            {
+                if (f.Name.ToLower().Contains("health"))
+                    Debug.Log($"👉 FIELD: {f.Name}, Value = {f.GetValue(controller)}");
+            }
+        }
     }
 
     IEnumerator UpdateProfile(PlayerProfile profile)
@@ -78,11 +158,11 @@ public class PlayerStats : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("Profile cập nhật thành công!");
+            Debug.Log("✅ Profile cập nhật thành công!");
         }
         else
         {
-            Debug.LogError("Lỗi cập nhật profile: " + request.error);
+            Debug.LogError("❌ Lỗi cập nhật profile: " + request.error);
         }
     }
 }

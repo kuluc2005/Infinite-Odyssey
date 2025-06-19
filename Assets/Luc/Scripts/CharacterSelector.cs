@@ -32,13 +32,19 @@ public class CharacterSelector : MonoBehaviour
 
     IEnumerator UpdateProfileAndLoadScene(string characterClass, int hp, int mp)
     {
-        // Lấy PlayerProfile đang dùng
-        ProfileManager.CurrentProfile.characterClass = characterClass;
-        ProfileManager.CurrentProfile.hP = hp;
-        ProfileManager.CurrentProfile.mP = mp;
+        var profile = ProfileManager.CurrentProfile;
+        profile.characterClass = characterClass;
 
-        string json = JsonUtility.ToJson(ProfileManager.CurrentProfile);
-        Debug.Log("JSON gửi lên API: " + json);
+        profile.level = 1;
+        profile.exp = 0;
+
+        profile.maxHP = 100; 
+        profile.maxMP = 200;
+        profile.hP = profile.maxHP;
+        profile.mP = profile.maxMP;
+
+        string json = JsonUtility.ToJson(profile);
+        Debug.Log("📤 JSON gửi lên API: " + json);
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
 
         UnityWebRequest request = new UnityWebRequest("http://localhost:5186/api/update-profile", "PUT");
@@ -50,13 +56,12 @@ public class CharacterSelector : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("Đã cập nhật profile thành công");
-            SceneManager.LoadScene("SceneMain"); // Vào game
+            Debug.Log("✅ Đã cập nhật profile thành công");
+            SceneManager.LoadScene("SceneMain");
         }
         else
         {
-            Debug.LogError("Không thể cập nhật profile: " + request.error);
+            Debug.LogError("❌ Không thể cập nhật profile: " + request.error);
         }
     }
-
 }

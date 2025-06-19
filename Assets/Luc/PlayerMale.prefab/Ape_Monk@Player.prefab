@@ -12871,9 +12871,9 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   _isDead: 1
-  _currentHealth: 0
+  _currentHealth: 100
   isImmortal: 0
-  fillHealthOnStart: 1
+  fillHealthOnStart: 0
   _maxHealth: 100
   _healthRecovery: 0
   _healthRecoveryDelay: 0
