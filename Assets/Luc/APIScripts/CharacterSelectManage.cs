@@ -53,12 +53,12 @@ public class CharacterSelectManager : MonoBehaviour
         {
             string json = request.downloadHandler.text;
             PlayerCharacterListWrapper wrapper = JsonUtility.FromJson<PlayerCharacterListWrapper>(json);
-            Debug.Log("📥 JSON từ API: " + json);
-            Debug.Log("📦 Số lượng nhân vật: " + wrapper.data?.Length);
+            Debug.Log("JSON từ API: " + json);
+            Debug.Log("Số lượng nhân vật: " + wrapper.data?.Length);
 
             foreach (var character in wrapper.data)
             {
-                Debug.Log("➡️ Nhân vật: " + character.characterClass + " - ID: " + character.id);
+                Debug.Log("Nhân vật: " + character.characterClass + " - ID: " + character.id);
             }
 
 
@@ -78,11 +78,11 @@ public class CharacterSelectManager : MonoBehaviour
                     if (textComp != null)
                     {
                         textComp.text = character.characterClass + " #" + character.id;
-                        Debug.Log("✅ Gán tên cho nhân vật: " + textComp.text);
+                        Debug.Log("Gán tên cho nhân vật: " + textComp.text);
                     }
                     else
                     {
-                        Debug.LogError("❌ Không tìm thấy TMP_Text trong prefab!");
+                        Debug.LogError("Không tìm thấy TMP_Text trong prefab!");
                     }
 
                     btn.GetComponent<Button>().onClick.AddListener(() =>
@@ -144,7 +144,7 @@ public class CharacterSelectManager : MonoBehaviour
 
             if (ProfileManager.CurrentProfile != null)
             {
-                Debug.Log("✅ Tạo nhân vật mới xong. Reload danh sách.");
+                Debug.Log("Tạo nhân vật mới xong. Reload danh sách.");
                 int pid = PlayerPrefs.GetInt("PlayerId");
                 StartCoroutine(LoadCharacters(pid)); // ← reload lại danh sách
             }

@@ -34,7 +34,7 @@ public class RegisterManager : MonoBehaviour
         };
 
         string json = JsonUtility.ToJson(registerData);
-        Debug.Log("📤 JSON gửi đi từ Unity: " + json);  // Thêm dòng này
+        Debug.Log("JSON gửi đi từ Unity: " + json);  // Thêm dòng này
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
 
         UnityWebRequest request = new UnityWebRequest(url, "POST");

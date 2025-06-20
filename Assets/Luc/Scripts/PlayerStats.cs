@@ -29,7 +29,7 @@ public class PlayerStats : MonoBehaviour
     {
         while (ProfileManager.CurrentProfile == null)
         {
-            Debug.LogWarning("⏳ Đang đợi ProfileManager.CurrentProfile...");
+            Debug.LogWarning("Đang đợi ProfileManager.CurrentProfile...");
             yield return null;
         }
 
@@ -60,7 +60,7 @@ public class PlayerStats : MonoBehaviour
             vHUDController.instance.staminaSlider.value = currentMP;
         }
 
-        Debug.Log($"✅ HP/MP đã gán: {currentHP}/{maxHP} - {currentMP}/{maxMP}");
+        Debug.Log($"HP/MP đã gán: {currentHP}/{maxHP} - {currentMP}/{maxMP}");
     }
 
     public void AddExp(int amount)
@@ -108,11 +108,11 @@ public class PlayerStats : MonoBehaviour
         if (maxHealthField != null)
         {
             maxHealthField.SetValue(controller, newMaxHP);
-            Debug.Log($"✅ [Invector] _maxHealth = {newMaxHP}");
+            Debug.Log($"_maxHealth = {newMaxHP}");
         }
         else
         {
-            Debug.LogError("❌ Không tìm thấy _maxHealth trong controller");
+            Debug.LogError("Không tìm thấy _maxHealth trong controller");
         }
 
         // Set _maxStamina
@@ -120,11 +120,11 @@ public class PlayerStats : MonoBehaviour
         if (maxStaminaField != null)
         {
             maxStaminaField.SetValue(controller, newMaxMP);
-            Debug.Log($"✅ [Invector] _maxStamina = {newMaxMP}");
+            Debug.Log($"_maxStamina = {newMaxMP}");
         }
         else
         {
-            Debug.LogError("❌ Không tìm thấy _maxStamina trong controller");
+            Debug.LogError("Không tìm thấy _maxStamina trong controller");
         }
 
         // Set current values
@@ -138,7 +138,7 @@ public class PlayerStats : MonoBehaviour
             foreach (var f in fields)
             {
                 if (f.Name.ToLower().Contains("health"))
-                    Debug.Log($"👉 FIELD: {f.Name}, Value = {f.GetValue(controller)}");
+                    Debug.Log($"FIELD: {f.Name}, Value = {f.GetValue(controller)}");
             }
         }
     }
@@ -158,11 +158,11 @@ public class PlayerStats : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("✅ Profile cập nhật thành công!");
+            Debug.Log("Profile cập nhật thành công!");
         }
         else
         {
-            Debug.LogError("❌ Lỗi cập nhật profile: " + request.error);
+            Debug.LogError("Lỗi cập nhật profile: " + request.error);
         }
     }
 }

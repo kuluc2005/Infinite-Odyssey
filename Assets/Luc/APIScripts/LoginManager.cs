@@ -50,7 +50,7 @@ public class LoginManager : MonoBehaviour
 
             if (loginResult != null && loginResult.data != null)
             {
-                Debug.Log($"✅ Đã lưu PlayerId: {loginResult.data.id}");
+                Debug.Log($"Đã lưu PlayerId: {loginResult.data.id}");
                 PlayerPrefs.SetInt("PlayerId", loginResult.data.id);
                 PlayerPrefs.SetInt("CharacterId", -1); 
                 PlayerPrefs.Save(); 
