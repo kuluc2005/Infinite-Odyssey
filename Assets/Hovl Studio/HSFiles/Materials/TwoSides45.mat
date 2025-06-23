@@ -39,7 +39,6 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
-  - _ALPHATEST_ON
   - _DOUBLESIDED_ON
   - _USEBACKFRESNEL_ON
   - _USECUSTOMDATA_ON
@@ -146,6 +145,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 0
+    - _DstBlend2: 0
     - _Emission: 1
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
@@ -160,7 +160,8 @@ Material:
     - _OcclusionStrength: 1
     - _OpaqueCullMode: 2
     - _Parallax: 0.02
-    - _QueueControl: -1
+    - _PerPixelSorting: 0
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _RenderQueueType: 1
     - _SeparateEmission: 2
