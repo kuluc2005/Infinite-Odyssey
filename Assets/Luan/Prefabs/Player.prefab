@@ -37681,7 +37681,6 @@ GameObject:
   - component: {fileID: 3793750523506190897}
   - component: {fileID: 7285958263138385299}
   - component: {fileID: 1039529808905243972}
-  - component: {fileID: 1695317569831452176}
   m_Layer: 8
   m_Name: vMeleeController_Ape Monk
   m_TagString: Player
@@ -39007,19 +39006,6 @@ MonoBehaviour:
   onLoadItems:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1695317569831452176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5064524765646746846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0162e837d67a8904ba231d63215b347d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questText: {fileID: 8791250051192525502}
 --- !u!1 &5066205050909035655
 GameObject:
   m_ObjectHideFlags: 0

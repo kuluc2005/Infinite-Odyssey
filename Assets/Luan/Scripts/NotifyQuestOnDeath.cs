@@ -1,47 +1,32 @@
 ﻿using UnityEngine;
-using System.Reflection;
-using UnityEngine.Events;
 using Invector.vCharacterController.vActions;
 using Invector.vCharacterController;
 
 public class NotifyQuestOnDeath : MonoBehaviour
 {
+    [Tooltip("ID của quái vật này (dùng để khớp với Objective.targetID)")]
+    public string enemyID = "Goblin_01";
+
     void Start()
     {
-        var onDeadTrigger = GetComponent<vOnDeadTrigger>();
-        if (onDeadTrigger != null)
+        var onDead = GetComponent<vOnDeadTrigger>();
+        if (onDead != null)
         {
-            // Lấy field "onDead" dạng UnityEvent<GameObject>
-            var onDeadField = typeof(vOnDeadTrigger).GetField("onDead", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-
-            if (onDeadField != null)
-            {
-                // Chuyển thành UnityEvent<GameObject>
-                UnityEvent<GameObject> onDeadEvent = onDeadField.GetValue(onDeadTrigger) as UnityEvent<GameObject>;
-
-                if (onDeadEvent != null)
-                {
-                    onDeadEvent.AddListener(OnEnemyDeath);
-                }
-                else
-                {
-                    Debug.LogWarning("onDeadEvent null: không thể cast thành UnityEvent<GameObject>");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Không tìm thấy field 'onDead' trong vOnDeadTrigger.");
-            }
+            // Đảm bảo đúng tên event
+            onDead.OnDead.AddListener(OnEnemyDeath);
+        }
+        else
+        {
+            Debug.LogWarning("NotifyQuestOnDeath: Không tìm thấy vOnDeadTrigger.");
         }
     }
 
-    // Hàm phải có đúng tham số như UnityEvent<GameObject>
-    void OnEnemyDeath(GameObject sender)
+    public void OnEnemyDeath()
     {
-        Debug.Log("🔔 Enemy chết → báo về QuestManager");
         if (QuestManager.instance != null)
         {
-            QuestManager.instance.EnemyKilled();
+            Debug.Log("NotifyQuestOnDeath → Gọi UpdateQuestObjective");
+            QuestManager.instance.UpdateQuestObjective(ObjectiveType.KillEnemy, enemyID);
         }
     }
 }

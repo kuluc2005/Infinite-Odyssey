@@ -26,6 +26,7 @@ public class NPCDialogueTrigger : MonoBehaviour
     private Coroutine typingCoroutine;
     private string currentFullText;
 
+
     // Components
     private vThirdPersonCamera tpCamera;
     private vMeleeCombatInput combatInput;
