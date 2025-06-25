@@ -13,8 +13,10 @@ public class BossManager : MonoBehaviour
     public int expReward = 100;
 
     private int basicAttackCount = 0;
-    private bool hasEnteredSkillMode = false;
+    private int skill1UsageCount = 0;
+    private bool isSkill2Active = false;
     private bool hasTriggeredDeath = false;
+    private bool isUsingSkill1 = false;
 
     private Animator animator;
     private vHealthController health;
@@ -29,33 +31,45 @@ public class BossManager : MonoBehaviour
 
     void Update()
     {
-        if (health == null || hasTriggeredDeath) return;
+        if (health == null) return;
 
         if (health.currentHealth <= 0 && !hasTriggeredDeath)
         {
-            hasTriggeredDeath = true;
+            hasTriggeredDeath = true; 
             animator.SetBool("IsDead", true);
-
             RewardExpToPlayer();
             Destroy(gameObject, 3f);
         }
-
-        if (health.currentHealth <= 30 && !hasEnteredSkillMode)
-        {
-            hasEnteredSkillMode = true;
-            EnterSkill2Mode();
-        }
     }
+
 
     public void CountBasicAttack()
     {
+        // Nếu vừa dùng Skill1 thì không tăng
+        if (isUsingSkill1)
+        {
+            isUsingSkill1 = false; // reset lại cho lần sau
+            return;
+        }
+
         basicAttackCount++;
+
         if (basicAttackCount >= 3)
         {
-            animator.SetTrigger("Attack1");
             basicAttackCount = 0;
+
+            if (skill1UsageCount < 2)
+            {
+                isUsingSkill1 = true; // đánh dấu đã gọi skill1
+                animator.SetTrigger("Attack1");
+            }
+            else if (!isSkill2Active)
+            {
+                StartCoroutine(UseSkill2Once());
+            }
         }
     }
+
 
     public void SpawnSkill1()
     {
@@ -69,6 +83,40 @@ public class BossManager : MonoBehaviour
             if (hp != null)
             {
                 hp.TakeDamage(new vDamage(skill1Damage));
+            }
+        }
+
+        skill1UsageCount++;
+    }
+
+    IEnumerator UseSkill2Once()
+    {
+        isSkill2Active = true;
+
+        if (agent) agent.enabled = false;
+        animator.SetBool("isChasing", false);
+        animator.SetBool("isAttacking", false);
+        animator.ResetTrigger("Attack1");
+        animator.SetTrigger("SkillStart");
+
+        yield return new WaitForSeconds(1.5f);
+
+
+        isSkill2Active = false;
+        skill1UsageCount = 0;
+        animator.ResetTrigger("SkillStart");
+
+        if (agent) agent.enabled = true;
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance < 10f)
+            {
+                animator.SetBool("isChasing", true);
+                animator.SetBool("isAttacking", true);
+                agent.SetDestination(player.transform.position);
             }
         }
     }
@@ -92,32 +140,12 @@ public class BossManager : MonoBehaviour
         }
     }
 
-    void EnterSkill2Mode()
-    {
-        if (agent) agent.enabled = false;
-        animator.SetBool("isChasing", false);
-        animator.SetBool("isAttacking", false);
-        animator.SetTrigger("SkillStart");
-        StartCoroutine(SpamSkill2());
-    }
-
-    IEnumerator SpamSkill2()
-    {
-        while (!health.isDead)
-        {
-            yield return new WaitForSeconds(3f);
-            animator.SetTrigger("SkillStart");
-            yield return new WaitForSeconds(skill2Interval);
-        }
-    }
-
     void RewardExpToPlayer()
     {
         var playerStats = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerStats>();
         if (playerStats != null)
         {
             playerStats.AddExp(expReward);
-            Debug.Log("Player nhận " + expReward + " EXP khi giết boss");
         }
     }
 }

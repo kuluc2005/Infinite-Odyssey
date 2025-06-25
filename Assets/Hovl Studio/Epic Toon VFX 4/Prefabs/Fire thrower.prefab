@@ -14760,6 +14760,7 @@ GameObject:
   - component: {fileID: 8460063633659019818}
   - component: {fileID: 4230261324805133774}
   - component: {fileID: -7985419834669136504}
+  - component: {fileID: -9220898350593577460}
   m_Layer: 0
   m_Name: Fire thrower
   m_TagString: Untagged
@@ -14811,7 +14812,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -14879,7 +14880,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 3.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -19748,7 +19749,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a90e496c63f6c4db2728c61c5ff894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 3
+  lifeTime: 4
+--- !u!114 &-9220898350593577460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5011422705881722773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a13053c059665449162d1b629202d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3
+  stopDistance: 0.5
 --- !u!1 &5011503875209072437
 GameObject:
   m_ObjectHideFlags: 0
