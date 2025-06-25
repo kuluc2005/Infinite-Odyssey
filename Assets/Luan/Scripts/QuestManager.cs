@@ -9,11 +9,6 @@ public class QuestManager : MonoBehaviour
     public Dictionary<string, QuestData> activeQuests = new Dictionary<string, QuestData>();
     public List<QuestData> completedQuests = new List<QuestData>();
 
-    [Header("Quest giết quái")]
-    public int totalEnemies = 3;
-    private int enemiesKilled = 0;
-    public bool questCompleted = false;
-
     void Awake()
     {
         if (instance != null && instance != this)
@@ -31,9 +26,22 @@ public class QuestManager : MonoBehaviour
     {
         if (quest == null || activeQuests.ContainsKey(quest.questID)) return;
 
+        // ✅ Reset tất cả progress trước khi bắt đầu
+        foreach (var obj in quest.objectives)
+        {
+            obj.currentAmount = 0;
+        }
+
         activeQuests.Add(quest.questID, quest);
-        Debug.Log($"Quest Started: {quest.questName}");
+        Debug.Log($"[QuestManager] Bắt đầu nhiệm vụ: {quest.questName}");
+
+        QuestUI ui = FindObjectOfType<QuestUI>();
+        if (ui != null)
+        {
+            ui.UpdateQuestText();
+        }
     }
+
 
     public void UpdateQuestObjective(ObjectiveType type, string targetID, int amount = 1)
     {
@@ -44,12 +52,19 @@ public class QuestManager : MonoBehaviour
                 if (obj.type == type && obj.targetID == targetID && !obj.IsCompleted())
                 {
                     obj.currentAmount += amount;
-                    Debug.Log($"Objective Updated: {obj.objectiveDescription} ({obj.currentAmount}/{obj.requiredAmount})");
+                    Debug.Log($"[QuestManager] Đã cập nhật mục tiêu: {obj.objectiveDescription} ({obj.currentAmount}/{obj.requiredAmount})");
 
                     if (obj.IsCompleted())
                     {
-                        Debug.Log($"Objective Completed: {obj.objectiveDescription}");
+                        Debug.Log($"[QuestManager] Mục tiêu hoàn thành: {obj.objectiveDescription}");
                         CheckQuestCompletion(quest);
+                    }
+
+                    // Cập nhật UI sau khi mỗi cập nhật
+                    QuestUI ui = FindObjectOfType<QuestUI>();
+                    if (ui != null)
+                    {
+                        ui.UpdateQuestText();
                     }
 
                     return;
@@ -74,49 +89,26 @@ public class QuestManager : MonoBehaviour
 
         activeQuests.Remove(quest.questID);
         completedQuests.Add(quest);
-        Debug.Log($"Quest Completed: {quest.questName}");
 
-        // Hiện cổng nếu là nhiệm vụ chính
-        if (quest.questID == "Quest_Man1_TimDaoSi")
+        Debug.Log($"[QuestManager] Đã hoàn thành nhiệm vụ: {quest.questName}");
+
+        // Mở cổng nếu có portal tương ứng (tên phải khớp)
+        GameObject portal = GameObject.Find($"Portal_{quest.questID}");
+        if (portal != null)
         {
-            GameObject portal = GameObject.Find("Portal_Man1_To_Man2");
-            if (portal != null)
-            {
-                portal.SetActive(true);
-            }
+            portal.SetActive(true);
+            Debug.Log("[QuestManager] Đã mở cổng: " + portal.name);
         }
 
-        // Cập nhật UI khi hoàn thành nhiệm vụ
+        // Cập nhật UI
         QuestUI ui = FindObjectOfType<QuestUI>();
         if (ui != null)
         {
-            ui.UpdateQuestText();
+            ui.ShowSuccess();
         }
 
-        // Thưởng (nếu có)
-        Debug.Log($"Applied Rewards: {quest.goldReward} Gold, +{quest.healthIncreaseReward} HP, +{quest.damageIncreaseReward} Damage.");
-    }
-
-    public void EnemyKilled()
-    {
-        enemiesKilled++;
-
-        QuestUI ui = FindObjectOfType<QuestUI>();
-        if (ui != null)
-        {
-            ui.UpdateQuestText();
-        }
-
-        if (enemiesKilled >= totalEnemies)
-        {
-            questCompleted = true;
-            Debug.Log("Nhiệm vụ hoàn thành!");
-
-            if (ui != null)
-            {
-                ui.UpdateQuestText();
-            }
-        }
+        // Ghi log phần thưởng
+        Debug.Log($"[QuestManager] Thưởng: {quest.goldReward} vàng, +{quest.healthIncreaseReward} HP, +{quest.damageIncreaseReward} sát thương.");
     }
 
     public QuestData GetActiveQuest(string questID)
@@ -134,7 +126,4 @@ public class QuestManager : MonoBehaviour
     {
         return completedQuests.Any(q => q.questID == questID);
     }
-
-    public int GetEnemiesKilled() => enemiesKilled;
-    public bool IsQuestCompletedByEnemyKill() => questCompleted;
 }

@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class QuestUI : MonoBehaviour
 {
     [Header("UI hiện nhiệm vụ")]
     public TextMeshProUGUI questText;
 
-    [Tooltip("ID của nhiệm vụ cần hiển thị")]
-    public string questID = "Quest_Man1_TimDaoSi"; // ← Bạn có thể đổi trong Inspector
- 
+    [Tooltip("ID nhiệm vụ cần hiển thị (có thể để trống để tự lấy quest đầu tiên)")]
+    public string questID = "";
 
     void Start()
     {
-        UpdateQuestText();
-    }
+        // Nếu không chỉ định questID → lấy quest đang active đầu tiên (nếu có)
+        if (string.IsNullOrEmpty(questID) && QuestManager.instance != null && QuestManager.instance.activeQuests.Count > 0)
+        {
+            questID = QuestManager.instance.activeQuests.First().Key;
+        }
 
-    void Update()
-    {
-        // Tự động cập nhật mỗi frame – hoặc có thể gọi thủ công nếu muốn tối ưu
         UpdateQuestText();
     }
 
@@ -25,7 +25,7 @@ public class QuestUI : MonoBehaviour
     {
         if (QuestManager.instance == null || string.IsNullOrEmpty(questID))
         {
-            questText.text = "Không có nhiệm vụ nào.";
+            questText.text = "Chưa có nhiệm vụ.";
             return;
         }
 
@@ -33,18 +33,18 @@ public class QuestUI : MonoBehaviour
 
         if (quest != null && !QuestManager.instance.IsQuestCompleted(questID))
         {
-            // Hiển thị tiến độ từng objective
-            string progressText = "Nhiệm vụ:\n";
-            foreach (var obj in quest .objectives)
+            // ✅ Hiển thị đơn giản, giống mẫu viết tay
+            string progressText = $"<b>Nhiệm vụ:</b> {quest.questName}\n";
+            foreach (var obj in quest.objectives)
             {
-                progressText += $"- {obj.objectiveDescription}: {obj.currentAmount}/{obj.requiredAmount}\n";
+                progressText += $"{obj.currentAmount}/{obj.requiredAmount}";
             }
 
             questText.text = progressText;
         }
         else if (QuestManager.instance.IsQuestCompleted(questID))
         {
-            questText.text = "Nhiệm vụ: <color=green>Thành công!</color>";
+            questText.text = "<b>Nhiệm vụ:</b> <color=green>Thành công!</color>";
         }
         else
         {
@@ -52,8 +52,9 @@ public class QuestUI : MonoBehaviour
         }
     }
 
+
     public void ShowSuccess()
     {
-        questText.text = "Nhiệm vụ: <color=green>Thành công!</color>";
+        questText.text = "<color=green><b>Nhiệm vụ hoàn thành!</b></color>";
     }
 }

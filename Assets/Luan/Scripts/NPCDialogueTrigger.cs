@@ -146,7 +146,7 @@ public class NPCDialogueTrigger : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         // ✅ Hiện cổng nếu hoàn thành nhiệm vụ
-        if (QuestManager.instance != null && QuestManager.instance.questCompleted && portalObject != null)
+        if (QuestManager.instance != null && QuestManager.instance && portalObject != null)
         {
             portalObject.SetActive(true);
         }

@@ -26,6 +26,7 @@ MonoBehaviour:
   - {fileID: 11411124}
   - {fileID: 11437076}
   - {fileID: 11411708}
+  - {fileID: 2997328546321817158}
   - {fileID: 4295735523900542224}
   - {fileID: 114043347838910644}
   inEdition: 0
@@ -711,6 +712,45 @@ MonoBehaviour:
   disableDelayTime: 0.5
   customHandler: meleeHandler
   twoHandWeapon: 1
+  onDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &2997328546321817158
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1adabc1ae49fd3c44a36cc9152ebb0f9, type: 3}
+  m_Name: Map
+  m_EditorClassIdentifier: 
+  id: 13
+  description: Item Description
+  type: 0
+  icon: {fileID: 21300000, guid: 3cac9f22c7e47374c99a7d9e13490316, type: 3}
+  stackable: 1
+  createNewItem: 1
+  maxStack: 1
+  amount: 0
+  originalObject: {fileID: 0}
+  dropObject: {fileID: 0}
+  attributes: []
+  isInEquipArea: 0
+  isEquiped: 0
+  destroyAfterUse: 1
+  canBeEquipped: 1
+  canBeUsed: 1
+  canBeDroped: 1
+  canBeDestroyed: 1
+  EnableAnim: LowBack
+  DisableAnim: LowBack
+  enableDelayTime: 0.5
+  disableDelayTime: 0.5
+  customHandler: 
+  twoHandWeapon: 0
   onDestroy:
     m_PersistentCalls:
       m_Calls: []
