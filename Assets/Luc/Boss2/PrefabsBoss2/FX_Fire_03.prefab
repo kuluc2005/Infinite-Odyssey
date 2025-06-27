@@ -4847,6 +4847,7 @@ GameObject:
   - component: {fileID: 2203107161349944249}
   - component: {fileID: 3902558653308509774}
   - component: {fileID: -6607835101776381822}
+  - component: {fileID: 852526019770635344}
   m_Layer: 0
   m_Name: FX_Fire_03
   m_TagString: Untagged
@@ -4864,7 +4865,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.45, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2972392978296103415}
@@ -9746,6 +9747,20 @@ MonoBehaviour:
   speed: 3
   lifetime: 5
   damage: 1
+--- !u!114 &852526019770635344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2972392977303283589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe22ff6224c68e440976de3ca81c7349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionEffectPrefab: {fileID: 1638949781681410, guid: 8a5811ae0a0f7804fbff1cf892735c20, type: 3}
+  lifeTime: 5
 --- !u!1 &2972392977518692226
 GameObject:
   m_ObjectHideFlags: 0
