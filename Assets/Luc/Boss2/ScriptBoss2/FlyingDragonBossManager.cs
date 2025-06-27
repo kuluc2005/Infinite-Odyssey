@@ -33,8 +33,8 @@ public class FlyingDragonBossManager : MonoBehaviour
         health = GetComponent<vHealthController>();
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        animator.Play("Sleep"); // Bắt đầu ở trạng thái ngủ
-        Debug.Log("💤 Boss khởi động ở trạng thái Sleep.");
+        animator.Play("Sleep");
+        Debug.Log("Boss khởi động ở trạng thái Sleep.");
     }
 
     void Update()
@@ -51,7 +51,7 @@ public class FlyingDragonBossManager : MonoBehaviour
 
         RotateTowardsPlayer();
 
-        if (isUsingBreath) return; // khi đang khè thì không bắn
+        if (isUsingBreath) return;
 
         HandleFireBreath();
         HandleFireball();
@@ -87,7 +87,7 @@ public class FlyingDragonBossManager : MonoBehaviour
             rb.linearVelocity = dir * 3f;
         }
 
-        Debug.Log("🔥 Boss bắn Fireball!");
+        Debug.Log("Boss bắn Fireball!");
     }
 
     void HandleFireBreath()
@@ -96,20 +96,40 @@ public class FlyingDragonBossManager : MonoBehaviour
         if (breathTimer >= fireBreathCooldown)
         {
             breathTimer = 0f;
-            StartCoroutine(UseFireBreath());
+            isUsingBreath = true;
+            animator.SetTrigger("TriggerBreath"); // Gọi animation
         }
     }
 
-    IEnumerator UseFireBreath()
+    // ✅ GỌI từ animation event
+    public void TriggerFireBreathEffect()
     {
+        Debug.Log("🔥 Animation event gọi TriggerFireBreathEffect()");
+        StartCoroutine(UseFireBreath());
+    }
+
+    private IEnumerator UseFireBreath()
+    {
+        Debug.Log("🔥 Coroutine UseFireBreath bắt đầu");
         isUsingBreath = true;
 
-        animator.SetTrigger("TriggerBreath");
-        yield return new WaitForSeconds(0.5f); // delay đúng khung animation
+        yield return new WaitForSeconds(0.5f); // chờ animation há miệng
 
         if (fireBreathEffectPrefab && fireBreathSpawnPoint)
         {
-            GameObject breath = Instantiate(fireBreathEffectPrefab, fireBreathSpawnPoint.position, fireBreathSpawnPoint.rotation, transform);
+            GameObject breath = Instantiate(
+                fireBreathEffectPrefab,
+                fireBreathSpawnPoint.position,
+                fireBreathSpawnPoint.rotation
+            );
+
+            var follow = breath.GetComponent<FollowSpawnPoint>();
+            if (follow != null)
+            {
+                follow.target = fireBreathSpawnPoint;
+            }
+
+
             Destroy(breath, fireBreathDuration);
         }
 
@@ -120,7 +140,7 @@ public class FlyingDragonBossManager : MonoBehaviour
     public void SetPlayerInRange(bool inZone)
     {
         isPlayerInZone = inZone;
-        Debug.Log("📍 Player trong vùng: " + inZone);
+        Debug.Log("Player trong vùng: " + inZone);
 
         if (inZone)
         {
@@ -128,6 +148,7 @@ public class FlyingDragonBossManager : MonoBehaviour
             {
                 StopCoroutine(returnToSleepCoroutine);
                 returnToSleepCoroutine = null;
+                Debug.Log("Đã hủy coroutine ngủ vì Player quay lại vùng.");
             }
 
             if (!hasTakenOff)
@@ -135,18 +156,22 @@ public class FlyingDragonBossManager : MonoBehaviour
                 animator.SetTrigger("TriggerTakeOff");
                 Invoke(nameof(EnableCombat), 3f);
                 hasTakenOff = true;
-                Debug.Log("🚀 Boss TakeOff");
+                Debug.Log("Boss bắt đầu combat");
             }
         }
         else
         {
-            returnToSleepCoroutine = StartCoroutine(ReturnToSleepAfterDelay(5f));
+            if (returnToSleepCoroutine == null)
+            {
+                returnToSleepCoroutine = StartCoroutine(ReturnToSleepAfterDelay(5f));
+                Debug.Log("Bắt đầu đếm để trở về trạng thái ngủ.");
+            }
         }
     }
 
     void EnableCombat()
     {
-        Debug.Log("✅ Boss sẵn sàng chiến đấu.");
+        Debug.Log("Boss sẵn sàng chiến đấu.");
     }
 
     IEnumerator ReturnToSleepAfterDelay(float delay)
@@ -155,7 +180,7 @@ public class FlyingDragonBossManager : MonoBehaviour
 
         if (!isPlayerInZone && hasTakenOff)
         {
-            Debug.Log("😴 Boss trở lại Sleep vì Player đã rời vùng.");
+            Debug.Log("Boss trở lại Sleep vì Player đã rời vùng.");
 
             hasTakenOff = false;
             isUsingBreath = false;
@@ -182,13 +207,4 @@ public class FlyingDragonBossManager : MonoBehaviour
             SetPlayerInRange(false);
         }
     }
-    public void SpawnFireBreathEffect()
-    {
-        if (fireBreathEffectPrefab && fireBreathSpawnPoint)
-        {
-            GameObject breath = Instantiate(fireBreathEffectPrefab, fireBreathSpawnPoint.position, fireBreathSpawnPoint.rotation, transform);
-            Destroy(breath, fireBreathDuration);
-        }
-    }
-
 }

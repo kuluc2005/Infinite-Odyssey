@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2386159082878823986}
   - component: {fileID: 3663384007926096974}
   - component: {fileID: 6568436494814525082}
-  - component: {fileID: -3572511507622867717}
+  - component: {fileID: 6323427673015763035}
   m_Layer: 0
   m_Name: FX_Fire_06
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2386159083210497887}
@@ -4877,7 +4877,7 @@ CapsuleCollider:
   m_Height: 10.961451
   m_Direction: 1
   m_Center: {x: 5.3091393, y: 0.2354393, z: 0.10949135}
---- !u!114 &-3572511507622867717
+--- !u!114 &6323427673015763035
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4886,11 +4886,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2386159082878823987}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5d3836fac405bf4eba791ddb924c49a, type: 3}
+  m_Script: {fileID: 11500000, guid: 963dfe3a307881f40a10f86e82f90a6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sweepSpeed: 2
-  sweepDistance: 4
+  target: {fileID: 0}
 --- !u!1 &2386159083210497856
 GameObject:
   m_ObjectHideFlags: 0
