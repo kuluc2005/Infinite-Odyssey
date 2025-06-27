@@ -802,7 +802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 6
   _isDead: 1
   _currentHealth: 100
   isImmortal: 0
@@ -1156,7 +1156,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: QuestManager, Assembly-CSharp
-        m_MethodName: EnemyKilled
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

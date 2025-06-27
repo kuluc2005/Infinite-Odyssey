@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Vietnamese (Vietnam) (vi-VN)
   m_GUID: 7d6730d78e3f7704dbedb0012aa55780
   m_SerializeEntries:
+  - m_GUID: 466308a420944f144b2e3ee0c3e0aa4e
+    m_Address: NPC Level 2_vi-VN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-vi-VN
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb0994049c1c68441954ed8820067237
     m_Address: NPCLines_vi-VN
     m_ReadOnly: 1

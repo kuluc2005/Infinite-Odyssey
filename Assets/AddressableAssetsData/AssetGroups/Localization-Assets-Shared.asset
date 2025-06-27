@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Localization-Assets-Shared
   m_GUID: 3322003b818115b4197bf4e781d5bedf
   m_SerializeEntries:
+  - m_GUID: ac439325098b9a94da92dab185eb9c9d
+    m_Address: Assets/Luan/Localization/NPC Level 2 Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e4677a00fa0eae144aefa4ec715e87d4
     m_Address: Assets/Luan/Localization/NPCLines Shared Data.asset
     m_ReadOnly: 1

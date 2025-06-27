@@ -4,11 +4,10 @@ using System.Linq;
 
 public class QuestNPC : MonoBehaviour
 {
-    [Header("Thông tin nhiệm vụ")]
     public QuestData questData;
 
-    [Tooltip("ID của item yêu cầu trong ItemListData (ví dụ: 13 cho Map)")]
-    public int requiredItemID = 13;
+    [Tooltip("ID vật phẩm cần để hoàn thành nhiệm vụ")]
+    public string requiredItemID = "14";
 
     private bool playerInRange = false;
     private vItemManager playerInventory;
@@ -17,62 +16,71 @@ public class QuestNPC : MonoBehaviour
     {
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
-            if (questData == null || QuestManager.instance == null) return;
-
-            // 1. Nhận nhiệm vụ nếu chưa nhận
             if (!QuestManager.instance.IsQuestActive(questData.questID))
             {
+                // Nhận nhiệm vụ lần đầu
                 QuestManager.instance.StartQuest(questData);
-                Debug.Log($"[NPC] ✅ Đã nhận nhiệm vụ: {questData.questName}");
+                Debug.Log("[NPC] Đã nhận nhiệm vụ từ NPC.");
             }
-            // 2. Nếu đang làm và chưa hoàn thành
             else if (!QuestManager.instance.IsQuestCompleted(questData.questID))
             {
-                if (HasItemInInventory())
+                if (HasEnoughItems())
                 {
-                    //RemoveItemFromInventory();
-                    QuestManager.instance.UpdateQuestObjective(ObjectiveType.CollectItem, requiredItemID.ToString(), 1);
-                    Debug.Log($"[NPC] ✅ Đã giao item ID {requiredItemID} và cập nhật nhiệm vụ.");
-                }
-                // ✅ Cập nhật UI
-                QuestUI ui = FindObjectOfType<QuestUI>();
-                if (ui != null)
-                {
-                    ui.ShowSuccess(); // hoặc ui.UpdateQuestText();
+                    //RemoveRequiredItems();
+                    QuestManager.instance.UpdateQuestObjective(ObjectiveType.CollectItem, requiredItemID, GetItemCount());
+                    Debug.Log("[NPC] ✅ Đã giao đủ vật phẩm nhiệm vụ.");
                 }
                 else
                 {
-                    Debug.LogWarning($"[NPC] ❌ Không tìm thấy item ID {requiredItemID} trong túi.");
+                    Debug.Log("[NPC] ❌ Chưa đủ vật phẩm. Cần thêm " + GetRequiredAmount() + " đồng vàng.");
                 }
             }
-            // 3. Nếu đã hoàn thành rồi
             else
             {
-                Debug.Log("[NPC] ✅ Nhiệm vụ đã hoàn thành trước đó.");
+                Debug.Log("[NPC] Nhiệm vụ đã hoàn thành trước đó.");
             }
         }
     }
 
-    // Kiểm tra có item trong inventory không
-    bool HasItemInInventory()
+    bool HasEnoughItems()
     {
-        if (playerInventory == null) return false;
-
-        return playerInventory.items.Any(item => item != null && item.id == requiredItemID && item.amount > 0);
+        return GetItemCount() >= GetRequiredAmount();
     }
 
-    // Xóa 1 item khỏi inventory
-    //void RemoveItemFromInventory()
+    int GetItemCount()
+    {
+        if (playerInventory == null) return 0;
+
+        var item = playerInventory.items.FirstOrDefault(i => i != null && i.id.ToString() == requiredItemID);
+        return item != null ? item.amount : 0;
+    }
+
+    int GetRequiredAmount()
+    {
+        var obj = questData.objectives.FirstOrDefault(o => o.type == ObjectiveType.CollectItem && o.targetID == requiredItemID);
+        return obj != null ? obj.requiredAmount : 1;
+    }
+
+    //void RemoveRequiredItems()
     //{
-    //    var item = playerInventory.items.FirstOrDefault(i => i != null && i.id == requiredItemID);
-    //    if (item != null)
+    //    if (playerInventory == null) return;
+
+    //    var item = playerInventory.items.FirstOrDefault(i => i != null && i.id.ToString() == requiredItemID);
+    //    int removeAmount = GetRequiredAmount();
+
+    //    if (item != null && item.amount >= removeAmount)
     //    {
-    //        playerInventory.RemoveItem(item, 1);
-    //        Debug.Log($"[NPC] Đã xóa 1 item ID {requiredItemID} khỏi túi.");
+    //        for (int i = 0; i < removeAmount; i++)
+    //        {
+    //            playerInventory.RemoveItem(item, true); // xóa từng item 1
+    //        }
+
+    //        Debug.Log($"[NPC] Đã xóa {removeAmount} vật phẩm ID {requiredItemID} khỏi túi.");
     //    }
     //}
 
-    private void OnTriggerEnter(Collider other)
+
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -81,7 +89,7 @@ public class QuestNPC : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {

@@ -782,7 +782,7 @@ MonoBehaviour:
   destroyAfterUse: 1
   canBeEquipped: 0
   canBeUsed: 1
-  canBeDroped: 0
+  canBeDroped: 1
   canBeDestroyed: 1
   EnableAnim: LowBack
   DisableAnim: LowBack
