@@ -15,6 +15,12 @@ public class FlyingDragonBossManager : MonoBehaviour
     public float fireBreathDuration = 3f;
     public float fireBreathCooldown = 15f;
 
+    [Header("🔥 Fire Zone Settings")]
+    public GameObject fireZonePrefab;
+    public LayerMask groundLayer;
+    public float fireSpawnInterval = 0.5f;
+
+
     private Animator animator;
     private vHealthController health;
     private Transform player;
@@ -101,16 +107,16 @@ public class FlyingDragonBossManager : MonoBehaviour
         }
     }
 
-    // ✅ GỌI từ animation event
+    // GỌI từ animation event
     public void TriggerFireBreathEffect()
     {
-        Debug.Log("🔥 Animation event gọi TriggerFireBreathEffect()");
+        Debug.Log("Animation event gọi TriggerFireBreathEffect()");
         StartCoroutine(UseFireBreath());
     }
 
     private IEnumerator UseFireBreath()
     {
-        Debug.Log("🔥 Coroutine UseFireBreath bắt đầu");
+        Debug.Log("Coroutine UseFireBreath bắt đầu");
         isUsingBreath = true;
 
         yield return new WaitForSeconds(0.5f); // chờ animation há miệng
@@ -131,6 +137,23 @@ public class FlyingDragonBossManager : MonoBehaviour
 
 
             Destroy(breath, fireBreathDuration);
+
+            // Trong suốt thời gian khè lửa, raycast liên tục xuống đất để spawn fire zone
+            float elapsed = 0f;
+            while (elapsed < fireBreathDuration)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(fireBreathSpawnPoint.position, Vector3.down, out hit, 10f, groundLayer))
+                {
+                    Vector3 spawnPos = hit.point + transform.forward * 7f;
+                    Instantiate(fireZonePrefab, spawnPos, Quaternion.identity);
+                }
+
+                yield return new WaitForSeconds(fireSpawnInterval);
+                elapsed += fireSpawnInterval;
+            }
+
+            isUsingBreath = false;
         }
 
         yield return new WaitForSeconds(fireBreathDuration);
