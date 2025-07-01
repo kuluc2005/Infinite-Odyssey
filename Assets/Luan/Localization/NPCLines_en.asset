@@ -19,47 +19,52 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 364369477632
-    m_Localized: '"You have come... The chaotic waves of lost souls have heralded
-      the arrival of a brave traveler. You seek me, do you?"'
+    m_Localized: 'Blind Monk: "You have come... The chaotic waves of lost souls have
+      heralded the arrival of a brave traveler. You seek me, have you not?"'
     m_Metadata:
       m_Items: []
   - m_Id: 1861639536640
-    m_Localized: '"Greetings, Master. Yes, I have heard of your wisdom. I am on a
-      journey to find my family, and it is said that you may have a clue."'
+    m_Localized: 'You: "Greetings, Master. Yes, I have heard of your wisdom. I am
+      on a journey to find my family, and it is said that you may have a clue."'
     m_Metadata:
       m_Items: []
   - m_Id: 2160303341568
-    m_Localized: '"Family... A thread of fate binds you to this journey. The Curse
-      of the wicked has torn space and time apart, scattering not only lands but
-      also souls. Searching in the chaos is a hopeless task."'
+    m_Localized: 'Blind Monk: "If you want to know about the clue, help me find two
+      gold coins in this forest. Can you do it?"'
     m_Metadata:
       m_Items: []
   - m_Id: 2575438774272
-    m_Localized: '"I have fought with hideous monsters so I know this path is not
-      easy at all. I am ready to face any challenge."'
+    m_Localized: "Blind Monk: \u201CThis is still not enough.\u201D"
     m_Metadata:
       m_Items: []
   - m_Id: 3540762034176
-    m_Localized: '"Brave, but sometimes bravery alone is not enough. You carry an
-      item... a tooth. It may help you on the road ahead, but remember, true strength
-      comes from understanding and adaptability."'
+    m_Localized: "Blind Monk: \u201CYou did very well.\u201D"
     m_Metadata:
       m_Items: []
   - m_Id: 3926466035712
-    m_Localized: '"Thank you, sir. So, my family... where are they?"'
+    m_Localized: 'You: "I am ready to face any challenge."'
     m_Metadata:
       m_Items: []
   - m_Id: 4390326697984
-    m_Localized: '"They are in another world, this piece of map... it''s not just
-      a guide, it''s part of a larger whole. Go look for it in the Desert world."'
+    m_Localized: 'Blind Monk: "Brave, but sometimes bravery alone is not enough.
+      I will give you a small piece of a map. It may help you on the road ahead,
+      but remember, true strength comes from understanding and adaptability."'
     m_Metadata:
       m_Items: []
   - m_Id: 5665600634880
-    m_Localized: '"Thank you, sir."'
+    m_Localized: 'You: "Thank you, sir."'
     m_Metadata:
       m_Items: []
   - m_Id: 6139116584960
-    m_Localized: '"Good luck."'
+    m_Localized: 'Blind Monk: "They are in another world, this piece of map."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8099008402489344
+    m_Localized: 'You: "Thank you."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8099043974381568
+    m_Localized: 'Blind Monk: "Good luck."'
     m_Metadata:
       m_Items: []
   references:

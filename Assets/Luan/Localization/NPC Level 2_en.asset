@@ -17,7 +17,72 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: ac439325098b9a94da92dab185eb9c9d, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 204088344576
+    m_Localized: 'Desert Merchant: "You have come... A lone traveler in this torn
+      land. The waves of lost souls and the chaos of the land have heralded your
+      arrival. You seek something, do you not?"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4765955981312
+    m_Localized: 'You: "Greetings Merchant. Yes, I am on a journey to find my family.
+      I believe they are in another world, torn apart by these upheavals, and I have
+      heard that you may have a clue."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4807760609280
+    m_Localized: 'Desert Merchant: "If you want a clue about your family, help me
+      find something."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4918590898176
+    m_Localized: 'You: "What is it?"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4961364410368
+    m_Localized: 'Desert Merchant: "Those are the 3 ancient gold coins you made."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5017576472576
+    m_Localized: 'Desert Merchant: "I think it is not enough."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5079211769856
+    m_Localized: 'Desert Merchant: "You did well."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5244068888576
+    m_Localized: 'You: "I have experienced dangers and encounters on this path. I
+      know it is not easy, but I am willing to face any challenge to find them."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5292253052928
+    m_Localized: 'Desert Merchant: "Brave, but sometimes bravery alone is not enough.
+      You carry an item, this is... a small piece of a map. It will tell you about
+      the clue you need. Remember, true strength comes from understanding and adaptability."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5485224591360
+    m_Localized: 'You: "Thank you. So, my family... are they in another world?"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5542011273216
+    m_Localized: 'Desert Merchant: "They are in another world, a land deeply changed
+      by the Curse, but not this one. This piece of map... it is not only a guide,
+      but also a part of a larger whole, it is the door to the next challenge in
+      your quest. Try searching there."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5601419395072
+    m_Localized: 'You: "Thank you very much. I will go now."'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5617194172416
+    m_Localized: 'Desert Merchant: "Good luck, traveler. The gate is open. Remember,
+      every failed journey is not the end, but a new beginning, a chance to become
+      stronger. The journey is endless..."'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

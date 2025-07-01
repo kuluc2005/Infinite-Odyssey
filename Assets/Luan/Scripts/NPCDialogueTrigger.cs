@@ -258,11 +258,6 @@ public class NPCDialogueTrigger : MonoBehaviour
 
             hasGivenReward = true;
         }
-
-
-
-
-
         currentLine = 0;
         isTyping = false;
         typingCoroutine = null;
