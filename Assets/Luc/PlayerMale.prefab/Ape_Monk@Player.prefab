@@ -13399,7 +13399,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1266370944583079468}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19ce6a4d1f67f494f8e871355031f21c, type: 3}
   m_Name: 
@@ -13411,7 +13411,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 724313117c912804b936c9df9cbb57f5, type: 2}
   animationType: 0
   debugTextureName: 0
-  _volume: 1
+  _volume: 0.1
   _spawnParticle: 1
   _spawnStepMark: 1
   _useTriggerEnter: 1
