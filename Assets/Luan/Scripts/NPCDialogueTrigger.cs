@@ -244,20 +244,30 @@ public class NPCDialogueTrigger : MonoBehaviour
             Debug.Log("[NPC] Đã nhận nhiệm vụ sau hội thoại intro.");
         }
 
-        if (currentState == DialogueState.Complete && !hasGivenReward && isReadyToComplete)
+        if (currentState == DialogueState.Complete)
         {
-            RemoveRequiredItems();
+            if (!hasGivenReward)
+            {
+                RemoveRequiredItems();
+                QuestManager.instance.CompleteQuest(questData); // Chỉ hoàn thành 1 lần
+                hasGivenReward = true;
+            }
 
-            if (mapPieceReward && rewardSpawnPoint)
+            // Spawn bản đồ nếu chưa có trong scene
+            if (mapPieceReward && rewardSpawnPoint && GameObject.Find(mapPieceReward.name) == null)
+            {
                 Instantiate(mapPieceReward, rewardSpawnPoint.position, Quaternion.identity);
+                Debug.Log("[NPC] Spawn bản đồ nhiệm vụ.");
+            }
 
-            if (portalObject)
+            // Hiện cổng dịch chuyển nếu chưa kích hoạt
+            if (portalObject && !portalObject.activeSelf)
+            {
                 portalObject.SetActive(true);
-
-            QuestManager.instance.CompleteQuest(questData); // ✅ Chỉ gọi sau hội thoại hoàn thành
-
-            hasGivenReward = true;
+                Debug.Log("[NPC] Hiện cổng dịch chuyển.");
+            }
         }
+
         currentLine = 0;
         isTyping = false;
         typingCoroutine = null;
