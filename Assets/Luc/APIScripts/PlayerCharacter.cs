@@ -6,6 +6,8 @@ public class PlayerCharacter
     public int id;
     public int playerId;
     public string characterClass;
+    public string name;    
+    public int level;       
     public string createdAt;
 }
 

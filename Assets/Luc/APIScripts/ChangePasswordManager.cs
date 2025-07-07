@@ -7,7 +7,9 @@ using System.Collections;
 public class ChangePasswordManager : MonoBehaviour
 {
     public TMP_InputField emailInput;
+    public TMP_InputField oldPasswordInput;
     public TMP_InputField newPasswordInput;
+    public ErrorPanelManager errorPanelManager; // Kéo vào Inspector
     public TMP_Text statusText;
 
     public void OnChangePasswordButtonClick()
@@ -25,10 +27,11 @@ public class ChangePasswordManager : MonoBehaviour
     {
         string url = "http://localhost:5186/api/changepassword";
 
-        PlayerChangePassword data = new PlayerChangePassword
+        ChangePasswordRequest data = new ChangePasswordRequest
         {
             Email = emailInput.text,
-            PasswordHash = newPasswordInput.text
+            OldPassword = oldPasswordInput.text,     // <-- Lấy từ input mật khẩu cũ
+            NewPassword = newPasswordInput.text      // <-- Lấy từ input mật khẩu mới
         };
 
         string json = JsonUtility.ToJson(data);
@@ -43,27 +46,44 @@ public class ChangePasswordManager : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            if (request.downloadHandler.text.Contains("true"))
+            Debug.Log("Change password response: " + request.downloadHandler.text);
+            ChangePasswordResponse response = JsonUtility.FromJson<ChangePasswordResponse>(request.downloadHandler.text);
+
+            if (response != null && response.status)
             {
-                statusText.text = "✅ Đổi mật khẩu thành công!";
+                errorPanelManager.ShowError("Đổi mật khẩu thành công!",Color.green);
                 yield return new WaitForSeconds(1.5f);
+                errorPanelManager.HideError();
                 UnityEngine.SceneManagement.SceneManager.LoadScene("LoginScene");
             }
             else
             {
-                statusText.text = "❌ Thay đổi thất bại!";
+                errorPanelManager.ShowError("❌" + (response?.message ?? "Thay đổi thất bại!"), Color.red);
+                Debug.LogWarning("API báo lỗi đổi mật khẩu: " + response?.message);
             }
         }
         else
         {
-            statusText.text = "⚠️ Lỗi kết nối: " + request.error;
+            errorPanelManager.ShowError("Lỗi kết nối:" + request.error);
+            Debug.LogError("Lỗi kết nối API: " + request.error);
         }
     }
+
+    [System.Serializable]
+        public class ChangePasswordResponse
+    {
+        public bool status;
+        public string message;
+        public object data;
+    }
+
 }
 
 [System.Serializable]
-public class PlayerChangePassword
+public class ChangePasswordRequest
 {
     public string Email;
-    public string PasswordHash;
+    public string OldPassword;
+    public string NewPassword;
 }
+

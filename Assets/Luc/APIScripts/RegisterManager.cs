@@ -9,6 +9,7 @@ public class RegisterManager : MonoBehaviour
     public TMP_InputField emailInput;
     public TMP_InputField passwordInput;
     public TMP_InputField usernameInput;
+    public ErrorPanelManager errorPanelManager; // Kéo vào Inspector
     public TMP_Text statusText;
 
     public void OnRegisterButtonClick()
@@ -47,29 +48,41 @@ public class RegisterManager : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             Debug.Log("Phản hồi: " + request.downloadHandler.text);
+            RegisterResponse response = JsonUtility.FromJson<RegisterResponse>(request.downloadHandler.text);
 
-            if (request.downloadHandler.text.Contains("true"))
+            if (response != null && response.status)
             {
-                statusText.text = "Đăng ký thành công!";
+                // Thành công thì vẫn có thể dùng statusText hoặc popup riêng
+                errorPanelManager.ShowError("Đăng ký thành công!",Color.green);
                 yield return new WaitForSeconds(1.5f);
+                errorPanelManager.HideError();
                 UnityEngine.SceneManagement.SceneManager.LoadScene("LoginScene");
             }
             else
             {
-                statusText.text = "Đăng ký thất bại.";
+                errorPanelManager.ShowError("❌" + (response?.message ?? "Đăng ký thất bại."), Color.red);
             }
         }
         else
         {
-            statusText.text = "!!!!!Lỗi: " + request.error;
+            errorPanelManager.ShowError("!!!!!Lỗi: " + request.error);
+            Debug.LogError("Đăng ký lỗi: " + request.error);
         }
     }
-}
 
-[System.Serializable]
-public class PlayerRegister
-{
-    public string Email;
-    public string PasswordHash;
-    public string UserName;
+    [System.Serializable]
+    public class PlayerRegister
+    {
+        public string Email;
+        public string PasswordHash;
+        public string UserName;
+    }
+
+    [System.Serializable]
+    public class RegisterResponse
+    {
+        public bool status;
+        public string message;
+        //public object data; // Không dùng cũng được
+    }
 }

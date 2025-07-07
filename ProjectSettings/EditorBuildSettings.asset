@@ -15,8 +15,11 @@ EditorBuildSettings:
     path: Assets/Scenes/ChangePasswordScene.unity
     guid: fad556c2543079147b44e2a9390ee6b5
   - enabled: 1
-    path: Assets/Scenes/CharacterSelectScene.unity
+    path: Assets/Scenes/CreateCharacterScene.unity
     guid: 9cf8dd06212f7de4ca9e591f4f201778
+  - enabled: 1
+    path: Assets/Scenes/CharacterSelectScene.unity
+    guid: def508ef870c02a42868d42191d29424
   - enabled: 1
     path: Assets/Scenes/SceneMain.unity
     guid: 82f4ec3f15db8c648b1df0ff25f35d86
