@@ -6,11 +6,25 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/CharacterSelectScene.unity
+    path: Assets/Scenes/RegisterScene.unity
+    guid: 251136d03486bc345acbd76749ef128c
+  - enabled: 1
+    path: Assets/Scenes/LoginScene.unity
+    guid: 89c2cb3d3ea1764498d776733c424881
+  - enabled: 1
+    path: Assets/Scenes/ChangePasswordScene.unity
+    guid: fad556c2543079147b44e2a9390ee6b5
+  - enabled: 1
+    path: Assets/Scenes/CreateCharacterScene.unity
     guid: 9cf8dd06212f7de4ca9e591f4f201778
   - enabled: 1
+<<<<<<< HEAD
     path: Assets/Scenes/Menu.unity
     guid: 32d0d7be79976db44a11ecb48344d924
+=======
+    path: Assets/Scenes/CharacterSelectScene.unity
+    guid: def508ef870c02a42868d42191d29424
+>>>>>>> origin/devvv_Luc
   - enabled: 1
     path: Assets/Scenes/SceneMain.unity
     guid: 82f4ec3f15db8c648b1df0ff25f35d86
@@ -18,5 +32,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Main.unity
     guid: 925946cedd7cd594b999df70b4627a74
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: e5fd9f41f47cce244a32be49ed356513, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

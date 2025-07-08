@@ -103292,7 +103292,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 1.7333333
-    functionName: SpawnAttackEffect
+    functionName: SpawnSkill1
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
