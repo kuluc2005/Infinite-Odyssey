@@ -126,4 +126,12 @@ public class QuestManager : MonoBehaviour
     {
         return completedQuests.Any(q => q.questID == questID);
     }
+
+    public void ResetAllQuests()
+    {
+        activeQuests.Clear();
+        completedQuests.Clear();
+        Debug.Log("[QuestManager] Đã reset toàn bộ nhiệm vụ.");
+    }
+
 }

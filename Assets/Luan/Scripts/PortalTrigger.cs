@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Invector.vItemManager;
 
 public class PortalTrigger : MonoBehaviour
 {
     public string sceneToLoad = "Level2";
     public GameObject loadingScreen;
 
-    private bool isLoading = false; // Ngăn gọi lại nhiều lần
+    private bool isLoading = false;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -15,12 +16,22 @@ public class PortalTrigger : MonoBehaviour
         {
             isLoading = true;
 
-            // Vô hiệu hóa collider để tránh bị trigger lại
+            // ✅ Lưu Inventory
+            var player = other.gameObject;
+            var inv = player.GetComponent<vItemManager>();
+            if (inv != null)
+            {
+                InventorySaveManager.instance.SaveInventory(inv);
+            }
+
+            // ✅ Tắt trigger
             GetComponent<Collider>().enabled = false;
 
+            // ✅ Bật màn hình loading nếu có
             if (loadingScreen != null)
                 loadingScreen.SetActive(true);
 
+            // ✅ Bắt đầu load scene
             StartCoroutine(LoadSceneAsync());
         }
     }
@@ -32,21 +43,18 @@ public class PortalTrigger : MonoBehaviour
 
         float fakeProgress = 0f;
 
-        // Tăng từ 0% đến 90% đều đặn
         while (fakeProgress < 0.9f)
         {
-            fakeProgress += Time.deltaTime * 0.25f; // chỉnh tốc độ tại đây
+            fakeProgress += Time.deltaTime * 0.25f;
             LoadingUI.instance?.UpdateProgress(fakeProgress);
             yield return null;
         }
 
-        // Đợi thật sự scene load đến 90%
         while (asyncLoad.progress < 0.9f)
         {
             yield return null;
         }
 
-        // Tăng từ 90% → 100% nhẹ nhàng
         float finalProgress = 0.9f;
         while (finalProgress < 1f)
         {
@@ -55,8 +63,7 @@ public class PortalTrigger : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.5f); // delay một chút trước khi load scene
+        yield return new WaitForSeconds(0.5f);
         asyncLoad.allowSceneActivation = true;
     }
-
 }

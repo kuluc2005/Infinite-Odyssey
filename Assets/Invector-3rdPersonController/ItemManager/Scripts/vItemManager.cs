@@ -1841,6 +1841,11 @@ namespace Invector.vItemManager
             }
         }
 
+        internal void AddItem(vItem clonedItem)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
 
         public struct CollectedItemInfo

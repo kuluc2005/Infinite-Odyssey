@@ -2,11 +2,6 @@
     "itemReferences": [
         {
             "amount": 1,
-            "id": 14,
-            "attributes": []
-        },
-        {
-            "amount": 1,
             "id": 1,
             "attributes": [
                 {
@@ -36,78 +31,77 @@
             ]
         },
         {
-            "amount": 3,
-            "id": 2,
-            "attributes": [
-                {
-                    "name": 0,
-                    "value": 25,
-                    "isOpen": true,
-                    "isBool": false
-                }
-            ]
+            "amount": 1,
+            "id": 14,
+            "attributes": []
         },
         {
             "amount": 1,
-            "id": 3,
-            "attributes": [
-                {
-                    "name": 2,
-                    "value": 25,
-                    "isOpen": false,
-                    "isBool": false
-                },
-                {
-                    "name": 3,
-                    "value": 15,
-                    "isOpen": false,
-                    "isBool": false
-                },
-                {
-                    "name": 4,
-                    "value": 85,
-                    "isOpen": false,
-                    "isBool": false
-                },
-                {
-                    "name": 5,
-                    "value": 60,
-                    "isOpen": false,
-                    "isBool": false
-                }
-            ]
+            "id": 14,
+            "attributes": []
         },
         {
             "amount": 1,
-            "id": 6,
-            "attributes": [
-                {
-                    "name": 3,
-                    "value": 0,
-                    "isOpen": false,
-                    "isBool": false
-                },
-                {
-                    "name": 4,
-                    "value": 80,
-                    "isOpen": false,
-                    "isBool": false
-                },
-                {
-                    "name": 5,
-                    "value": 90,
-                    "isOpen": false,
-                    "isBool": false
-                }
-            ]
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 14,
+            "attributes": []
+        },
+        {
+            "amount": 1,
+            "id": 13,
+            "attributes": []
         }
     ],
     "equipAreas": [
         {
             "slotsData": [
                 {
-                    "hasItem": true,
-                    "indexOfItem": 1
+                    "hasItem": false,
+                    "indexOfItem": 0
                 },
                 {
                     "hasItem": false,
@@ -118,7 +112,7 @@
                     "indexOfItem": 0
                 }
             ],
-            "indexOfSelectedSlot": 1
+            "indexOfSelectedSlot": 0
         },
         {
             "slotsData": [
@@ -140,8 +134,8 @@
         {
             "slotsData": [
                 {
-                    "hasItem": true,
-                    "indexOfItem": 2
+                    "hasItem": false,
+                    "indexOfItem": 0
                 },
                 {
                     "hasItem": false,

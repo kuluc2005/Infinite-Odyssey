@@ -12,14 +12,22 @@ public class QuestUI : MonoBehaviour
 
     void Start()
     {
-        // Nếu không chỉ định questID → lấy quest đang active đầu tiên (nếu có)
-        if (string.IsNullOrEmpty(questID) && QuestManager.instance != null && QuestManager.instance.activeQuests.Count > 0)
+        InvokeRepeating(nameof(CheckForNewQuest), 0.5f, 1.0f);
+    }
+
+    void CheckForNewQuest()
+    {
+        if (string.IsNullOrEmpty(questID) || !QuestManager.instance.activeQuests.ContainsKey(questID))
         {
-            questID = QuestManager.instance.activeQuests.First().Key;
+            if (QuestManager.instance.activeQuests.Count > 0)
+            {
+                questID = QuestManager.instance.activeQuests.First().Key;
+            }
         }
 
         UpdateQuestText();
     }
+
 
     public void UpdateQuestText()
     {
@@ -31,7 +39,7 @@ public class QuestUI : MonoBehaviour
 
         var quest = QuestManager.instance.GetActiveQuest(questID);
 
-        if (quest != null && !QuestManager.instance.IsQuestCompleted(questID))
+        if (quest != null && QuestManager.instance.IsQuestActive(questID))
         {
             // ✅ Hiển thị đơn giản, giống mẫu viết tay
             string progressText = $"<b>Nhiệm vụ:</b> {quest.questName}\n";
