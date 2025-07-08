@@ -284,7 +284,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e2840c0c33d02354c9043e980bbb2c68, type: 2}
+  m_Motion: {fileID: 7400000, guid: 63f37c1ff27418b4f9eb6c40dea014fe, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -14235,7 +14235,7 @@ AnimatorStateMachine:
     m_Position: {x: -450, y: -90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6796683286002909405}
-    m_Position: {x: -450, y: 30, z: 0}
+    m_Position: {x: -460, y: 30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2255705255368827919}
     m_Position: {x: -440, y: 120, z: 0}
@@ -34803,12 +34803,6 @@ AnimatorStateMachine:
   - first: {fileID: 1107964730024747042}
     second:
     - {fileID: 1109025621482636618}
-  - first: {fileID: 6275954197518142570}
-    second:
-    - {fileID: 4971469594778624932}
-  - first: {fileID: -378068903317287752}
-    second:
-    - {fileID: 1819417089307877721}
   - first: {fileID: 1107352502706023130}
     second:
     - {fileID: 1109515306538650046}
@@ -34827,9 +34821,15 @@ AnimatorStateMachine:
   - first: {fileID: 3469873124468870993}
     second:
     - {fileID: -5741667466855460528}
+  - first: {fileID: 6275954197518142570}
+    second:
+    - {fileID: 4971469594778624932}
   - first: {fileID: -1175972000340694910}
     second:
     - {fileID: 3136380440010475883}
+  - first: {fileID: -378068903317287752}
+    second:
+    - {fileID: 1819417089307877721}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 84, y: -72, z: 0}
   m_EntryPosition: {x: 84, y: -36, z: 0}
@@ -39708,12 +39708,12 @@ AnimatorStateMachine:
   m_StateMachineTransitions:
   - first: {fileID: 0}
     second: []
-  - first: {fileID: -844501075886182514}
-    second:
-    - {fileID: -8314579133289816830}
   - first: {fileID: 6152468934069097874}
     second:
     - {fileID: -6000345812176981960}
+  - first: {fileID: -844501075886182514}
+    second:
+    - {fileID: -8314579133289816830}
   m_StateMachineBehaviours:
   - {fileID: -8849150923002502607}
   m_AnyStatePosition: {x: -528, y: 60, z: 0}
