@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.Networking;
 using Invector.vCharacterController;
 using System.Reflection;
 
@@ -39,11 +38,11 @@ public class PlayerStats : MonoBehaviour
         maxHP = profile.maxHP;
         maxMP = profile.maxMP;
 
-        currentHP = profile.hP <= 0 ? maxHP : profile.hP;
-        currentMP = profile.mP <= 0 ? maxMP : profile.mP;
+        currentHP = profile.HP <= 0 ? maxHP : profile.HP;
+        currentMP = profile.MP <= 0 ? maxMP : profile.MP;
 
-        profile.hP = currentHP;
-        profile.mP = currentMP;
+        profile.HP = currentHP;
+        profile.MP = currentMP;
 
         var controller = GetComponent<vThirdPersonController>();
         if (controller != null)
@@ -70,6 +69,8 @@ public class PlayerStats : MonoBehaviour
         {
             LevelUp();
         }
+        // Nếu muốn sync exp lên server, bạn cũng dùng PlayerPositionManager ở đây!
+        // SyncExp();
     }
 
     private void LevelUp()
@@ -83,19 +84,29 @@ public class PlayerStats : MonoBehaviour
         currentHP = maxHP;
         currentMP = maxMP;
 
-        var profile = ProfileManager.CurrentProfile;
-        profile.level = level;
-        profile.maxHP = maxHP;
-        profile.maxMP = maxMP;
-        profile.hP = currentHP;
-        profile.mP = currentMP;
-
-        StartCoroutine(UpdateProfile(profile));
-
         var controller = GetComponent<vThirdPersonController>();
         if (controller != null)
         {
             ForceUpdateStatsToInvector(controller, maxHP, maxMP, currentHP, currentMP, debugFields: true);
+        }
+
+        // --- CHỈ DÙNG PlayerPositionManager ĐỂ UPDATE PROFILE ---
+        var ppm = GetComponent<PlayerPositionManager>();
+        if (ppm != null)
+        {
+            ppm.UpdateProfile(profile =>
+            {
+                profile.level = level;
+                profile.maxHP = maxHP;
+                profile.maxMP = maxMP;
+                profile.HP = currentHP;
+                profile.MP = currentMP;
+                // KHÔNG động vào profile.currentCheckpoint!
+            });
+        }
+        else
+        {
+            Debug.LogError("PlayerPositionManager chưa được gắn vào player!");
         }
     }
 
@@ -143,26 +154,6 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    IEnumerator UpdateProfile(PlayerProfile profile)
-    {
-        string url = "http://localhost:5186/api/update-profile";
-        string json = JsonUtility.ToJson(profile);
-        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
-
-        UnityWebRequest request = new UnityWebRequest(url, "PUT");
-        request.uploadHandler = new UploadHandlerRaw(body);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            Debug.Log("Profile cập nhật thành công!");
-        }
-        else
-        {
-            Debug.LogError("Lỗi cập nhật profile: " + request.error);
-        }
-    }
+    // --- XÓA toàn bộ hàm UpdateProfile thủ công kiểu cũ ---
+    // KHÔNG còn IEnumerator UpdateProfile(PlayerProfile profile) nữa!
 }

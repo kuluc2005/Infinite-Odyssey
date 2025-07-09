@@ -11073,6 +11073,7 @@ GameObject:
   - component: {fileID: 2320896161792188813}
   - component: {fileID: -5715322949155667556}
   - component: {fileID: 3900122201374935682}
+  - component: {fileID: -2982198054138640665}
   m_Layer: 8
   m_Name: Buffterfly@Player
   m_TagString: Player
@@ -12430,6 +12431,18 @@ MonoBehaviour:
   skill2VFXSpawnPoint: {fileID: 6638277969665754182}
   skill1Cooldown: 2
   skill2Cooldown: 5
+--- !u!114 &-2982198054138640665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026103951123677101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 254193839a28c1343abf88cdd565a854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1035499065628696381
 GameObject:
   m_ObjectHideFlags: 0
