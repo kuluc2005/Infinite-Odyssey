@@ -87,7 +87,7 @@ public class InventorySaveManager : MonoBehaviour
                 newItem.amount = data.amount;
 
                 // ✅ Thêm vào inventory
-                itemManager.AddItem(newItem);
+                //itemManager.AddItem(newItem);
 
                 // ✅ Nếu là vũ khí hoặc trang bị → tự động equip lại
                 //if (newItem.type.ToString() == "Weapon" || newItem.type.ToString() == "Equipment")

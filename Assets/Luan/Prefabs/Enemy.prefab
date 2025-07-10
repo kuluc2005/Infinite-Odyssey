@@ -802,7 +802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 6
+  selectedToolbar: 3
   _isDead: 1
   _currentHealth: 100
   isImmortal: 0
@@ -905,10 +905,10 @@ MonoBehaviour:
   firstAttackDelay: 0
   minTimeToAttack: 1
   maxTimeToAttack: 3
-  maxAttackCount: 5
+  maxAttackCount: 30
   randomAttackCount: 1
-  chanceToRoll: 0.1
-  chanceToBlockInStrafe: 0.1
+  chanceToRoll: 0
+  chanceToBlockInStrafe: 0
   chanceToBlockAttack: 0
   raiseShield: 4
   lowerShield: 2

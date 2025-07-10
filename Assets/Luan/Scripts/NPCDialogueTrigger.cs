@@ -9,7 +9,9 @@ using Invector.vCharacterController;
 using Invector.vCharacterController.vActions;
 using Invector.vItemManager;
 using System.Linq;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
+
 
 public class NPCDialogueTrigger : MonoBehaviour
 {
