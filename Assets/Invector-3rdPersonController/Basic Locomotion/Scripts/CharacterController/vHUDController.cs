@@ -9,6 +9,8 @@ namespace Invector.vCharacterController
 
         #region Health/Stamina Variables
         [Header("Health/Stamina")]
+        public Slider bonusHealthSlider; // 🔥 Thêm dòng này
+        public int baseHealth = 200; // Giá trị cố định cho thanh máu chính
         public Slider healthSlider;
         public float healthSliderMaxValueSmooth = 10f;
         public float healthSliderValueSmooth = 10;
@@ -153,16 +155,24 @@ namespace Invector.vCharacterController
 
         void UpdateSliders(vThirdPersonController cc)
         {
-            if (healthSlider != null)
+            // ----------- XỬ LÝ HEALTH -----------
+            if (healthSlider != null && bonusHealthSlider != null)
             {
-                if (cc.maxHealth != healthSlider.maxValue)
-                {
-                    healthSlider.maxValue = Mathf.Lerp(healthSlider.maxValue, cc.maxHealth, healthSliderMaxValueSmooth * Time.fixedDeltaTime);
-                    healthSlider.onValueChanged.Invoke(healthSlider.value);
-                }
-                healthSlider.value = Mathf.Lerp(healthSlider.value, cc.currentHealth, healthSliderValueSmooth * Time.fixedDeltaTime);
+                // Gán giới hạn cố định
+                healthSlider.maxValue = baseHealth;
+                bonusHealthSlider.maxValue = baseHealth;
+
+                // Tính giá trị hiện tại
+                int currentHealth = Mathf.RoundToInt(cc.currentHealth);
+                int displayHealth = Mathf.Clamp(currentHealth, 0, baseHealth); // Phần máu chính
+                int bonusHealth = Mathf.Clamp(currentHealth - baseHealth, 0, baseHealth); // Phần máu bonus
+
+                // Cập nhật giá trị với Lerp mượt
+                healthSlider.value = Mathf.Lerp(healthSlider.value, displayHealth, healthSliderValueSmooth * Time.fixedDeltaTime);
+                bonusHealthSlider.value = Mathf.Lerp(bonusHealthSlider.value, bonusHealth, healthSliderValueSmooth * Time.fixedDeltaTime);
             }
-            if (staminaSlider)
+            // ----------- XỬ LÝ STAMINA -----------
+            if (staminaSlider != null)
             {
                 if (cc.maxStamina != staminaSlider.maxValue)
                 {
