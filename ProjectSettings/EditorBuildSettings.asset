@@ -23,6 +23,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SceneMain.unity
     guid: 82f4ec3f15db8c648b1df0ff25f35d86
+  - enabled: 1
+    path: Assets/Luan/Scene/Level 1.unity
+    guid: 4485d8936976c3446972e50f86a0ceb6
+  - enabled: 1
+    path: Assets/Luan/Scene/Level 2.unity
+    guid: 4ae7708ca68730847873f457602667ce
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: e5fd9f41f47cce244a32be49ed356513, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
