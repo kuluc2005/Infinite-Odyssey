@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: b1d6ed70f1185a847afd7a56e153d84b
   m_currentHash:
     serializedVersion: 2
-    Hash: 2f43513966d134dd9be26622d1dcf4b0
+    Hash: ed925f2fd040148a9f0ce23a32de158b
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -59,6 +59,12 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: 9efdf1aa4c924bd4399d359a659c1cb4, type: 2}
+  - {fileID: 11400000, guid: 8df5675e7250c9e47b6d21469ff9be9a, type: 2}
+  - {fileID: 11400000, guid: 5147871cc55f94c4e9e4a9bb3353b727, type: 2}
+  - {fileID: 11400000, guid: f4751a3a7be343c4dbcf8bab01a478d4, type: 2}
+  - {fileID: 11400000, guid: 7cf8465e171ae2b4ea4b5444bfc87136, type: 2}
+  - {fileID: 11400000, guid: 82caea7b24969f84aa3917ed9a5c8040, type: 2}
   - {fileID: 11400000, guid: b06328905e9a7d44aa31bc1d8d4420c3, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
@@ -99,6 +105,9 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - Locale-vi-VN
+    - Locale-en
+    - Locale-vi
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: cc6a94dd782950c4f9ebad82e510d6c7, type: 2}
