@@ -48,26 +48,38 @@ public class PlayerSpawner : MonoBehaviour
 
             // ==== Lấy vị trí lưu ====
             Vector3 spawnPos = spawnPoint.position;
-            Debug.Log("currentCheckpoint nhận về từ API: " + wrapper.data.currentCheckpoint); // <--- THÊM DÒNG NÀY
-            if (!string.IsNullOrEmpty(wrapper.data.currentCheckpoint) && wrapper.data.currentCheckpoint.Contains(","))
+
+            if (!string.IsNullOrEmpty(wrapper.data.currentCheckpoint) && wrapper.data.currentCheckpoint.Contains(":"))
             {
-                string[] values = wrapper.data.currentCheckpoint.Split(',');
-                if (values.Length == 3)
+                string[] parts = wrapper.data.currentCheckpoint.Split(':');
+                if (parts.Length == 2)
                 {
-                    float x = float.Parse(values[0]);
-                    float y = float.Parse(values[1]);
-                    float z = float.Parse(values[2]);
-                    spawnPos = new Vector3(x, y, z);
-                    Debug.Log($"Đã lấy lại vị trí lưu: {spawnPos}"); // <--- THÊM DÒNG NÀY
-                }
-                else
-                {
-                    Debug.LogWarning("currentCheckpoint sai định dạng: " + wrapper.data.currentCheckpoint); // <--- THÊM DÒNG NÀY
+                    string savedScene = parts[0];
+                    string coords = parts[1];
+
+                    // Kiểm tra scene
+                    string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                    if (savedScene == currentScene && coords.Contains(","))
+                    {
+                        string[] values = coords.Split(',');
+                        if (values.Length == 3)
+                        {
+                            float x = float.Parse(values[0]);
+                            float y = float.Parse(values[1]);
+                            float z = float.Parse(values[2]);
+                            spawnPos = new Vector3(x, y, z);
+                            Debug.Log($"Đã lấy lại vị trí lưu: {spawnPos}");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Vị trí lưu thuộc scene khác, sẽ spawn tại spawnPoint!");
+                    }
                 }
             }
             else
             {
-                Debug.Log("Không có vị trí lưu, sẽ spawn tại spawnPoint"); // <--- THÊM DÒNG NÀY
+                Debug.Log("Không có vị trí lưu hợp lệ, sẽ spawn tại spawnPoint");
             }
 
             // ==== Spawn tại vị trí đã lưu (hoặc spawnPoint nếu chưa có dữ liệu) ====
@@ -75,7 +87,13 @@ public class PlayerSpawner : MonoBehaviour
             PlayerPositionManager ppm = player.GetComponent<PlayerPositionManager>();
             if (ppm != null)
             {
-                ppm.characterId = wrapper.data.characterId; // Thêm biến này trong PlayerPositionManager
+                ppm.characterId = wrapper.data.characterId; 
+            }
+
+            InventorySyncManager ism = player.GetComponent<InventorySyncManager>();
+            if (ism != null)
+            {
+                ism.characterId = wrapper.data.characterId;
             }
         }
         else

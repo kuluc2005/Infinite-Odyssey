@@ -37,6 +37,9 @@ public class PlayerStats : MonoBehaviour
         level = profile.level;
         maxHP = profile.maxHP;
         maxMP = profile.maxMP;
+        currentExp = profile.exp;
+
+        expToLevelUp = 100 + (level - 1) * 50;
 
         currentHP = profile.HP <= 0 ? maxHP : profile.HP;
         currentMP = profile.MP <= 0 ? maxMP : profile.MP;
@@ -59,8 +62,15 @@ public class PlayerStats : MonoBehaviour
             vHUDController.instance.staminaSlider.value = currentMP;
         }
 
+        var expUIManager = GetComponentInChildren<ExpUIManager>();
+        if (expUIManager != null)
+        {
+            expUIManager.UpdateUI();
+        }
+
         Debug.Log($"HP/MP đã gán: {currentHP}/{maxHP} - {currentMP}/{maxMP}");
     }
+
 
     public void AddExp(int amount)
     {
@@ -69,9 +79,29 @@ public class PlayerStats : MonoBehaviour
         {
             LevelUp();
         }
-        // Nếu muốn sync exp lên server, bạn cũng dùng PlayerPositionManager ở đây!
-        // SyncExp();
+        else
+        {
+            // Update UI
+            var expUIManager = GetComponentInChildren<ExpUIManager>();
+            if (expUIManager != null)
+                expUIManager.UpdateUI();
+
+            // Gửi exp mới nhất lên server
+            SyncExp();
+        }
     }
+    private void SyncExp()
+    {
+        var ppm = GetComponent<PlayerPositionManager>();
+        if (ppm != null)
+        {
+            ppm.UpdateProfile(profile =>
+            {
+                profile.exp = currentExp;
+            });
+        }
+    }
+
 
     private void LevelUp()
     {
@@ -101,9 +131,16 @@ public class PlayerStats : MonoBehaviour
                 profile.maxMP = maxMP;
                 profile.HP = currentHP;
                 profile.MP = currentMP;
+
+                profile.exp = currentExp;
+                //profile.expToLevelUp = expToLevelUp;
                 // KHÔNG động vào profile.currentCheckpoint!
             });
         }
+        var expUIManager = GetComponentInChildren<ExpUIManager>();
+        if (expUIManager != null)
+            expUIManager.UpdateUI();
+
         else
         {
             Debug.LogError("PlayerPositionManager chưa được gắn vào player!");
@@ -154,6 +191,4 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    // --- XÓA toàn bộ hàm UpdateProfile thủ công kiểu cũ ---
-    // KHÔNG còn IEnumerator UpdateProfile(PlayerProfile profile) nữa!
 }

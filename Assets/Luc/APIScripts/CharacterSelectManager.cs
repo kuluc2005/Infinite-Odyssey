@@ -74,10 +74,30 @@ public void OnCharacterSelected(PlayerCharacter character)
         // Đợi load profile xong
         yield return StartCoroutine(ProfileManager.LoadProfileStatic(characterId));
         if (ProfileManager.CurrentProfile != null)
-            UnityEngine.SceneManagement.SceneManager.LoadScene("SceneMain"); 
+        {
+            // Lấy scene cuối cùng của nhân vật này
+            string lastScene = ProfileManager.CurrentProfile.lastScene;
+
+            if (!string.IsNullOrEmpty(lastScene)
+                && lastScene != "LoginScene"
+                && lastScene != "CharacterSelectScene"
+                && lastScene != "CreateCharacterScene"
+                && lastScene != "ChangePasswordScene"
+                && lastScene != "RegisterScene")
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(lastScene);
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("SceneMain"); 
+            }
+        }
         else
+        {
             Debug.LogError("Không thể load profile cho nhân vật này!");
+        }
     }
+
 
 
     [System.Serializable]

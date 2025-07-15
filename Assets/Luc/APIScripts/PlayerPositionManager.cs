@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Linq;
 
 public class PlayerPositionManager : MonoBehaviour
 {
@@ -70,13 +71,21 @@ public class PlayerPositionManager : MonoBehaviour
     public void SavePlayerPosition()
     {
         Vector3 pos = transform.position;
-        Debug.Log("===> SavePlayerPosition gọi tại vị trí: " + pos);
+        string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+        // Chỉ lưu lastScene nếu đang ở scene chơi game thực sự!
+        string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene" };
+        bool isGameScene = !skipScenes.Contains(sceneName);
 
         UpdateProfile(profile =>
         {
-            profile.currentCheckpoint = $"{pos.x},{pos.y},{pos.z}";
+            profile.currentCheckpoint = $"{sceneName}:{pos.x},{pos.y},{pos.z}";
+            if (isGameScene)
+                profile.lastScene = sceneName;
         });
     }
+
+
 
 
     // --- Có thể gọi hàm này khi tăng level ---

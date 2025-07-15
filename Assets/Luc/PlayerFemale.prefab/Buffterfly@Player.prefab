@@ -9603,6 +9603,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f66a52c3c67ac0438fa54788c311abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bonusHealthSlider: {fileID: 0}
+  baseHealth: 200
   healthSlider: {fileID: 2574929826802064813}
   healthSliderMaxValueSmooth: 10
   healthSliderValueSmooth: 10
@@ -11074,6 +11076,7 @@ GameObject:
   - component: {fileID: -5715322949155667556}
   - component: {fileID: 3900122201374935682}
   - component: {fileID: -2982198054138640665}
+  - component: {fileID: 3665444379014806905}
   m_Layer: 8
   m_Name: Buffterfly@Player
   m_TagString: Player
@@ -12443,6 +12446,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254193839a28c1343abf88cdd565a854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterId: -1
+--- !u!114 &3665444379014806905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026103951123677101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee73292c5ad91d643b67eaab4368b950, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemManager: {fileID: 2320896161792188813}
+  characterId: 0
 --- !u!1 &1035499065628696381
 GameObject:
   m_ObjectHideFlags: 0
