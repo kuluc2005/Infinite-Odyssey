@@ -1272,9 +1272,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 882188487}
+      - m_Target: {fileID: 882188488}
         m_TargetAssemblyTypeName: LoginManager, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: GoToChangeScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1340,19 +1340,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 964763834130152480, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontColor.b
-      value: 0.6075471
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 964763834130152480, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontColor.g
-      value: 0.6075471
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 964763834130152480, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontColor.r
-      value: 0.6075471
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 964763834130152480, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4288387995
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 2127601197739876158, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -1384,19 +1384,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2397224159564395058, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontColor.b
-      value: 0.6226415
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2397224159564395058, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontColor.g
-      value: 0.6226415
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2397224159564395058, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontColor.r
-      value: 0.6226415
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2397224159564395058, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4288651167
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 3007106843510077439, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Type
