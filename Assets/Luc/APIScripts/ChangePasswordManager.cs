@@ -20,6 +20,9 @@ public class ChangePasswordManager : MonoBehaviour
     public void GoToLoginScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("LoginScene");
+    } public void GoToRegisterScene()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("RegisterScene");
     }
 
 

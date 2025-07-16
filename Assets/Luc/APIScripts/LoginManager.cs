@@ -19,6 +19,9 @@ public class LoginManager : MonoBehaviour
     public void GoToRegisterScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("RegisterScene");
+    }public void GoToChangeScene()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("ChangePasswordScene");
     }
 
     IEnumerator LoginCoroutine()

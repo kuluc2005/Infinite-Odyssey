@@ -18,7 +18,7 @@ public class PlayerSkillManager : MonoBehaviour
     [Header("Skill 3 Settings")]
     public GameObject skill3EffectPrefab;  // Prefab hiệu ứng Skill 3
     public float skill3Cooldown = 10f;
-    private float skill3CooldownTimer = 0;
+    public float skill3CooldownTimer = 0;
 
     // (Nếu muốn spawn hiệu ứng buff khi dùng Skill 2)
     public GameObject buffVFXPrefab;
