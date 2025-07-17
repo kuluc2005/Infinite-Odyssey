@@ -1,5 +1,87 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6981661230815265078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1adabc1ae49fd3c44a36cc9152ebb0f9, type: 3}
+  m_Name: Map Full
+  m_EditorClassIdentifier: 
+  id: 15
+  description: Item Description
+  type: 0
+  icon: {fileID: 21300000, guid: b792d883ec35c3848a393419286c9eb9, type: 3}
+  stackable: 1
+  createNewItem: 1
+  maxStack: 1
+  amount: 0
+  originalObject: {fileID: 0}
+  dropObject: {fileID: 0}
+  attributes: []
+  isInEquipArea: 0
+  isEquiped: 0
+  destroyAfterUse: 1
+  canBeEquipped: 1
+  canBeUsed: 1
+  canBeDroped: 1
+  canBeDestroyed: 1
+  EnableAnim: LowBack
+  DisableAnim: LowBack
+  enableDelayTime: 0.5
+  disableDelayTime: 0.5
+  customHandler: 
+  twoHandWeapon: 0
+  onDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &-1005415638491454417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1adabc1ae49fd3c44a36cc9152ebb0f9, type: 3}
+  m_Name: Staff
+  m_EditorClassIdentifier: 
+  id: 16
+  description: Magic-Staff
+  type: 1
+  icon: {fileID: 21300000, guid: 711d9e1db66d2334aa75bb3d48a326c5, type: 3}
+  stackable: 1
+  createNewItem: 1
+  maxStack: 1
+  amount: 0
+  originalObject: {fileID: 1000010725870802, guid: efc072bf3d171be42a0a602c9ca3c079, type: 3}
+  dropObject: {fileID: 1000010725870802, guid: efc072bf3d171be42a0a602c9ca3c079, type: 3}
+  attributes:
+  - name: 2
+    value: 200
+    isOpen: 0
+    isBool: 0
+  isInEquipArea: 0
+  isEquiped: 0
+  destroyAfterUse: 1
+  canBeEquipped: 1
+  canBeUsed: 1
+  canBeDroped: 1
+  canBeDestroyed: 1
+  EnableAnim: LowBack
+  DisableAnim: LowBack
+  enableDelayTime: 0.5
+  disableDelayTime: 0.5
+  customHandler: 
+  twoHandWeapon: 0
+  onDestroy:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26,13 +108,16 @@ MonoBehaviour:
   - {fileID: 11411124}
   - {fileID: 11437076}
   - {fileID: 11411708}
-  - {fileID: 2473669973433986992}
+  - {fileID: 2997328546321817158}
+  - {fileID: 4295735523900542224}
+  - {fileID: -6981661230815265078}
+  - {fileID: -1005415638491454417}
   - {fileID: 114043347838910644}
   inEdition: 0
-  itemsHidden: 1
+  itemsHidden: 0
 --- !u!114 &11411124
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -71,7 +156,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &11411708
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -110,7 +195,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &11437076
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -149,7 +234,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000010878405866
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -204,7 +289,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000011454979648
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -259,7 +344,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000011522160142
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -314,7 +399,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000012184096246
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -369,7 +454,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000012982302300
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -422,7 +507,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000013569560620
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -465,7 +550,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000013967465728
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -520,7 +605,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000013983157954
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -563,7 +648,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000014005472098
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -585,11 +670,11 @@ MonoBehaviour:
   dropObject: {fileID: 819158048279699071, guid: 0f25b0bc9b7934840b324072cedb3325, type: 3}
   attributes:
   - name: 2
-    value: 15
+    value: 25
     isOpen: 0
     isBool: 0
   - name: 3
-    value: 25
+    value: 15
     isOpen: 0
     isBool: 0
   - name: 4
@@ -618,7 +703,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114000014017037032
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -661,7 +746,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!114 &114043347838910644
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -714,9 +799,9 @@ MonoBehaviour:
   onDestroy:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2473669973433986992
+--- !u!114 &2997328546321817158
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -724,32 +809,67 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1adabc1ae49fd3c44a36cc9152ebb0f9, type: 3}
-  m_Name: Magic_Staff
+  m_Name: Map
   m_EditorClassIdentifier: 
   id: 13
-  description: Magic_Staff
-  type: 1
-  icon: {fileID: 21300000, guid: 711d9e1db66d2334aa75bb3d48a326c5, type: 3}
+  description: Item Description
+  type: 0
+  icon: {fileID: 21300000, guid: 3cac9f22c7e47374c99a7d9e13490316, type: 3}
   stackable: 1
   createNewItem: 1
   maxStack: 1
   amount: 0
-  originalObject: {fileID: 1000010725870802, guid: efc072bf3d171be42a0a602c9ca3c079, type: 3}
-  dropObject: {fileID: 1000010725870802, guid: efc072bf3d171be42a0a602c9ca3c079, type: 3}
-  attributes:
-  - name: 2
-    value: 25
-    isOpen: 0
-    isBool: 0
+  originalObject: {fileID: 0}
+  dropObject: {fileID: 0}
+  attributes: []
   isInEquipArea: 0
   isEquiped: 0
-  destroyAfterUse: 0
+  destroyAfterUse: 1
   canBeEquipped: 1
-  canBeUsed: 0
+  canBeUsed: 1
   canBeDroped: 1
   canBeDestroyed: 1
-  EnableAnim: HighBack
-  DisableAnim: HighBack
+  EnableAnim: LowBack
+  DisableAnim: LowBack
+  enableDelayTime: 0.5
+  disableDelayTime: 0.5
+  customHandler: 
+  twoHandWeapon: 0
+  onDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4295735523900542224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1adabc1ae49fd3c44a36cc9152ebb0f9, type: 3}
+  m_Name: Coin
+  m_EditorClassIdentifier: 
+  id: 14
+  description: Coin
+  type: 0
+  icon: {fileID: 21300000, guid: 6ab5a3ea27f130647b54ca5ee121436c, type: 3}
+  stackable: 1
+  createNewItem: 1
+  maxStack: 1
+  amount: 0
+  originalObject: {fileID: 0}
+  dropObject: {fileID: 0}
+  attributes: []
+  isInEquipArea: 0
+  isEquiped: 0
+  destroyAfterUse: 1
+  canBeEquipped: 0
+  canBeUsed: 1
+  canBeDroped: 1
+  canBeDestroyed: 1
+  EnableAnim: LowBack
+  DisableAnim: LowBack
   enableDelayTime: 0.5
   disableDelayTime: 0.5
   customHandler: 
