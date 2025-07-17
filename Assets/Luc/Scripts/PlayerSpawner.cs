@@ -1,10 +1,10 @@
-<<<<<<< HEAD
+
 ﻿using UnityEngine;
-=======
+
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
->>>>>>> origin/devvv_Luc
+
 
 public class PlayerSpawner : MonoBehaviour
 {
