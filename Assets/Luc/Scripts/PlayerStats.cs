@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.Networking;
 using Invector.vCharacterController;
 using System.Reflection;
 
@@ -38,12 +37,15 @@ public class PlayerStats : MonoBehaviour
         level = profile.level;
         maxHP = profile.maxHP;
         maxMP = profile.maxMP;
+        currentExp = profile.exp;
 
-        currentHP = profile.hP <= 0 ? maxHP : profile.hP;
-        currentMP = profile.mP <= 0 ? maxMP : profile.mP;
+        expToLevelUp = 100 + (level - 1) * 50;
 
-        profile.hP = currentHP;
-        profile.mP = currentMP;
+        currentHP = profile.HP <= 0 ? maxHP : profile.HP;
+        currentMP = profile.MP <= 0 ? maxMP : profile.MP;
+
+        profile.HP = currentHP;
+        profile.MP = currentMP;
 
         var controller = GetComponent<vThirdPersonController>();
         if (controller != null)
@@ -60,8 +62,15 @@ public class PlayerStats : MonoBehaviour
             vHUDController.instance.staminaSlider.value = currentMP;
         }
 
+        var expUIManager = GetComponentInChildren<ExpUIManager>();
+        if (expUIManager != null)
+        {
+            expUIManager.UpdateUI();
+        }
+
         Debug.Log($"HP/MP đã gán: {currentHP}/{maxHP} - {currentMP}/{maxMP}");
     }
+
 
     public void AddExp(int amount)
     {
@@ -70,7 +79,29 @@ public class PlayerStats : MonoBehaviour
         {
             LevelUp();
         }
+        else
+        {
+            // Update UI
+            var expUIManager = GetComponentInChildren<ExpUIManager>();
+            if (expUIManager != null)
+                expUIManager.UpdateUI();
+
+            // Gửi exp mới nhất lên server
+            SyncExp();
+        }
     }
+    private void SyncExp()
+    {
+        var ppm = GetComponent<PlayerPositionManager>();
+        if (ppm != null)
+        {
+            ppm.UpdateProfile(profile =>
+            {
+                profile.exp = currentExp;
+            });
+        }
+    }
+
 
     private void LevelUp()
     {
@@ -83,19 +114,36 @@ public class PlayerStats : MonoBehaviour
         currentHP = maxHP;
         currentMP = maxMP;
 
-        var profile = ProfileManager.CurrentProfile;
-        profile.level = level;
-        profile.maxHP = maxHP;
-        profile.maxMP = maxMP;
-        profile.hP = currentHP;
-        profile.mP = currentMP;
-
-        StartCoroutine(UpdateProfile(profile));
-
         var controller = GetComponent<vThirdPersonController>();
         if (controller != null)
         {
             ForceUpdateStatsToInvector(controller, maxHP, maxMP, currentHP, currentMP, debugFields: true);
+        }
+
+        // --- CHỈ DÙNG PlayerPositionManager ĐỂ UPDATE PROFILE ---
+        var ppm = GetComponent<PlayerPositionManager>();
+        if (ppm != null)
+        {
+            ppm.UpdateProfile(profile =>
+            {
+                profile.level = level;
+                profile.maxHP = maxHP;
+                profile.maxMP = maxMP;
+                profile.HP = currentHP;
+                profile.MP = currentMP;
+
+                profile.exp = currentExp;
+                //profile.expToLevelUp = expToLevelUp;
+                // KHÔNG động vào profile.currentCheckpoint!
+            });
+        }
+        var expUIManager = GetComponentInChildren<ExpUIManager>();
+        if (expUIManager != null)
+            expUIManager.UpdateUI();
+
+        else
+        {
+            Debug.LogError("PlayerPositionManager chưa được gắn vào player!");
         }
     }
 
@@ -143,26 +191,4 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    IEnumerator UpdateProfile(PlayerProfile profile)
-    {
-        string url = "http://localhost:5186/api/update-profile";
-        string json = JsonUtility.ToJson(profile);
-        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
-
-        UnityWebRequest request = new UnityWebRequest(url, "PUT");
-        request.uploadHandler = new UploadHandlerRaw(body);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            Debug.Log("Profile cập nhật thành công!");
-        }
-        else
-        {
-            Debug.LogError("Lỗi cập nhật profile: " + request.error);
-        }
-    }
 }

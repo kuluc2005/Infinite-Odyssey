@@ -78,8 +78,8 @@ public class PlayerProfile
     public int level;
     public int exp;
     public int coins;
-    public int hP;
-    public int mP;
+    public int HP;
+    public int MP;
     public string currentCheckpoint;
     public string inventoryJSON;
     public string skillTreeJSON;

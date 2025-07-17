@@ -40,8 +40,8 @@ public class CharacterSelector : MonoBehaviour
 
         profile.maxHP = 100; 
         profile.maxMP = 200;
-        profile.hP = profile.maxHP;
-        profile.mP = profile.maxMP;
+        profile.HP = profile.maxHP;
+        profile.MP = profile.maxMP;
 
         string json = JsonUtility.ToJson(profile);
         Debug.Log("📤 JSON gửi lên API: " + json);

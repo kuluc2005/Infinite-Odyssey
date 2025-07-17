@@ -20,6 +20,9 @@ public class RegisterManager : MonoBehaviour
     public void GoToLoginScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("LoginScene");
+    }public void GoToChangeScene()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("ChangePasswordScene");
     }
 
 
