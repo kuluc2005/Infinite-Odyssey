@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 public class LoginManager : MonoBehaviour
 {
@@ -13,13 +14,36 @@ public class LoginManager : MonoBehaviour
 
     public void OnLoginButtonClick()
     {
+        string email = emailInput.text.Trim();
+        string password = passwordInput.text.Trim();
+
+        if (string.IsNullOrEmpty(email))
+        {
+            errorPanelManager.ShowError("Email không được để trống", Color.red);
+            return;
+        }
+
+        if (!IsValidEmail(email))
+        {
+            errorPanelManager.ShowError("Email không hợp lệ", Color.red);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(password))
+        {
+            errorPanelManager.ShowError("Mật khẩu không được để trống", Color.red);
+            return;
+        }
+
         StartCoroutine(LoginCoroutine());
     }
 
     public void GoToRegisterScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("RegisterScene");
-    }public void GoToChangeScene()
+    }
+
+    public void GoToChangeScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("ChangePasswordScene");
     }
@@ -44,10 +68,12 @@ public class LoginManager : MonoBehaviour
 
         yield return request.SendWebRequest();
 
+        string responseText = request.downloadHandler.text;
+
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("Login response: " + request.downloadHandler.text);
-            LoginResponse loginResult = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
+            Debug.Log("Login response: " + responseText);
+            LoginResponse loginResult = JsonUtility.FromJson<LoginResponse>(responseText);
 
             if (loginResult != null && loginResult.status && loginResult.data != null)
             {
@@ -69,12 +95,10 @@ public class LoginManager : MonoBehaviour
                     CharacterListWrapper wrapper = JsonUtility.FromJson<CharacterListWrapper>(charListRequest.downloadHandler.text);
                     if (wrapper.data != null && wrapper.data.Length > 0)
                     {
-                        // Có nhân vật rồi, chuyển vào scene chọn lại nhân vật cũ
                         UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelectScene");
                     }
                     else
                     {
-                        // Chưa có nhân vật nào, chuyển vào scene tạo nhân vật mới
                         UnityEngine.SceneManagement.SceneManager.LoadScene("CreateCharacterScene");
                     }
                 }
@@ -82,29 +106,38 @@ public class LoginManager : MonoBehaviour
                 {
                     errorPanelManager.ShowError("Không thể lấy danh sách nhân vật!\n" + charListRequest.error, Color.red);
                 }
-                // ----- KẾT THÚC ĐOẠN BỔ SUNG -----
             }
             else
             {
-                errorPanelManager.ShowError("❌ " + (loginResult?.message ?? "Đăng nhập thất bại."), Color.red);
+                errorPanelManager.ShowError("" + (loginResult?.message ?? "Đăng nhập thất bại."), Color.red);
                 Debug.LogError("Đăng nhập API trả về lỗi: " + loginResult?.message);
             }
         }
         else
         {
-            errorPanelManager.ShowError("Lỗi: " + request.error);
-            Debug.LogError("Lỗi kết nối: " + request.error);
+            if (responseText.StartsWith("\"") && responseText.EndsWith("\""))
+                responseText = responseText.Trim('"');
+
+            if (string.IsNullOrEmpty(responseText))
+                responseText = $"Lỗi máy chủ ({request.responseCode})";
+
+            errorPanelManager.ShowError("" + responseText, Color.red);
+            Debug.LogError("Lỗi kết nối: " + responseText);
         }
     }
 
-    // ------- class cho response lấy danh sách nhân vật -------
+    private bool IsValidEmail(string email)
+    {
+        string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        return Regex.IsMatch(email, pattern);
+    }
+
     [System.Serializable]
     public class CharacterListWrapper
     {
         public bool status;
         public PlayerCharacter[] data;
     }
-    // ---------------------------------------------------------------
 
     [System.Serializable]
     public class PlayerLogin

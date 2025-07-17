@@ -828,7 +828,6 @@ GameObject:
   - component: {fileID: 1074954067745861057}
   - component: {fileID: 5275476568620670561}
   - component: {fileID: 6610657456016527165}
-  - component: {fileID: 1037395670829624678}
   - component: {fileID: 8571707265041036627}
   m_Layer: 9
   m_Name: Red
@@ -950,6 +949,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2097152
   fireSpawnInterval: 1
+  wakeUpDistance: 10
 --- !u!114 &6610657456016527165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -988,27 +988,6 @@ MonoBehaviour:
   onResetHealth:
     m_PersistentCalls:
       m_Calls: []
---- !u!135 &1037395670829624678
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2428504523705235515}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 30
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8571707265041036627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,19 +1001,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyName: DragonTerrorBringer
-  maxHealth: 100
-  useEnemyData: 1
-  enemyData: {fileID: 11400000, guid: 3f4b4b3a0893d8c49af9ad41cbe23ed7, type: 2}
   detectionRadius: 12
   enemyHUD: {fileID: 0}
   healthSlider: {fileID: 0}
   subHealthSlider: {fileID: 0}
-  hudInstance: {fileID: 0}
   nameText: {fileID: 0}
   damageDisplayText: {fileID: 0}
   smoothDamageDelay: 1.5
   damageCounterTimer: 1.5
   showDamageType: 1
+  hudInstance: {fileID: 0}
 --- !u!1 &2443880603600655821
 GameObject:
   m_ObjectHideFlags: 0

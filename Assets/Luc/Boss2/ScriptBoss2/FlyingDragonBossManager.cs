@@ -20,12 +20,13 @@ public class FlyingDragonBossManager : MonoBehaviour
     public LayerMask groundLayer;
     public float fireSpawnInterval = 0.5f;
 
+    [Header("Wake Zone Settings")]
+    public float wakeUpDistance = 10f;
 
     private Animator animator;
     private vHealthController health;
     private Transform player;
     private bool isDead = false;
-
 
     private float fireballTimer = 0f;
     private float breathTimer = 0f;
@@ -53,15 +54,27 @@ public class FlyingDragonBossManager : MonoBehaviour
             return;
         }
 
-        if (!hasTakenOff || health == null || !isPlayerInZone)
-            return;
-
         if (player == null)
         {
             var found = GameObject.FindGameObjectWithTag("Player");
             if (found) player = found.transform;
             else return;
         }
+
+        // Kiểm tra vùng đánh thức 
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (!isPlayerInZone && distanceToPlayer <= wakeUpDistance)
+        {
+            SetPlayerInRange(true);
+        }
+        else if (isPlayerInZone && distanceToPlayer > wakeUpDistance)
+        {
+            SetPlayerInRange(false);
+        }
+
+        if (!hasTakenOff || health == null || !isPlayerInZone)
+            return;
 
         RotateTowardsPlayer();
 
@@ -71,20 +84,15 @@ public class FlyingDragonBossManager : MonoBehaviour
         HandleFireball();
     }
 
-
     void HandleDeath()
     {
         isDead = true;
         isUsingBreath = false;
-        animator.SetTrigger("IsDead"); 
-
+        animator.SetTrigger("IsDead");
         Debug.Log("Boss đã chết!");
-
         GetComponent<Collider>().enabled = false;
-
         Destroy(gameObject, 3f);
     }
-
 
     void RotateTowardsPlayer()
     {
@@ -126,11 +134,10 @@ public class FlyingDragonBossManager : MonoBehaviour
         {
             breathTimer = 0f;
             isUsingBreath = true;
-            animator.SetTrigger("TriggerBreath"); // Gọi animation
+            animator.SetTrigger("TriggerBreath"); 
         }
     }
 
-    // GỌI từ animation event
     public void TriggerFireBreathEffect()
     {
         Debug.Log("Animation event gọi TriggerFireBreathEffect()");
@@ -142,26 +149,16 @@ public class FlyingDragonBossManager : MonoBehaviour
         Debug.Log("Coroutine UseFireBreath bắt đầu");
         isUsingBreath = true;
 
-        yield return new WaitForSeconds(0.5f); // chờ animation há miệng
+        yield return new WaitForSeconds(0.5f); 
 
         if (fireBreathEffectPrefab && fireBreathSpawnPoint)
         {
-            GameObject breath = Instantiate(
-                fireBreathEffectPrefab,
-                fireBreathSpawnPoint.position,
-                fireBreathSpawnPoint.rotation
-            );
-
+            GameObject breath = Instantiate(fireBreathEffectPrefab, fireBreathSpawnPoint.position, fireBreathSpawnPoint.rotation);
             var follow = breath.GetComponent<FollowSpawnPoint>();
-            if (follow != null)
-            {
-                follow.target = fireBreathSpawnPoint;
-            }
-
+            if (follow != null) follow.target = fireBreathSpawnPoint;
 
             Destroy(breath, fireBreathDuration);
 
-            // Trong suốt thời gian khè lửa, raycast liên tục xuống đất để spawn fire zone
             float elapsed = 0f;
             while (elapsed < fireBreathDuration)
             {
@@ -238,19 +235,10 @@ public class FlyingDragonBossManager : MonoBehaviour
         returnToSleepCoroutine = null;
     }
 
-    void OnTriggerEnter(Collider other)
+    // OnDrawGizmos  debug vùng đánh thức trong Scene
+    void OnDrawGizmosSelected()
     {
-        if (other.CompareTag("Player"))
-        {
-            SetPlayerInRange(true);
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            SetPlayerInRange(false);
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, wakeUpDistance);
     }
 }
