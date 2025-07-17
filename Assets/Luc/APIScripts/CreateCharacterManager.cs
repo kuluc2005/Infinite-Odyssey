@@ -12,25 +12,52 @@ public class CreateCharacterManager : MonoBehaviour
     public GameObject nameInputPanel;         // Panel chứa input & nút, ẩn đi lúc đầu
     public Button createCharacterButton;      // Nút xác nhận tạo nhân vật
     public ErrorPanelManager errorPanelManager;
+    public Button closeNameInputButton;  //Nút tắt panel đặt tên
+
+    public Image avatarImage;                   // UI ảnh đại diện nhân vật
+    public Sprite avatarMaleSprite;             // Ảnh nam
+    public Sprite avatarFemaleSprite;           // Ảnh nữ
+
+
 
     private string selectedClass = null;
 
     void Start()
     {
-        nameInputPanel.SetActive(false); // Ẩn panel nhập tên lúc đầu
+        nameInputPanel.SetActive(false);
 
         maleButton.onClick.AddListener(() => ShowNameInput("Male"));
         femaleButton.onClick.AddListener(() => ShowNameInput("Female"));
+        createCharacterButton.onClick.AddListener(OnCreateCharacter);
 
-        createCharacterButton.onClick.AddListener(OnCreateCharacter); // Sự kiện xác nhận
+        closeNameInputButton.onClick.AddListener(() => nameInputPanel.SetActive(false));
     }
+
 
     void ShowNameInput(string characterClass)
     {
         selectedClass = characterClass;
         nameInput.text = "";
-        nameInputPanel.SetActive(true);    // Hiện ô nhập tên & nút
+        nameInputPanel.SetActive(true);
+
+        // Gán avatar tương ứng từ Resources nếu có
+        if (avatarImage != null)
+        {
+            // Ưu tiên load từ Resources/ImageL/[characterClass]
+            Sprite loadedAvatar = Resources.Load<Sprite>("ImageL/" + characterClass);
+
+            if (loadedAvatar != null)
+            {
+                avatarImage.sprite = loadedAvatar;
+            }
+            else
+            {
+                avatarImage.sprite = (characterClass == "Male") ? avatarMaleSprite : avatarFemaleSprite;
+            }
+        }
     }
+
+
 
     void OnCreateCharacter()
     {

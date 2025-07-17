@@ -17,17 +17,20 @@ public class CharacterCardUI : MonoBehaviour
     {
         this.character = character;
         this.onSelect = onSelect;
-        Debug.Log("Name nhân vật từ API: " + character.name);
 
         nameText.text = character.name ?? (character.characterClass + " #" + character.id);
         levelText.text = "Level: " + (character.level > 0 ? character.level.ToString() : "1");
 
-        // Cách gán avatar theo class
-        avatarImage.sprite = (character.characterClass == "Male")
-            ? Resources.Load<Sprite>("AvatarMale")
-            : Resources.Load<Sprite>("AvatarFemale");
+        string spriteName = "Avatar" + character.characterClass;
+        Sprite avatarSprite = Resources.Load<Sprite>("ImageL/" + spriteName);
+
+        if (avatarSprite != null)
+            avatarImage.sprite = avatarSprite;
+        else
+            Debug.LogWarning("Không tìm thấy avatar: Resources/ImageL/" + spriteName);
 
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(() => onSelect?.Invoke(character));
     }
+
 }
