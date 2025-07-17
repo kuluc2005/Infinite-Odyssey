@@ -15,7 +15,7 @@ public class FlyingDragonBossManager : MonoBehaviour
     public float fireBreathDuration = 3f;
     public float fireBreathCooldown = 15f;
 
-    [Header("🔥 Fire Zone Settings")]
+    [Header("Fire Zone Settings")]
     public GameObject fireZonePrefab;
     public LayerMask groundLayer;
     public float fireSpawnInterval = 0.5f;
@@ -24,6 +24,8 @@ public class FlyingDragonBossManager : MonoBehaviour
     private Animator animator;
     private vHealthController health;
     private Transform player;
+    private bool isDead = false;
+
 
     private float fireballTimer = 0f;
     private float breathTimer = 0f;
@@ -45,7 +47,13 @@ public class FlyingDragonBossManager : MonoBehaviour
 
     void Update()
     {
-        if (!hasTakenOff || health == null || health.currentHealth <= 0 || !isPlayerInZone)
+        if (!isDead && health != null && health.currentHealth <= 0)
+        {
+            HandleDeath();
+            return;
+        }
+
+        if (!hasTakenOff || health == null || !isPlayerInZone)
             return;
 
         if (player == null)
@@ -62,6 +70,21 @@ public class FlyingDragonBossManager : MonoBehaviour
         HandleFireBreath();
         HandleFireball();
     }
+
+
+    void HandleDeath()
+    {
+        isDead = true;
+        isUsingBreath = false;
+        animator.SetTrigger("IsDead"); 
+
+        Debug.Log("Boss đã chết!");
+
+        GetComponent<Collider>().enabled = false;
+
+        Destroy(gameObject, 3f);
+    }
+
 
     void RotateTowardsPlayer()
     {

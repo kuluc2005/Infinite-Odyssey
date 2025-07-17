@@ -61,7 +61,11 @@ MonoBehaviour:
   amount: 0
   originalObject: {fileID: 1000010725870802, guid: efc072bf3d171be42a0a602c9ca3c079, type: 3}
   dropObject: {fileID: 1000010725870802, guid: efc072bf3d171be42a0a602c9ca3c079, type: 3}
-  attributes: []
+  attributes:
+  - name: 2
+    value: 200
+    isOpen: 0
+    isBool: 0
   isInEquipArea: 0
   isEquiped: 0
   destroyAfterUse: 1

@@ -5158,7 +5158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3846773610316275953
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5176,7 +5176,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 270.10013, y: 177}
+  m_AnchoredPosition: {x: 270.10013, y: -150}
   m_SizeDelta: {x: -539.8657, y: -383.4086}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2487481440761682676
@@ -13087,7 +13087,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 6
+  selectedToolbar: 8
   _isDead: 1
   _currentHealth: 100
   isImmortal: 0
@@ -13292,7 +13292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
+  openCloseWindow: 1
   selectedToolbar: 2
   unlockCursorOnStart: 0
   showCursorOnStart: 0
@@ -13709,7 +13709,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
+  openCloseWindow: 1
   selectedToolbar: 0
   defaultDamageEffects: []
   customDamageEffects: []
@@ -14355,7 +14355,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1266370944583079468}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0162e837d67a8904ba231d63215b347d, type: 3}
   m_Name: 
