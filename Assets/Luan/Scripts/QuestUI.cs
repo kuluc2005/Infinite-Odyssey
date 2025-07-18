@@ -7,59 +7,46 @@ public class QuestUI : MonoBehaviour
     [Header("UI hiện nhiệm vụ")]
     public TextMeshProUGUI questText;
 
-    [Tooltip("ID nhiệm vụ cần hiển thị (có thể để trống để tự lấy quest đầu tiên)")]
-    public string questID = "";
+    private string currentQuestID = "";
 
     void Start()
     {
-        InvokeRepeating(nameof(CheckForNewQuest), 0.5f, 1.0f);
+        InvokeRepeating(nameof(CheckAndUpdateQuestUI), 0.5f, 1.0f);
     }
 
-    void CheckForNewQuest()
+    void CheckAndUpdateQuestUI()
     {
-        if (string.IsNullOrEmpty(questID) || !QuestManager.instance.activeQuests.ContainsKey(questID))
+        if (QuestManager.instance == null || QuestManager.instance.activeQuests.Count == 0)
         {
-            if (QuestManager.instance.activeQuests.Count > 0)
-            {
-                questID = QuestManager.instance.activeQuests.First().Key;
-            }
-        }
-
-        UpdateQuestText();
-    }
-
-
-    public void UpdateQuestText()
-    {
-        if (QuestManager.instance == null || string.IsNullOrEmpty(questID))
-        {
-            questText.text = "Chưa có nhiệm vụ.";
+            questText.text = ""; // Không hiển thị gì nếu chưa có nhiệm vụ
             return;
         }
 
+        // Luôn lấy quest đầu tiên đang hoạt động
+        currentQuestID = QuestManager.instance.activeQuests.First().Key;
+
+        UpdateQuestText(currentQuestID);
+    }
+
+    void UpdateQuestText(string questID)
+    {
         var quest = QuestManager.instance.GetActiveQuest(questID);
 
-        if (quest != null && QuestManager.instance.IsQuestActive(questID))
+        if (quest != null)
         {
-            // ✅ Hiển thị đơn giản, giống mẫu viết tay
             string progressText = $"<b>Nhiệm vụ:</b> {quest.questName}\n";
             foreach (var obj in quest.objectives)
             {
-                progressText += $"{obj.currentAmount}/{obj.requiredAmount}";
+                progressText += $"- {obj.objectiveDescription}: {obj.currentAmount}/{obj.requiredAmount}\n";
             }
 
             questText.text = progressText;
         }
-        else if (QuestManager.instance.IsQuestCompleted(questID))
-        {
-            questText.text = "<b>Nhiệm vụ:</b> <color=green>Thành công!</color>";
-        }
         else
         {
-            questText.text = "Chưa nhận nhiệm vụ.";
+            questText.text = "";
         }
     }
-
 
     public void ShowSuccess()
     {

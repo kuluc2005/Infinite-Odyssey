@@ -1,5 +1,4 @@
 ﻿// ✅ NPCDialogueTrigger.cs - Hoàn chỉnh hệ thống hội thoại và nhiệm vụ thu thập vật phẩm (2 đồng vàng cổ)
-
 using UnityEngine;
 using TMPro;
 using UnityEngine.Localization.Settings;
@@ -20,8 +19,6 @@ public class NPCDialogueTrigger : MonoBehaviour
     public TextMeshProUGUI dialogueText;
     public GameObject continueButton;
     public GameObject skipButton;
-    public GameObject npcImage;
-    public GameObject playerImage;
 
     [Header("Quest & Dialogue Phases")]
     public QuestData questData;
@@ -74,6 +71,14 @@ public class NPCDialogueTrigger : MonoBehaviour
 
         if (playerAnimator)
             originalUseRootMotion = playerAnimator.applyRootMotion;
+        // 🔥 Gán các UI nếu chưa có
+        if (dialoguePanel == null && UIDialogueManager.Instance != null)
+        {
+            dialoguePanel = UIDialogueManager.Instance.dialoguePanel;
+            dialogueText = UIDialogueManager.Instance.dialogueText;
+            continueButton = UIDialogueManager.Instance.continueButton;
+            skipButton = UIDialogueManager.Instance.skipButton;
+        }
     }
 
     void Update()
@@ -94,10 +99,6 @@ public class NPCDialogueTrigger : MonoBehaviour
         dialoguePanel.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        npcImage.SetActive(true);
-        playerImage.SetActive(false);
-
         bool isActive = QuestManager.instance.IsQuestActive(questData.questID);
         bool isCompleted = QuestManager.instance.IsQuestCompleted(questData.questID);
 
@@ -169,8 +170,7 @@ public class NPCDialogueTrigger : MonoBehaviour
         {
             for (int i = 0; i < requiredAmount; i++)
                 //playerInventory.RemoveItem(item, true);
-
-            Debug.Log($"[NPC] Đã xóa {requiredAmount} vật phẩm ID {requiredItemID} sau khi hoàn thành nhiệm vụ.");
+                Debug.Log($"[NPC] Đã xóa {requiredAmount} vật phẩm ID {requiredItemID} sau khi hoàn thành nhiệm vụ.");
         }
     }
 
@@ -188,13 +188,9 @@ public class NPCDialogueTrigger : MonoBehaviour
             EndDialogue();
         }
     }
-
     IEnumerator LoadLocalizedLine(string key)
     {
         isTyping = true;
-
-        npcImage.SetActive(currentLine % 2 == 0);
-        playerImage.SetActive(currentLine % 2 != 0);
 
         var table = LocalizationSettings.StringDatabase;
         var localizedString = table.GetLocalizedStringAsync(localizedTableName, key);
@@ -215,14 +211,43 @@ public class NPCDialogueTrigger : MonoBehaviour
 
     public void SkipTyping()
     {
-        if (!isTyping || string.IsNullOrEmpty(currentFullText)) return;
-
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
 
-        dialogueText.text = currentFullText;
         isTyping = false;
+        typingCoroutine = null;
+
+        if (currentState == DialogueState.Intro || currentState == DialogueState.Complete)
+        {
+            EndDialogue(); //kết thúc đoạn hội thoại đang diễn ra
+        }
+        else
+        {
+            dialogueText.text = currentFullText;
+        }
     }
+
+    public void OnContinueClicked()
+    {
+        if (!isTalking) return;
+
+        if (isTyping)
+        {
+            // Nếu đang chạy từng chữ → hiển thị full luôn
+            if (typingCoroutine != null)
+                StopCoroutine(typingCoroutine);
+
+            dialogueText.text = currentFullText;
+            isTyping = false;
+            typingCoroutine = null;
+        }
+        else
+        {
+            // Nếu đã hiện xong câu → chuyển sang câu tiếp theo
+            NextLine();
+        }
+    }
+
 
     void NextLine()
     {
@@ -234,8 +259,6 @@ public class NPCDialogueTrigger : MonoBehaviour
     {
         isTalking = false;
         dialoguePanel.SetActive(false);
-        npcImage.SetActive(false);
-        playerImage.SetActive(false);
         UnlockControls();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
+[System.Serializable]
+public class QuestSaveData
+{
+    public List<string> completedQuestIDs = new List<string>();
+}
+
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager instance { get; private set; }
@@ -19,6 +25,7 @@ public class QuestManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadQuestProgress();
         }
     }
 
@@ -26,7 +33,6 @@ public class QuestManager : MonoBehaviour
     {
         if (quest == null || activeQuests.ContainsKey(quest.questID)) return;
 
-        // ✅ Reset tất cả progress trước khi bắt đầu
         foreach (var obj in quest.objectives)
         {
             obj.currentAmount = 0;
@@ -34,12 +40,7 @@ public class QuestManager : MonoBehaviour
 
         activeQuests.Add(quest.questID, quest);
         Debug.Log($"[QuestManager] Bắt đầu nhiệm vụ: {quest.questName}");
-
-        QuestUI ui = FindObjectOfType<QuestUI>();
-        if (ui != null)
-        {
-            ui.UpdateQuestText();
-        }
+        FindObjectOfType<QuestPanelToggle>()?.UpdateBadge();
     }
 
 
@@ -59,14 +60,6 @@ public class QuestManager : MonoBehaviour
                         Debug.Log($"[QuestManager] Mục tiêu hoàn thành: {obj.objectiveDescription}");
                         CheckQuestCompletion(quest);
                     }
-
-                    // Cập nhật UI sau khi mỗi cập nhật
-                    QuestUI ui = FindObjectOfType<QuestUI>();
-                    if (ui != null)
-                    {
-                        ui.UpdateQuestText();
-                    }
-
                     return;
                 }
             }
@@ -109,6 +102,16 @@ public class QuestManager : MonoBehaviour
 
         // Ghi log phần thưởng
         Debug.Log($"[QuestManager] Thưởng: {quest.goldReward} vàng, +{quest.healthIncreaseReward} HP, +{quest.damageIncreaseReward} sát thương.");
+
+        // ✅ Thêm dòng này cuối cùng
+        SaveQuestProgress();
+
+        // ✅ Nếu có nhiệm vụ tiếp theo thì mở luôn
+        if (quest.nextQuest != null)
+        {
+            Debug.Log("[QuestManager] Mở nhiệm vụ tiếp theo: " + quest.nextQuest.questName);
+            StartQuest(quest.nextQuest);
+        }
     }
 
     public QuestData GetActiveQuest(string questID)
@@ -132,6 +135,34 @@ public class QuestManager : MonoBehaviour
         activeQuests.Clear();
         completedQuests.Clear();
         Debug.Log("[QuestManager] Đã reset toàn bộ nhiệm vụ.");
+    }
+
+    public void SaveQuestProgress()
+    {
+        QuestSaveData data = new QuestSaveData();
+        data.completedQuestIDs = completedQuests.Select(q => q.questID).ToList();
+
+        string json = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString("QuestProgress", json);
+        PlayerPrefs.Save();
+        Debug.Log("[QuestManager] ✅ Đã lưu tiến trình nhiệm vụ.");
+    }
+    public void LoadQuestProgress()
+    {
+        if (PlayerPrefs.HasKey("QuestProgress"))
+        {
+            string json = PlayerPrefs.GetString("QuestProgress");
+            QuestSaveData data = JsonUtility.FromJson<QuestSaveData>(json);
+            completedQuests.Clear();
+            foreach (string id in data.completedQuestIDs)
+            {
+                QuestData quest = Resources.Load<QuestData>($"Quests/{id}");
+                if (quest != null)
+                    completedQuests.Add(quest);
+            }
+
+            Debug.Log("[QuestManager] ✅ Đã load lại tiến trình nhiệm vụ.");
+        }
     }
 
 }

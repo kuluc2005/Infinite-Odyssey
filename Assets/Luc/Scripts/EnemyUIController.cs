@@ -93,7 +93,7 @@ public class EnemyUIController : MonoBehaviour
     {
         if (player == null || healthControl == null) return;
 
-        Debug.Log($"Health: {healthControl.currentHealth}");
+        //Debug.Log($"Health: {healthControl.currentHealth}");
 
         if (isUIActive && healthSlider != null)
         {
