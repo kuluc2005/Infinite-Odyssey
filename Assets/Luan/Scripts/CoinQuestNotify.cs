@@ -6,5 +6,6 @@ public class CoinQuestNotify : MonoBehaviour
     public void NotifyQuest()
     {
         QuestManager.instance?.UpdateQuestObjective(ObjectiveType.CollectItem, itemID, 1);
+        FindFirstObjectByType<InventorySyncManager>()?.SaveInventoryToServer();
     }
 }

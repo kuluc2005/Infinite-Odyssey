@@ -37,6 +37,12 @@ public class InventorySyncManager : MonoBehaviour
         if (characterId <= 0)
             characterId = PlayerPrefs.GetInt("CharacterId", -1);
 
+        // --- Đăng ký auto-save inventory khi có thay đổi ---
+        itemManager.onAddItem.RemoveAllListeners();
+        itemManager.onUseItem.RemoveAllListeners();
+        itemManager.onAddItem.AddListener((item) => SaveInventoryToServer());
+        itemManager.onUseItem.AddListener((item) => SaveInventoryToServer());
+
         Debug.Log("InventorySyncManager Start: characterId = " + characterId);
 
         if (characterId <= 0)
@@ -46,7 +52,6 @@ public class InventorySyncManager : MonoBehaviour
         }
 
         StartCoroutine(LoadInventoryFromServer());
-        // XÓA các dòng addListener tại đây!
     }
 
 
@@ -88,7 +93,7 @@ public class InventorySyncManager : MonoBehaviour
     public void SaveInventoryToServer()
     {
         string inventoryJson = SerializeInventoryToJson();
-        Debug.Log("Will save inventoryJSON: " + inventoryJson);
+        Debug.Log("<color=yellow>[DEBUG][Inventory] SaveInventoryToServer ĐƯỢC GỌI!</color> " + inventoryJson);
         StartCoroutine(UpdateProfileInventoryCoroutine(inventoryJson));
     }
 
@@ -137,31 +142,19 @@ public class InventorySyncManager : MonoBehaviour
         string raw = getReq.downloadHandler.text;
         Debug.Log("Profile API response: " + raw);
 
-        // Deserialize JSON như cũ...
         PlayerProfileWrapper profileWrapper = JsonUtility.FromJson<PlayerProfileWrapper>(raw);
         var profile = profileWrapper.data;
 
         if (!string.IsNullOrEmpty(profile.inventoryJSON) && profile.inventoryJSON != "[]")
         {
-            // === Gỡ các sự kiện auto-save trước khi deserialize ===
-            itemManager.onAddItem.RemoveAllListeners();
-            itemManager.onUseItem.RemoveAllListeners();
-
+            // Không cần đăng ký event lại ở đây!
             DeserializeInventoryFromJson(profile.inventoryJSON);
             Debug.Log("Đã tải inventory từ server.");
-
-            // === Chỉ đăng ký lại sự kiện auto-save SAU khi inventory đã load xong! ===
-            itemManager.onAddItem.AddListener((item) => SaveInventoryToServer());
-            itemManager.onUseItem.AddListener((item) => SaveInventoryToServer());
         }
         else
         {
             Debug.Log("Không có inventory để load.");
-            // Vẫn nên đăng ký event ở đây
-            itemManager.onAddItem.RemoveAllListeners();
-            itemManager.onUseItem.RemoveAllListeners();
-            itemManager.onAddItem.AddListener((item) => SaveInventoryToServer());
-            itemManager.onUseItem.AddListener((item) => SaveInventoryToServer());
         }
     }
+
 }
