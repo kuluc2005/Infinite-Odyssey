@@ -40,6 +40,12 @@ public class QuestUI : MonoBehaviour
                 progressText += $"- {obj.objectiveDescription}: {obj.currentAmount}/{obj.requiredAmount}\n";
             }
 
+            bool readyToComplete = quest.objectives.All(obj => obj.currentAmount >= obj.requiredAmount);
+            if (readyToComplete)
+            {
+                progressText += "<color=yellow>Đã đủ vật phẩm! Hãy đến trả nhiệm vụ cho NPC.</color>\n";
+            }
+
             questText.text = progressText;
         }
         else
@@ -47,6 +53,7 @@ public class QuestUI : MonoBehaviour
             questText.text = "";
         }
     }
+
 
     public void ShowSuccess()
     {

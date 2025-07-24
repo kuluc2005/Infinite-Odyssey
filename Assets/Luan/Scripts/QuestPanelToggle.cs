@@ -21,7 +21,7 @@ public class QuestPanelToggle : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.N))
         {
-            ToggleQuestPanel(); // 👉 bấm N thì cũng như click vào icon
+            ToggleQuestPanel(); 
         }
     }
 
@@ -55,7 +55,7 @@ public class QuestPanelToggle : MonoBehaviour
     public void UpdateBadge()
     {
         int questCount = QuestManager.instance != null ? QuestManager.instance.activeQuests.Count : 0;
-
+        Debug.Log($"[QuestPanelToggle] Cập nhật badge, questCount: {questCount}");
         if (questCount > 0)
         {
             badge.SetActive(true);

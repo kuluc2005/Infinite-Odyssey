@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ef25a45707a4742a6dd06dd774531d, type: 3}
+  m_Name: Quest_1_CollectCoin
+  m_EditorClassIdentifier: 
+  questID: Quest_1_CollectCoin
+  questName: "Thu th\u1EADp \u0111\u1ED3ng ti\u1EC1n c\u1ED5"
+  questDescription: "Thu th\u1EADp \u0111\u1ED3ng v\xE0ng \u1EDF c\xE1c con y\xEAu
+    qu\xE1i"
+  targetTag: 
+  targetKillCount: 0
+  objectives:
+  - objectiveDescription: "Nh\u1EB7t 2 \u0111\u1ED3ng v\xE0ng c\u1ED5"
+    type: 1
+    targetID: 14
+    requiredAmount: 2
+    currentAmount: 0
+  goldReward: 100
+  healthIncreaseReward: 0
+  damageIncreaseReward: 0
+  startDialogue: []
+  progressDialogue: []
+  completeDialogue: []
+  nextQuest: {fileID: 0}

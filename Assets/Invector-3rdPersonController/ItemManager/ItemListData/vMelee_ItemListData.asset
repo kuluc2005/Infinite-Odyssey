@@ -113,7 +113,7 @@ MonoBehaviour:
   - {fileID: -6981661230815265078}
   - {fileID: -1005415638491454417}
   - {fileID: 114043347838910644}
-  inEdition: 0
+  inEdition: 1
   itemsHidden: 0
 --- !u!114 &11411124
 MonoBehaviour:
@@ -856,7 +856,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 6ab5a3ea27f130647b54ca5ee121436c, type: 3}
   stackable: 1
   createNewItem: 1
-  maxStack: 1
+  maxStack: 99
   amount: 0
   originalObject: {fileID: 0}
   dropObject: {fileID: 0}

@@ -1,5 +1,4 @@
-﻿// ✅ NPCDialogueTrigger.cs - Hoàn chỉnh hệ thống hội thoại và nhiệm vụ thu thập vật phẩm (2 đồng vàng cổ)
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using UnityEngine.Localization.Settings;
 using System.Collections;
@@ -8,9 +7,6 @@ using Invector.vCharacterController;
 using Invector.vCharacterController.vActions;
 using Invector.vItemManager;
 using System.Linq;
-using UnityEngine.Localization;
-using UnityEngine.Localization.Components;
-
 
 public class NPCDialogueTrigger : MonoBehaviour
 {
@@ -53,24 +49,18 @@ public class NPCDialogueTrigger : MonoBehaviour
     private Rigidbody playerRigidbody;
     private bool originalUseRootMotion;
     private vItemManager playerInventory;
-    private bool hasSeenCompleteDialogue = false;
-    private bool isReadyToComplete = false;
-    private bool readyToCompleteDialogueShown = false;
 
     void Awake()
     {
-        tpCamera = FindObjectOfType<vThirdPersonCamera>();
-        combatInput = FindObjectOfType<vMeleeCombatInput>();
-        playerInput = FindObjectOfType<vThirdPersonInput>();
-        playerAnimator = FindObjectOfType<Animator>();
-        playerRigidbody = FindObjectOfType<Rigidbody>();
-
-        var player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-            playerInventory = player.GetComponent<vItemManager>();
+        tpCamera = FindFirstObjectByType<vThirdPersonCamera>();
+        combatInput = FindFirstObjectByType<vMeleeCombatInput>();
+        playerInput = FindFirstObjectByType<vThirdPersonInput>();
+        playerAnimator = FindFirstObjectByType<Animator>();
+        playerRigidbody = FindFirstObjectByType<Rigidbody>();
 
         if (playerAnimator)
             originalUseRootMotion = playerAnimator.applyRootMotion;
+
         // 🔥 Gán các UI nếu chưa có
         if (dialoguePanel == null && UIDialogueManager.Instance != null)
         {
@@ -78,6 +68,32 @@ public class NPCDialogueTrigger : MonoBehaviour
             dialogueText = UIDialogueManager.Instance.dialogueText;
             continueButton = UIDialogueManager.Instance.continueButton;
             skipButton = UIDialogueManager.Instance.skipButton;
+        }
+    }
+
+    /// <summary>
+    /// Luôn lấy lại reference Player và vItemManager mỗi khi bắt đầu hội thoại để tránh lỗi null khi player spawn động!
+    /// </summary>
+    private bool EnsurePlayerInventory()
+    {
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerInventory = player.GetComponent<vItemManager>();
+            if (playerInventory == null)
+                playerInventory = player.GetComponentInChildren<vItemManager>();
+            if (playerInventory == null)
+            {
+                Debug.LogError("<color=red>[NPC-DEBUG] Không tìm thấy vItemManager trên Player!</color>");
+                return false;
+            }
+            return true;
+        }
+        else
+        {
+            Debug.LogError("<color=red>[NPC-DEBUG] Không tìm thấy object nào tag Player!</color>");
+            playerInventory = null;
+            return false;
         }
     }
 
@@ -91,7 +107,32 @@ public class NPCDialogueTrigger : MonoBehaviour
 
     public void StartDialogue()
     {
-        if (isTalking) return;
+        Debug.Log($"[NPC-DEBUG][Dialogue] === MỞ HỘI THOẠI VỚI NPC ===");
+
+        // Luôn lấy lại reference Player mỗi lần bắt đầu hội thoại
+        if (!EnsurePlayerInventory())
+        {
+            dialoguePanel?.SetActive(false);
+            Debug.LogWarning("[NPC-DEBUG] Không thể bắt đầu hội thoại do không có player hoặc inventory!");
+            return;
+        }
+
+        Debug.Log($"[NPC-DEBUG][Dialogue] QuestID: {questData.questID}, RequiredItemID: {requiredItemID}");
+
+        foreach (var obj in questData.objectives)
+        {
+            Debug.Log($"[NPC-DEBUG][Dialogue] Objective: type={obj.type}, targetID={obj.targetID}, currentAmount={obj.currentAmount}, requiredAmount={obj.requiredAmount}");
+        }
+
+        // Log inventory
+        if (playerInventory != null && playerInventory.items != null)
+        {
+            foreach (var i in playerInventory.items)
+            {
+                if (i == null) continue;
+                Debug.Log($"[NPC-DEBUG][Dialogue] Kho: {i.name} (ID: {i.id}) x{i.amount}");
+            }
+        }
 
         currentLine = 0;
         isTalking = true;
@@ -99,6 +140,7 @@ public class NPCDialogueTrigger : MonoBehaviour
         dialoguePanel.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
         bool isActive = QuestManager.instance.IsQuestActive(questData.questID);
         bool isCompleted = QuestManager.instance.IsQuestCompleted(questData.questID);
 
@@ -110,7 +152,6 @@ public class NPCDialogueTrigger : MonoBehaviour
         {
             dialogueKeys = introDialogueKeys;
             currentState = DialogueState.Intro;
-            isReadyToComplete = false;
         }
         // ✅ Đã nhận nhiệm vụ, nhưng chưa hoàn thành chính thức
         else if (isActive)
@@ -119,39 +160,44 @@ public class NPCDialogueTrigger : MonoBehaviour
             {
                 dialogueKeys = completeDialogueKeys;
                 currentState = DialogueState.Complete;
-                isReadyToComplete = true; // ✅ Đã sẵn sàng hoàn thành
             }
             else
             {
                 dialogueKeys = notReadyDialogueKeys;
                 currentState = DialogueState.NotReady;
-                isReadyToComplete = false;
             }
         }
         else if (isCompleted)
         {
             dialogueKeys = completeDialogueKeys;
             currentState = DialogueState.Complete;
-            isReadyToComplete = false; // Không cần thưởng nữa
         }
 
-
+        hasGivenReward = false; // Reset lại mỗi lần bắt đầu hội thoại
         ShowLine(currentLine);
     }
-
 
     int GetCurrentItemCount()
     {
         if (playerInventory == null || playerInventory.items == null)
+        {
+            Debug.LogWarning("[NPC-DEBUG] Không tìm thấy inventory hoặc items!");
             return 0;
+        }
 
-        var item = playerInventory.items.FirstOrDefault(i => i != null && i.id.ToString() == requiredItemID);
-        int count = item != null ? item.amount : 0;
+        foreach (var i in playerInventory.items)
+        {
+            if (i == null) continue;
+            Debug.Log($"[NPC-DEBUG][Check] Inventory có item: {i.name} (ID: {i.id}) x{i.amount}");
+        }
 
-        Debug.Log($"[NPC DEBUG] Đang có {count} vật phẩm có ID = {requiredItemID}");
-        return count;
+        int total = playerInventory.items
+            .Where(i => i != null && i.id.ToString() == requiredItemID)
+            .Sum(i => i.amount);
+
+        Debug.Log($"[NPC-DEBUG][Check] Tổng số coin ID = {requiredItemID} trong inventory: {total}");
+        return total;
     }
-
 
     int GetRequiredAmountFromQuest()
     {
@@ -159,18 +205,42 @@ public class NPCDialogueTrigger : MonoBehaviour
         return objective != null ? objective.requiredAmount : 1;
     }
 
+    // Sử dụng đúng hàm DestroyItem của Invector để trừ số lượng!
     void RemoveRequiredItems()
     {
-        if (playerInventory == null || playerInventory.items == null) return;
-
-        var item = playerInventory.items.FirstOrDefault(i => i != null && i.id.ToString() == requiredItemID);
-        int requiredAmount = GetRequiredAmountFromQuest();
-
-        if (item != null && item.amount >= requiredAmount)
+        if (playerInventory == null || playerInventory.items == null)
         {
-            for (int i = 0; i < requiredAmount; i++)
-                //playerInventory.RemoveItem(item, true);
-                Debug.Log($"[NPC] Đã xóa {requiredAmount} vật phẩm ID {requiredItemID} sau khi hoàn thành nhiệm vụ.");
+            Debug.LogWarning("[NPC-DEBUG][Remove] Không tìm thấy inventory hoặc items!");
+            return;
+        }
+
+        int requiredAmount = GetRequiredAmountFromQuest();
+        int removed = 0;
+
+        // Log inventory trước khi xóa
+        foreach (var i in playerInventory.items)
+        {
+            if (i == null) continue;
+            Debug.Log($"[NPC-DEBUG][Remove-Before] Có item: {i.name} (ID: {i.id}) x{i.amount}");
+        }
+
+        foreach (var item in playerInventory.items.Where(i => i != null && i.id.ToString() == requiredItemID).ToList())
+        {
+            if (removed >= requiredAmount) break;
+            int toRemove = Mathf.Min(item.amount, requiredAmount - removed);
+
+            Debug.Log($"[NPC-DEBUG][Remove] Đang xóa {toRemove} ở item ID: {item.id} - Trước khi xóa còn: {item.amount}");
+
+            playerInventory.DestroyItem(item, toRemove);
+            removed += toRemove;
+        }
+        Debug.Log($"[NPC-DEBUG][Remove] Đã xóa {removed} vật phẩm ID {requiredItemID} sau khi hoàn thành nhiệm vụ.");
+
+        // Log inventory sau khi xóa
+        foreach (var i in playerInventory.items)
+        {
+            if (i == null) continue;
+            Debug.Log($"[NPC-DEBUG][Remove-After] Còn lại: {i.name} (ID: {i.id}) x{i.amount}");
         }
     }
 
@@ -188,6 +258,7 @@ public class NPCDialogueTrigger : MonoBehaviour
             EndDialogue();
         }
     }
+
     IEnumerator LoadLocalizedLine(string key)
     {
         isTyping = true;
@@ -217,14 +288,7 @@ public class NPCDialogueTrigger : MonoBehaviour
         isTyping = false;
         typingCoroutine = null;
 
-        if (currentState == DialogueState.Intro || currentState == DialogueState.Complete)
-        {
-            EndDialogue(); //kết thúc đoạn hội thoại đang diễn ra
-        }
-        else
-        {
-            dialogueText.text = currentFullText;
-        }
+        dialogueText.text = currentFullText;
     }
 
     public void OnContinueClicked()
@@ -248,7 +312,6 @@ public class NPCDialogueTrigger : MonoBehaviour
         }
     }
 
-
     void NextLine()
     {
         currentLine++;
@@ -271,10 +334,11 @@ public class NPCDialogueTrigger : MonoBehaviour
 
         if (currentState == DialogueState.Complete)
         {
-            if (!hasGivenReward)
+            // Chỉ hoàn thành và trao thưởng nếu nhiệm vụ vẫn còn active (chưa hoàn thành)
+            if (!hasGivenReward && QuestManager.instance.IsQuestActive(questData.questID))
             {
                 RemoveRequiredItems();
-                QuestManager.instance.CompleteQuest(questData); // Chỉ hoàn thành 1 lần
+                QuestManager.instance.CompleteQuest(questData); // Chỉ hoàn thành 1 lần khi trả
                 hasGivenReward = true;
             }
 
@@ -298,11 +362,6 @@ public class NPCDialogueTrigger : MonoBehaviour
         typingCoroutine = null;
         currentFullText = "";
         currentState = DialogueState.None;
-
-        if (currentState == DialogueState.Complete && !QuestManager.instance.IsQuestCompleted(questData.questID))
-        {
-            QuestManager.instance.CompleteQuest(questData);  // ✅ Hoàn thành sau khi nói xong
-        }
     }
 
     void LockControls()
@@ -315,7 +374,9 @@ public class NPCDialogueTrigger : MonoBehaviour
         if (playerAnimator)
         {
             playerAnimator.applyRootMotion = false;
-            playerAnimator.SetFloat("InputMagnitude", 0f);
+            // Nếu animator không có parameter này thì thôi
+            if (playerAnimator.HasParameterOfType("InputMagnitude", AnimatorControllerParameterType.Float))
+                playerAnimator.SetFloat("InputMagnitude", 0f);
             playerAnimator.Play("Idle", 0);
         }
     }
@@ -326,5 +387,14 @@ public class NPCDialogueTrigger : MonoBehaviour
         if (combatInput) combatInput.lockInput = false;
         if (playerInput) playerInput.enabled = true;
         if (playerAnimator) playerAnimator.applyRootMotion = originalUseRootMotion;
+    }
+}
+
+// Hàm extension giúp kiểm tra animator parameter (chống lỗi Parameter does not exist)
+public static class AnimatorExtensions
+{
+    public static bool HasParameterOfType(this Animator self, string name, AnimatorControllerParameterType type)
+    {
+        return self.parameters.Any(p => p.type == type && p.name == name);
     }
 }
