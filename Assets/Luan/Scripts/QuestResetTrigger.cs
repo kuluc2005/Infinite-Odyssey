@@ -1,9 +1,9 @@
-using UnityEngine;
+//using UnityEngine;
 
-public class QuestResetTrigger : MonoBehaviour
-{
-    void Start()
-    {
-        QuestManager.instance?.ResetAllQuests();
-    }
-}
+//public class QuestResetTrigger : MonoBehaviour
+//{
+//    void Start()
+//    {
+//        QuestManager.instance?.ResetAllQuests();
+//    }
+//}

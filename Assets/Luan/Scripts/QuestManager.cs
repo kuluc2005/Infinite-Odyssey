@@ -8,12 +8,24 @@ public class QuestSaveData
     public List<string> completedQuestIDs = new List<string>();
 }
 
+// Wrapper cho API Quest
+[System.Serializable]
+public class PlayerQuestListWrapper
+{
+    public bool status;
+    public PlayerQuestDto[] data;
+}
+
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager instance { get; private set; }
 
     public Dictionary<string, QuestData> activeQuests = new Dictionary<string, QuestData>();
     public List<QuestData> completedQuests = new List<QuestData>();
+    void Start()
+    {
+        LoadQuestsFromApi();
+    }
 
     void Awake()
     {
@@ -25,22 +37,24 @@ public class QuestManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            LoadQuestProgress();
+            // Không dùng local nữa:
+            // LoadQuestProgress();
         }
     }
 
+    // --- Giao diện nhận nhiệm vụ như cũ ---
     public void StartQuest(QuestData quest)
     {
         if (quest == null || activeQuests.ContainsKey(quest.questID)) return;
-
         foreach (var obj in quest.objectives)
-        {
             obj.currentAmount = 0;
-        }
 
         activeQuests.Add(quest.questID, quest);
+
+        Debug.Log($"[DEBUG][StartQuest] Trước khi save: questID={quest.questID}, currentAmount={quest.objectives[0].currentAmount}, requiredAmount={quest.objectives[0].requiredAmount}");
+        SaveQuestToApi(quest, "active");
         Debug.Log($"[QuestManager] Bắt đầu nhiệm vụ: {quest.questName}");
-        FindObjectOfType<QuestPanelToggle>()?.UpdateBadge();
+        FindFirstObjectByType<QuestPanelToggle>()?.UpdateBadge();
     }
 
 
@@ -54,12 +68,7 @@ public class QuestManager : MonoBehaviour
                 {
                     obj.currentAmount += amount;
                     Debug.Log($"[QuestManager] Đã cập nhật mục tiêu: {obj.objectiveDescription} ({obj.currentAmount}/{obj.requiredAmount})");
-
-                    if (obj.IsCompleted())
-                    {
-                        Debug.Log($"[QuestManager] Mục tiêu hoàn thành: {obj.objectiveDescription}");
-                        CheckQuestCompletion(quest);
-                    }
+                    SaveQuestToApi(quest, "active");
                     return;
                 }
             }
@@ -69,7 +78,6 @@ public class QuestManager : MonoBehaviour
     private void CheckQuestCompletion(QuestData quest)
     {
         bool allCompleted = quest.objectives.All(obj => obj.IsCompleted());
-
         if (allCompleted)
         {
             CompleteQuest(quest);
@@ -79,13 +87,12 @@ public class QuestManager : MonoBehaviour
     public void CompleteQuest(QuestData quest)
     {
         if (!activeQuests.ContainsKey(quest.questID)) return;
-
         activeQuests.Remove(quest.questID);
         completedQuests.Add(quest);
 
+        SaveQuestToApi(quest, "completed");
         Debug.Log($"[QuestManager] Đã hoàn thành nhiệm vụ: {quest.questName}");
 
-        // Mở cổng nếu có portal tương ứng (tên phải khớp)
         GameObject portal = GameObject.Find($"Portal_{quest.questID}");
         if (portal != null)
         {
@@ -93,20 +100,15 @@ public class QuestManager : MonoBehaviour
             Debug.Log("[QuestManager] Đã mở cổng: " + portal.name);
         }
 
-        // Cập nhật UI
-        QuestUI ui = FindObjectOfType<QuestUI>();
+        QuestUI ui = FindFirstObjectByType<QuestUI>();
         if (ui != null)
         {
             ui.ShowSuccess();
         }
 
-        // Ghi log phần thưởng
         Debug.Log($"[QuestManager] Thưởng: {quest.goldReward} vàng, +{quest.healthIncreaseReward} HP, +{quest.damageIncreaseReward} sát thương.");
 
-        // ✅ Thêm dòng này cuối cùng
-        SaveQuestProgress();
-
-        // ✅ Nếu có nhiệm vụ tiếp theo thì mở luôn
+        // Nếu có nhiệm vụ tiếp theo thì mở luôn
         if (quest.nextQuest != null)
         {
             Debug.Log("[QuestManager] Mở nhiệm vụ tiếp theo: " + quest.nextQuest.questName);
@@ -137,32 +139,108 @@ public class QuestManager : MonoBehaviour
         Debug.Log("[QuestManager] Đã reset toàn bộ nhiệm vụ.");
     }
 
-    public void SaveQuestProgress()
-    {
-        QuestSaveData data = new QuestSaveData();
-        data.completedQuestIDs = completedQuests.Select(q => q.questID).ToList();
+    // ---- PHẦN ĐỒNG BỘ QUEST VỚI API ----
 
-        string json = JsonUtility.ToJson(data);
-        PlayerPrefs.SetString("QuestProgress", json);
-        PlayerPrefs.Save();
-        Debug.Log("[QuestManager] ✅ Đã lưu tiến trình nhiệm vụ.");
-    }
-    public void LoadQuestProgress()
+    public void LoadQuestsFromApi()
     {
-        if (PlayerPrefs.HasKey("QuestProgress"))
+        int playerId = PlayerPrefs.GetInt("PlayerId", -1);
+        int characterId = PlayerPrefs.GetInt("CharacterId", -1);
+        if (playerId > 0 && characterId > 0)
+            StartCoroutine(QuestApiManager.Instance.GetPlayerQuests(playerId, characterId, OnLoadedQuestsFromApi));
+    }
+
+    // Hàm nhận dữ liệu từ API về và map lại vào game
+    void OnLoadedQuestsFromApi(string json)
+    {
+        if (string.IsNullOrEmpty(json))
         {
-            string json = PlayerPrefs.GetString("QuestProgress");
-            QuestSaveData data = JsonUtility.FromJson<QuestSaveData>(json);
-            completedQuests.Clear();
-            foreach (string id in data.completedQuestIDs)
-            {
-                QuestData quest = Resources.Load<QuestData>($"Quests/{id}");
-                if (quest != null)
-                    completedQuests.Add(quest);
-            }
-
-            Debug.Log("[QuestManager] ✅ Đã load lại tiến trình nhiệm vụ.");
+            Debug.LogWarning("Không nhận được dữ liệu quest từ API!");
+            return;
         }
+
+        var questListWrapper = JsonUtility.FromJson<PlayerQuestListWrapper>(json);
+
+        // Chỉ clear khi dữ liệu thực sự hợp lệ và khác rỗng!
+        if (questListWrapper != null && questListWrapper.data != null && questListWrapper.data.Length > 0)
+        {
+            activeQuests.Clear();
+            completedQuests.Clear();
+
+            Debug.Log($"[OnLoadedQuestsFromApi] Nhận {questListWrapper.data.Length} quest từ API:");
+            foreach (var questDto in questListWrapper.data)
+            {
+                Debug.Log($"[OnLoadedQuestsFromApi]   QuestID: {questDto.questID} | status: {questDto.status} | progressJSON: {questDto.progressJSON}");
+
+                QuestData questDataAsset = Resources.Load<QuestData>($"Quests/{questDto.questID}");
+                if (questDataAsset == null)
+                {
+                    Debug.LogWarning($"Không tìm thấy asset QuestData: Quests/{questDto.questID}");
+                    continue;
+                }
+
+                QuestData questData = ScriptableObject.Instantiate(questDataAsset);
+
+                var objectives = JsonHelper.FromJson<QuestObjectiveProgress>(questDto.progressJSON);
+                if (objectives != null)
+                {
+                    foreach (var obj in objectives)
+                    {
+                        Debug.Log($"[OnLoadedQuestsFromApi]     Objective: type={obj.type}, targetID={obj.targetID}, currentAmount={obj.currentAmount}, requiredAmount={obj.requiredAmount}");
+                    }
+                }
+
+                for (int i = 0; i < questData.objectives.Count; i++)
+                {
+                    var obj = questData.objectives[i];
+                    var found = objectives.FirstOrDefault(o => o.targetID == obj.targetID && o.type == obj.type.ToString());
+                    obj.currentAmount = found != null ? found.currentAmount : 0;
+                }
+
+                if (questDto.status == "completed")
+                    completedQuests.Add(questData);
+                else
+                    activeQuests.Add(questData.questID, questData);
+            }
+            Debug.Log("[QuestManager] Đã load quest từ API xong.");
+        }
+        else
+        {
+            Debug.LogWarning("Quest API trả về rỗng hoặc không hợp lệ! Giữ nguyên danh sách quest local.");
+        }
+
+        FindFirstObjectByType<QuestPanelToggle>()?.UpdateBadge();
     }
 
+
+
+
+    public void SaveQuestToApi(QuestData quest, string status, System.Action<bool> callback = null)
+    {
+        var objectives = quest.objectives.Select(obj => new QuestObjectiveProgress
+        {
+            type = obj.type.ToString(),
+            targetID = obj.targetID,
+            currentAmount = obj.currentAmount,
+            requiredAmount = obj.requiredAmount
+        }).ToArray();
+
+        Debug.Log($"[SaveQuestToApi] Gửi quest: {quest.questID} | status: {status}");
+        foreach (var obj in objectives)
+        {
+            Debug.Log($"[SaveQuestToApi]   Objective: type={obj.type}, targetID={obj.targetID}, currentAmount={obj.currentAmount}, requiredAmount={obj.requiredAmount}");
+        }
+
+        string progressJson = JsonHelper.ToJson(objectives, true);
+
+        PlayerQuestDto dto = new PlayerQuestDto
+        {
+            playerId = PlayerPrefs.GetInt("PlayerId"),
+            characterId = PlayerPrefs.GetInt("CharacterId"),
+            questID = quest.questID,
+            status = status,
+            progressJSON = progressJson
+        };
+
+        StartCoroutine(QuestApiManager.Instance.SaveQuest(dto, callback));
+    }
 }
