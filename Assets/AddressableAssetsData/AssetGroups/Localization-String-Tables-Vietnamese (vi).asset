@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Localization-String-Tables-Vietnamese (vi)
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Vietnamese (vi)
-  m_GUID: 8c82a5249abb7524191e2fe6a143051c
+  m_GUID: 4911c804afc131f44bbb62aa3f61e3ed
   m_SerializeEntries:
   - m_GUID: aa2815c2fad86c1409af57a50a34b589
     m_Address: NPCLines_vi
@@ -22,7 +22,7 @@ MonoBehaviour:
     - Locale-vi
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
-  m_Settings: {fileID: 11400000, guid: 48d9bba0f170e9742adf81bae9666000, type: 2}
+  m_Settings: {fileID: 11400000, guid: ac9ea2aa0a2c0664fb17324ee627dd9e, type: 2}
   m_SchemaSet:
     m_Schemas:
     - {fileID: 11400000, guid: b304ef42bc2721348b10f71b1e205ac5, type: 2}
