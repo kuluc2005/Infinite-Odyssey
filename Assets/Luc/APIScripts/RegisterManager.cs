@@ -71,7 +71,7 @@ public class RegisterManager : MonoBehaviour
 
     IEnumerator RegisterCoroutine()
     {
-        string url = "http://localhost:5186/api/register";
+        string url = "http://172.16.80.23:5186/api/register";
 
         PlayerRegister registerData = new PlayerRegister
         {

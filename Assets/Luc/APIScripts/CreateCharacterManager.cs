@@ -75,7 +75,7 @@ public class CreateCharacterManager : MonoBehaviour
 
     IEnumerator CreateCharacter(int playerId, string characterClass, string name)
     {
-        string url = "http://localhost:5186/api/character/create";
+        string url = "http://172.16.80.23:5186/api/character/create";
         CreateCharacterRequest req = new CreateCharacterRequest
         {
             playerId = playerId,

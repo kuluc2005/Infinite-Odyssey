@@ -6,29 +6,35 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/RegisterScene.unity
-    guid: 251136d03486bc345acbd76749ef128c
-  - enabled: 1
-    path: Assets/Scenes/LoginScene.unity
-    guid: 89c2cb3d3ea1764498d776733c424881
-  - enabled: 1
-    path: Assets/Scenes/ChangePasswordScene.unity
-    guid: fad556c2543079147b44e2a9390ee6b5
-  - enabled: 1
-    path: Assets/Scenes/CreateCharacterScene.unity
-    guid: 9cf8dd06212f7de4ca9e591f4f201778
-  - enabled: 1
-    path: Assets/Scenes/CharacterSelectScene.unity
-    guid: def508ef870c02a42868d42191d29424
-  - enabled: 1
-    path: Assets/Scenes/SceneMain.unity
-    guid: 82f4ec3f15db8c648b1df0ff25f35d86
+    path: Assets/Scenes/Demo.unity
+    guid: 8ba0a6d03f273c44091c6952ec2b02cb
   - enabled: 1
     path: Assets/Scenes/Level 1.unity
     guid: 4485d8936976c3446972e50f86a0ceb6
   - enabled: 1
     path: Assets/Scenes/Level 2.unity
     guid: 4ae7708ca68730847873f457602667ce
+  - enabled: 1
+    path: Assets/Scenes/CreateCharacterScene.unity
+    guid: 9cf8dd06212f7de4ca9e591f4f201778
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 32d0d7be79976db44a11ecb48344d924
+  - enabled: 1
+    path: Assets/Scenes/SceneMain.unity
+    guid: 82f4ec3f15db8c648b1df0ff25f35d86
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: 925946cedd7cd594b999df70b4627a74
+  - enabled: 1
+    path: Assets/Scenes/RegisterScene.unity
+    guid: 251136d03486bc345acbd76749ef128c
+  - enabled: 1
+    path: Assets/Scenes/LoginScene.unity
+    guid: 89c2cb3d3ea1764498d776733c424881
+  - enabled: 1
+    path: Assets/Scenes/CharacterSelectScene.unity
+    guid: def508ef870c02a42868d42191d29424
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 59d3e19d28de66d418ce920cb1fd6ed5, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

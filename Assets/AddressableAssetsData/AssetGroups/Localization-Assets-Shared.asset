@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Localization-Assets-Shared
   m_EditorClassIdentifier: 
   m_GroupName: Localization-Assets-Shared
-  m_GUID: 3322003b818115b4197bf4e781d5bedf
+  m_GUID: b282a4f54be7e5147a6b90c0420693c3
   m_SerializeEntries:
   - m_GUID: ac439325098b9a94da92dab185eb9c9d
     m_Address: Assets/Luan/Localization/NPC Level 2 Shared Data.asset
@@ -26,7 +26,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
-  m_Settings: {fileID: 11400000, guid: 48d9bba0f170e9742adf81bae9666000, type: 2}
+  m_Settings: {fileID: 11400000, guid: ac9ea2aa0a2c0664fb17324ee627dd9e, type: 2}
   m_SchemaSet:
     m_Schemas:
     - {fileID: 11400000, guid: be302361bf837c04686deddac255eaff, type: 2}

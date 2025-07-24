@@ -17,7 +17,7 @@ public class ProfileManager : MonoBehaviour
 
     IEnumerator LoadProfile(int characterId)
     {
-        string url = $"http://localhost:5186/api/character/profile/{characterId}";
+        string url = $"http://172.16.80.23:5186/api/character/profile/{characterId}";
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 
