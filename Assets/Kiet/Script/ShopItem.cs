@@ -14,5 +14,4 @@ public class ShopItem
 
     [Header("Inventory Settings")]
     public int itemID;     // ID trong ItemListData của Invector
-    public int quantity = 1; // số lượng mua vào kho
 }
