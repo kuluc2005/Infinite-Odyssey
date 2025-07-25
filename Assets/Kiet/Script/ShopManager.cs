@@ -82,7 +82,7 @@ public class ShopManager : MonoBehaviour
 
     void Update()
     {
-        if (IsShopOpen && Input.GetKeyDown(KeyCode.Escape))
+        if (IsShopOpen && Input.GetKeyDown(KeyCode.B))
         {
             CloseShop();
         }
