@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using Invector.vItemManager;
 
 public class ShopManager : MonoBehaviour
 {
@@ -25,8 +26,16 @@ public class ShopManager : MonoBehaviour
 
     private ShopItem currentSelectedItem;
 
+    public GameObject shopCanvas;
+
+    private vItemManager playerItemManager;
+
+
+    public bool IsShopOpen => shopCanvas != null && shopCanvas.activeSelf;
     void Start()
     {
+        playerItemManager = FindObjectOfType<vItemManager>();
+
         // Hiện trỏ chuột để tương tác
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -71,6 +80,15 @@ public class ShopManager : MonoBehaviour
             buyButton.onClick.AddListener(BuyItem);
     }
 
+    void Update()
+    {
+        if (IsShopOpen && Input.GetKeyDown(KeyCode.Escape))
+        {
+            CloseShop();
+        }
+    }
+
+
     void ShowItemDetails(ShopItem item)
     {
         currentSelectedItem = item;
@@ -90,6 +108,18 @@ public class ShopManager : MonoBehaviour
             playerGold -= currentSelectedItem.price;
             UpdateCoinUI();
             Debug.Log("✅ Bought: " + currentSelectedItem.itemName);
+
+            if (playerItemManager != null)
+            {
+                // ✅ Tạo ItemReference từ itemID và số lượng
+                var itemRef = new ItemReference(currentSelectedItem.itemID);
+                itemRef.amount = 1; // Mua 1 item
+                itemRef.addToEquipArea = false; // Không auto trang bị
+
+                // ✅ Gọi đúng hàm AddItem (Overload dùng ItemReference)
+                playerItemManager.AddItem(itemRef, true); // true = không chơi animation
+                Debug.Log($"👜 Đã thêm item ID {currentSelectedItem.itemID} vào kho.");
+            }
         }
         else
         {
@@ -97,9 +127,22 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+
     void UpdateCoinUI()
     {
         if (coinText != null)
             coinText.text = "Gold: " + playerGold.ToString();
+    }
+
+    public void OpenShop()
+    {
+        if (shopCanvas != null)
+            shopCanvas.SetActive(true);
+    }
+
+    public void CloseShop()
+    {
+        if (shopCanvas != null)
+            shopCanvas.SetActive(false);
     }
 }
