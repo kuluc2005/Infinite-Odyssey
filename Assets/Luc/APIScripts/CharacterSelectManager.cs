@@ -89,7 +89,7 @@ public class CharacterSelectManager : MonoBehaviour
             }
             else
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene("SceneMain");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Level 0");
             }
         }
         else

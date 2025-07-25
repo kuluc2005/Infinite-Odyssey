@@ -9745,7 +9745,6 @@ GameObject:
   - component: {fileID: 1117241510088844932}
   - component: {fileID: 6116939183738836120}
   - component: {fileID: 1052956919200822412}
-  - component: {fileID: 1888938806467998736}
   m_Layer: 0
   m_Name: Portal green
   m_TagString: Untagged
@@ -14650,20 +14649,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.4603882, y: 3.3103027, z: 1}
   m_Center: {x: 0.09689331, y: 0.010375977, z: 0}
---- !u!114 &1888938806467998736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3992058561654064293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 586b0e4cd26858142888e0b9259629fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneToLoad: Level 2
-  loadingScreen: {fileID: 7434874946964280608, guid: 98e59a10009bdf8439e8f31f234d9ea7, type: 3}
 --- !u!1 &6275681469945861091
 GameObject:
   m_ObjectHideFlags: 0

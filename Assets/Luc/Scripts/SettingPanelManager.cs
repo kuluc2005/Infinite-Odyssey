@@ -60,7 +60,7 @@ public class SettingPanelManager : MonoBehaviour
     public void OnChangePasswordClicked()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("ChangePasswordScene");
+        SceneManager.LoadScene("CharacterSelectScene");
     }
 
     public void OnLogoutClicked()
