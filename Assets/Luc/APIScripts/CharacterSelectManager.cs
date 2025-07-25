@@ -61,9 +61,9 @@ public class CharacterSelectManager : MonoBehaviour
         {
             Debug.LogError("Không tải được danh sách nhân vật: " + request.error);
         }
-}
+    }
 
-public void OnCharacterSelected(PlayerCharacter character)
+    public void OnCharacterSelected(PlayerCharacter character)
     {
         PlayerPrefs.SetInt("CharacterId", character.id);
         StartCoroutine(GoToGameScene(character.id));
@@ -89,7 +89,7 @@ public void OnCharacterSelected(PlayerCharacter character)
             }
             else
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene("SceneMain"); 
+                UnityEngine.SceneManagement.SceneManager.LoadScene("SceneMain");
             }
         }
         else

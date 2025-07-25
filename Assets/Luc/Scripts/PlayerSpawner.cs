@@ -1,8 +1,6 @@
-
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
-
 
 public class PlayerSpawner : MonoBehaviour
 {
@@ -29,7 +27,7 @@ public class PlayerSpawner : MonoBehaviour
 
     IEnumerator LoadCharacterAndSpawn(int characterId)
     {
-        string url = $"http://localhost:5186/api/character/info/character/{characterId}";
+        string url = $"http://localhost:5186/api/character/profile/{characterId}";
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 
@@ -89,7 +87,7 @@ public class PlayerSpawner : MonoBehaviour
             PlayerPositionManager ppm = player.GetComponent<PlayerPositionManager>();
             if (ppm != null)
             {
-                ppm.characterId = wrapper.data.characterId; 
+                ppm.characterId = wrapper.data.characterId;
             }
 
             InventorySyncManager ism = player.GetComponent<InventorySyncManager>();
