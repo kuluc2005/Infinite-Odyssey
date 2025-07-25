@@ -27,7 +27,7 @@ public class CharacterSelectManager : MonoBehaviour
 
     IEnumerator LoadCharacters(int playerId)
     {
-        string url = $"http://localhost:5186/api/character/info/player/{playerId}";
+        string url = $"http://localhost:5186/api/character/list/{playerId}";
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 
