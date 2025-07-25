@@ -22,6 +22,7 @@ public class CharacterCardUI : MonoBehaviour
         levelText.text = "Level: " + (character.level > 0 ? character.level.ToString() : "1");
 
         string spriteName = "Avatar" + character.characterClass;
+        Debug.Log("Đang load avatar: " + spriteName);
         Sprite avatarSprite = Resources.Load<Sprite>("ImageL/" + spriteName);
 
         if (avatarSprite != null)

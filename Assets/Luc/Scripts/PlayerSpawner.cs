@@ -1,7 +1,5 @@
 
 ﻿using UnityEngine;
-
-using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 
@@ -31,7 +29,7 @@ public class PlayerSpawner : MonoBehaviour
 
     IEnumerator LoadCharacterAndSpawn(int characterId)
     {
-        string url = $"http://172.16.80.23:5186/api/character/info/character/{characterId}";
+        string url = $"http://localhost:5186/api/character/info/character/{characterId}";
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 

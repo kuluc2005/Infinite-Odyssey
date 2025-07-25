@@ -52,7 +52,7 @@ public class LoginManager : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
 
-        string url = "http://172.16.80.23:5186/api/login";
+        string url = "http://localhost:5186/api/login";
 
         string json = JsonUtility.ToJson(new PlayerLogin
         {
@@ -86,7 +86,7 @@ public class LoginManager : MonoBehaviour
                 errorPanelManager.HideError();
 
                 int playerId = loginResult.data.id;
-                string charUrl = $"http://172.16.80.23:5186/api/character/list/{playerId}";
+                string charUrl = $"http://localhost:5186/api/character/list/{playerId}";
                 UnityWebRequest charListRequest = UnityWebRequest.Get(charUrl);
                 yield return charListRequest.SendWebRequest();
 
