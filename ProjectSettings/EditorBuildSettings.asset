@@ -24,9 +24,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Level 3.unity
     guid: 82f4ec3f15db8c648b1df0ff25f35d86
   - enabled: 1
-    path: Assets/Scenes/Main.unity
-    guid: 925946cedd7cd594b999df70b4627a74
-  - enabled: 1
     path: Assets/Scenes/RegisterScene.unity
     guid: 251136d03486bc345acbd76749ef128c
   - enabled: 1
@@ -38,6 +35,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CharacterSelectScene.unity
     guid: def508ef870c02a42868d42191d29424
+  - enabled: 1
+    path: Assets/Scenes/CutSceneLevel1.unity
+    guid: 2cdcda36d2c486b42b16d2b5428791df
+  - enabled: 1
+    path: Assets/Scenes/CutSceneLevel2.unity
+    guid: f81c48a8a0d906b48ad1b3cf191b3956
+  - enabled: 1
+    path: Assets/Scenes/CutSceneLevel3.unity
+    guid: 23638615b43bb634fb5a307ca10c27ae
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 59d3e19d28de66d418ce920cb1fd6ed5, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
