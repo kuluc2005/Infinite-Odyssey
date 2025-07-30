@@ -82,7 +82,12 @@ public class PlayerPositionManager : MonoBehaviour
             profile.currentCheckpoint = $"{sceneName}:{pos.x},{pos.y},{pos.z}";
             if (isGameScene)
                 profile.lastScene = sceneName;
+
+            if (GoldManager.Instance != null)
+            {
                 profile.coins = GoldManager.Instance.CurrentGold;
+                Debug.Log($"[SavePlayerPosition] Lưu {profile.coins}");
+            }
         });
     }
 

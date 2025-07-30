@@ -10,11 +10,10 @@ public class GoldManager : MonoBehaviour
 
     void Awake()
     {
-        //Đảm bảo chỉ có 1 GoldManager tồn tại
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Giữ lại khi đổi scene
+            DontDestroyOnLoad(gameObject); 
         }
         else
         {
@@ -25,15 +24,19 @@ public class GoldManager : MonoBehaviour
 
     void Start()
     {
-        if (ProfileManager.CurrentProfile != null)
+        StartCoroutine(WaitForProfileAndLoadGold());
+    }
+
+    private IEnumerator WaitForProfileAndLoadGold()
+    {
+        while (ProfileManager.CurrentProfile == null)
         {
-            CurrentGold = ProfileManager.CurrentProfile.coins;
-            Debug.Log($"GoldManager Loaded Gold: {CurrentGold}");
+            Debug.Log("⏳ Đợi ProfileManager load profile...");
+            yield return null;
         }
-        else
-        {
-            Debug.LogWarning("ProfileManager chưa có profile khi load GoldManager!");
-        }
+
+        CurrentGold = ProfileManager.CurrentProfile.coins;
+        Debug.Log($"GoldManager Loaded Gold: {CurrentGold}");
     }
 
     public void AddCoins(int amount)
@@ -51,7 +54,7 @@ public class GoldManager : MonoBehaviour
     {
         if (CurrentGold < amount)
         {
-            Debug.Log("❌ Không đủ vàng!");
+            Debug.Log("Không đủ vàng!");
             return false;
         }
 
@@ -93,4 +96,14 @@ public class GoldManager : MonoBehaviour
             Debug.LogError("API lỗi khi update vàng: " + request.error);
         }
     }
+
+    public void RefreshGoldFromProfile()
+    {
+        if (ProfileManager.CurrentProfile != null)
+        {
+            CurrentGold = ProfileManager.CurrentProfile.coins;
+            Debug.Log($"GoldManager sync lại vàng từ Profile: {CurrentGold}");
+        }
+    }
+
 }

@@ -17,11 +17,11 @@ public class CharacterSelectManager : MonoBehaviour
         if (playerId != -1)
             StartCoroutine(LoadCharacters(playerId));
         else
-            UnityEngine.SceneManagement.SceneManager.LoadScene("LoginScene");
+            SceneManager.LoadScene("LoginScene");
 
         createNewCharacterButton.onClick.AddListener(() =>
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("CreateCharacterScene");
+            SceneManager.LoadScene("CreateCharacterScene");
         });
     }
 
@@ -54,7 +54,7 @@ public class CharacterSelectManager : MonoBehaviour
             }
             else
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene("CreateCharacterScene");
+                SceneManager.LoadScene("CreateCharacterScene");
             }
         }
         else
@@ -66,18 +66,21 @@ public class CharacterSelectManager : MonoBehaviour
     public void OnCharacterSelected(PlayerCharacter character)
     {
         PlayerPrefs.SetInt("CharacterId", character.id);
-        PlayerPrefs.SetString("CharacterName", character.name);  
+        PlayerPrefs.SetString("CharacterName", character.name);
         StartCoroutine(GoToGameScene(character.id));
     }
 
-
     IEnumerator GoToGameScene(int characterId)
     {
-        // Đợi load profile xong
         yield return StartCoroutine(ProfileManager.LoadProfileStatic(characterId));
+
         if (ProfileManager.CurrentProfile != null)
         {
-            // Lấy scene cuối cùng của nhân vật này
+            if (GoldManager.Instance != null)
+            {
+                GoldManager.Instance.RefreshGoldFromProfile();
+                Debug.Log($"[CharacterSelectManager]Vàng đã sync lại cho nhân vật ID {characterId}: {GoldManager.Instance.CurrentGold}");
+            }
             string lastScene = ProfileManager.CurrentProfile.lastScene;
 
             if (!string.IsNullOrEmpty(lastScene)
@@ -87,11 +90,11 @@ public class CharacterSelectManager : MonoBehaviour
                 && lastScene != "ChangePasswordScene"
                 && lastScene != "RegisterScene")
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(lastScene);
+                SceneManager.LoadScene(lastScene);
             }
             else
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Level 0");
+                SceneManager.LoadScene("Level 0");
             }
         }
         else
@@ -99,8 +102,6 @@ public class CharacterSelectManager : MonoBehaviour
             Debug.LogError("Không thể load profile cho nhân vật này!");
         }
     }
-
-
 
     [System.Serializable]
     public class CharacterListWrapper

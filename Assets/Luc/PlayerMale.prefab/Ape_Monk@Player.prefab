@@ -47501,7 +47501,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.00088500977, y: 0}
-  m_SizeDelta: {x: 180, y: 15}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.50000006, y: 1.0000025}
 --- !u!222 &205986389814493075
 CanvasRenderer:
@@ -57301,6 +57301,7 @@ GameObject:
   - component: {fileID: 855312264003014474}
   - component: {fileID: 7986303863643762815}
   - component: {fileID: 6343744326341201612}
+  - component: {fileID: 8350620885453811770}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -57381,6 +57382,19 @@ MonoBehaviour:
   expText: {fileID: 7649145485003473608}
   levelText: {fileID: 1413457882973471160}
   playerStats: {fileID: 0}
+--- !u!114 &8350620885453811770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8574144782441187166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df64372bacfb8844b95af74b136dc387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goldText: {fileID: 2876175464281509546}
 --- !u!1 &8608522403647240618
 GameObject:
   m_ObjectHideFlags: 0
