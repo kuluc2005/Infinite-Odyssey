@@ -191,4 +191,11 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    public void AddCoins(int amount)
+    {
+        if (ProfileManager.CurrentProfile == null) return;
+
+        ProfileManager.CurrentProfile.coins += amount;
+        GoldManager.Instance.AddCoins(amount);
+    }
 }

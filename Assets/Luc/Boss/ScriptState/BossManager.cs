@@ -10,7 +10,6 @@ public class BossManager : MonoBehaviour
     public int skill1Damage = 25;
     public int skill2Damage = 50;
     public float skill2Interval = 6f;
-    public int expReward = 100;
 
     private int basicAttackCount = 0;
     private int skill1UsageCount = 0;
@@ -35,20 +34,17 @@ public class BossManager : MonoBehaviour
 
         if (health.currentHealth <= 0 && !hasTriggeredDeath)
         {
-            hasTriggeredDeath = true; 
+            hasTriggeredDeath = true;
             animator.SetBool("IsDead", true);
-            RewardExpToPlayer();
             Destroy(gameObject, 3f);
         }
     }
 
-
     public void CountBasicAttack()
     {
-        // Nếu vừa dùng Skill1 thì không tăng
         if (isUsingSkill1)
         {
-            isUsingSkill1 = false; // reset lại cho lần sau
+            isUsingSkill1 = false;
             return;
         }
 
@@ -60,7 +56,7 @@ public class BossManager : MonoBehaviour
 
             if (skill1UsageCount < 2)
             {
-                isUsingSkill1 = true; // đánh dấu đã gọi skill1
+                isUsingSkill1 = true;
                 animator.SetTrigger("Attack1");
             }
             else if (!isSkill2Active)
@@ -69,7 +65,6 @@ public class BossManager : MonoBehaviour
             }
         }
     }
-
 
     public void SpawnSkill1()
     {
@@ -100,7 +95,6 @@ public class BossManager : MonoBehaviour
         animator.SetTrigger("SkillStart");
 
         yield return new WaitForSeconds(1.5f);
-
 
         isSkill2Active = false;
         skill1UsageCount = 0;
@@ -137,15 +131,6 @@ public class BossManager : MonoBehaviour
             Vector3 offset = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * radius;
             Vector3 pos = player.transform.position + offset;
             Instantiate(skill2Effect, pos, Quaternion.identity);
-        }
-    }
-
-    void RewardExpToPlayer()
-    {
-        var playerStats = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerStats>();
-        if (playerStats != null)
-        {
-            playerStats.AddExp(expReward);
         }
     }
 }

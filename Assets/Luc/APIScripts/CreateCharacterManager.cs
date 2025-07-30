@@ -80,7 +80,8 @@ public class CreateCharacterManager : MonoBehaviour
         {
             playerId = playerId,
             characterClass = characterClass,
-            name = name
+            name = name,
+            coins = 100
         };
 
         string json = JsonUtility.ToJson(req);
@@ -108,5 +109,6 @@ public class CreateCharacterManager : MonoBehaviour
         public int playerId;
         public string characterClass;
         public string name;
+        public int coins;
     }
 }

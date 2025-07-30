@@ -8,16 +8,15 @@ public class ExpUIManager : MonoBehaviour
     public GameObject expUIRoot;
 
     [Header("UI References")]
-    public Image expFillImage;             // Kéo "Filler" vào đây (Image Type = Filled, Fill Method = Horizontal)
-    public TextMeshProUGUI expText;        // Kéo Text hiện số XP vào đây
-    public TextMeshProUGUI levelText;      // Kéo Text hiện Level vào đây
+    public Image expFillImage;            
+    public TextMeshProUGUI expText;        
+    public TextMeshProUGUI levelText;      
 
     [Header("Data Reference")]
-    public PlayerStats playerStats;        // Auto gán nếu để trống
+    public PlayerStats playerStats;        
 
     void Awake()
     {
-        // Tự động tìm PlayerStats nếu chưa kéo reference
         if (playerStats == null)
             playerStats = GetComponentInParent<PlayerStats>();
     }
@@ -60,6 +59,6 @@ public class ExpUIManager : MonoBehaviour
 
         // Cập nhật Level
         if (levelText != null)
-            levelText.text = $"Lv. {playerStats.level}";
+            levelText.text = $"Lv.{playerStats.level}";
     }
 }

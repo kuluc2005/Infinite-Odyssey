@@ -127,9 +127,9 @@ public class InventorySyncManager : MonoBehaviour
         yield return putReq.SendWebRequest();
 
         if (putReq.result == UnityWebRequest.Result.Success)
-            Debug.Log("✅ Inventory đã được đồng bộ lên server!");
+            Debug.Log("Inventory đã được đồng bộ lên server!");
         else
-            Debug.LogError("❌ Lỗi đồng bộ inventory: " + putReq.error);
+            Debug.LogError("Lỗi đồng bộ inventory: " + putReq.error);
     }
 
     // ===== Load inventory từ API backend =====

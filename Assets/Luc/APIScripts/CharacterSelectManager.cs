@@ -66,8 +66,10 @@ public class CharacterSelectManager : MonoBehaviour
     public void OnCharacterSelected(PlayerCharacter character)
     {
         PlayerPrefs.SetInt("CharacterId", character.id);
+        PlayerPrefs.SetString("CharacterName", character.name);  
         StartCoroutine(GoToGameScene(character.id));
     }
+
 
     IEnumerator GoToGameScene(int characterId)
     {

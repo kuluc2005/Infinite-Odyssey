@@ -73,15 +73,16 @@ public class PlayerPositionManager : MonoBehaviour
         Vector3 pos = transform.position;
         string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-        // Chỉ lưu lastScene nếu đang ở scene chơi game thực sự!
         string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene" };
         bool isGameScene = !skipScenes.Contains(sceneName);
+
 
         UpdateProfile(profile =>
         {
             profile.currentCheckpoint = $"{sceneName}:{pos.x},{pos.y},{pos.z}";
             if (isGameScene)
                 profile.lastScene = sceneName;
+                profile.coins = GoldManager.Instance.CurrentGold;
         });
     }
 
