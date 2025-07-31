@@ -113,7 +113,7 @@ MonoBehaviour:
   - {fileID: -6981661230815265078}
   - {fileID: -1005415638491454417}
   - {fileID: 114043347838910644}
-  inEdition: 1
+  inEdition: 0
   itemsHidden: 0
 --- !u!114 &11411124
 MonoBehaviour:

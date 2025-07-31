@@ -88,16 +88,48 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-
     void ShowItemDetails(ShopItem item)
     {
         currentSelectedItem = item;
 
         if (iconDisplay != null) iconDisplay.sprite = item.icon;
         if (nameText != null) nameText.text = item.itemName;
-        if (descriptionText != null) descriptionText.text = item.description;
+
+        // 👉 Chuẩn bị biến Damage và StaminaCost mặc định là "??"
+        string dmgText = "??";
+        string staminaText = "??";
+
+        // 👉 Tìm vItem gốc từ ItemListData trong vItemManager
+        if (playerItemManager != null)
+        {
+            vItem vitem = playerItemManager.itemListData.items.Find(i => i.id == item.itemID);
+            if (vitem != null)
+            {
+                // ✅ Lấy Damage và StaminaCost từ attribute
+                var dmgAttr = vitem.GetItemAttribute(vItemAttributes.Damage);
+                var staminaAttr = vitem.GetItemAttribute(vItemAttributes.StaminaCost);
+
+                if (dmgAttr != null) dmgText = dmgAttr.value.ToString();
+                if (staminaAttr != null) staminaText = staminaAttr.value.ToString();
+            }
+            else
+            {
+                Debug.LogWarning($"⚠ Không tìm thấy vItem ID {item.itemID} trong ItemManager!");
+            }
+        }
+
+        // 🆕 👉 Hiển thị description + Damage + StaminaCost ngay trong 1 TMP_Text duy nhất
+        if (descriptionText != null)
+        {
+            descriptionText.text =
+                $"{item.description}\n" +
+                $"<color=#FFD700>Damage: </color> {dmgText}\n" +
+                $"<color=#00FF00>StaminaCost: </color> {staminaText}";
+        }
+
         if (priceText != null) priceText.text = item.price.ToString();
     }
+
 
     void BuyItem()
     {
@@ -116,9 +148,16 @@ public class ShopManager : MonoBehaviour
                 itemRef.amount = 1; // Mua 1 item
                 itemRef.addToEquipArea = false; // Không auto trang bị
 
-                // ✅ Gọi đúng hàm AddItem (Overload dùng ItemReference)
-                playerItemManager.AddItem(itemRef, true); // true = không chơi animation
+                // ✅ Thêm item vào kho
+                playerItemManager.AddItem(itemRef, true);
                 Debug.Log($"👜 Đã thêm item ID {currentSelectedItem.itemID} vào kho.");
+
+                // ✅ 🔥 Refresh UI Upgrade sau khi mua
+                InventoryUpgradeUI upgradeUI = FindObjectOfType<InventoryUpgradeUI>();
+                if (upgradeUI != null)
+                {
+                    upgradeUI.ForceRefresh();
+                }
             }
         }
         else
@@ -126,6 +165,7 @@ public class ShopManager : MonoBehaviour
             Debug.Log("❌ Not enough gold!");
         }
     }
+
 
 
     void UpdateCoinUI()
