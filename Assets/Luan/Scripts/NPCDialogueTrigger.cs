@@ -334,22 +334,28 @@ public class NPCDialogueTrigger : MonoBehaviour
 
         if (currentState == DialogueState.Complete)
         {
-            // Chỉ hoàn thành và trao thưởng nếu nhiệm vụ vẫn còn active (chưa hoàn thành)
             if (!hasGivenReward && QuestManager.instance.IsQuestActive(questData.questID))
             {
                 RemoveRequiredItems();
-                QuestManager.instance.CompleteQuest(questData); // Chỉ hoàn thành 1 lần khi trả
+
+                var invSync = FindFirstObjectByType<InventorySyncManager>();
+                if (invSync != null)
+                {
+                    Debug.Log("<color=yellow>[NPC] Đồng bộ kho sau khi trừ xu</color>");
+                    invSync.SaveInventoryToServer();
+                }
+
+                QuestManager.instance.CompleteQuest(questData);
                 hasGivenReward = true;
             }
 
-            // Spawn bản đồ nếu chưa có trong scene
+
             if (mapPieceReward && rewardSpawnPoint && GameObject.Find(mapPieceReward.name) == null)
             {
                 Instantiate(mapPieceReward, rewardSpawnPoint.position, Quaternion.identity);
                 Debug.Log("[NPC] Spawn bản đồ nhiệm vụ.");
             }
 
-            // Hiện cổng dịch chuyển nếu chưa kích hoạt
             if (portalObject && !portalObject.activeSelf)
             {
                 portalObject.SetActive(true);

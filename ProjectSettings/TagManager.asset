@@ -33,6 +33,10 @@ TagManager:
   - bridge
   - WayPointBoss
   - Ground
+  - RockSet_01
+  - Waypoints
+  - ' MainCamera'
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

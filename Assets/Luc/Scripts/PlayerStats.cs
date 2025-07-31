@@ -207,15 +207,6 @@ public class PlayerStats : MonoBehaviour
             currentHP = 0;
             //Die();
         }
-        if (vHUDController.instance != null)
-        {
-            vHUDController.instance.healthSlider.value = currentHP;
-        }
-
-        if (ProfileManager.CurrentProfile != null)
-        {
-            ProfileManager.CurrentProfile.HP = currentHP;
-        }
 
         Debug.Log($"Người chơi bị trúng đòn! HP còn lại: {currentHP}");
     }

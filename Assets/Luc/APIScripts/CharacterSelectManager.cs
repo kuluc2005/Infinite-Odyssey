@@ -65,6 +65,13 @@ public class CharacterSelectManager : MonoBehaviour
 
     public void OnCharacterSelected(PlayerCharacter character)
     {
+        var oldPlayer = FindFirstObjectByType<PlayerPositionManager>();
+        if (oldPlayer != null)
+        {
+            Debug.Log("Xoá player cũ trước khi load nhân vật mới");
+            Destroy(oldPlayer.gameObject);
+        }
+
         PlayerPrefs.SetInt("CharacterId", character.id);
         PlayerPrefs.SetString("CharacterName", character.name);
         StartCoroutine(GoToGameScene(character.id));

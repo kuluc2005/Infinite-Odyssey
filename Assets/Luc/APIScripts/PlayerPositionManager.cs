@@ -88,6 +88,12 @@ public class PlayerPositionManager : MonoBehaviour
                 profile.coins = GoldManager.Instance.CurrentGold;
                 Debug.Log($"[SavePlayerPosition] Lưu {profile.coins}");
             }
+            var stats = GetComponent<PlayerStats>();
+            if (stats != null)
+            {
+                profile.exp = stats.currentExp;
+                Debug.Log($"[SavePlayerPosition] Lưu EXP: {stats.currentExp}");
+            }
         });
     }
 

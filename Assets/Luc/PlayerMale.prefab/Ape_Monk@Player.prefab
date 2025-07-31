@@ -12901,6 +12901,7 @@ GameObject:
   - component: {fileID: 1093575749645363511}
   - component: {fileID: 8453145518483382483}
   - component: {fileID: 1047589416015852328}
+  - component: {fileID: 2343865218351392388}
   m_Layer: 8
   m_Name: Ape_Monk@Player
   m_TagString: Player
@@ -14331,6 +14332,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameText: {fileID: 8000309305393536375}
   goldText: {fileID: 2876175464281509546}
+--- !u!114 &2343865218351392388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266370944583079468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8ed0b11850145c4995dd76170bb2500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1271319766229705742
 GameObject:
   m_ObjectHideFlags: 0
@@ -25174,7 +25187,7 @@ SkinnedMeshRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -48172,7 +48185,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1302763225339234619, guid: 215687feeab0b7445b4a1cd86c82c2e1, type: 3}
+  m_Sprite: {fileID: 21300002, guid: 215687feeab0b7445b4a1cd86c82c2e1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
