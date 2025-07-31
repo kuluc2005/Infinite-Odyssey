@@ -198,4 +198,26 @@ public class PlayerStats : MonoBehaviour
         ProfileManager.CurrentProfile.coins += amount;
         GoldManager.Instance.AddCoins(amount);
     }
+
+    public void TakeDamage(int amount)
+    {
+        currentHP -= amount;
+        if (currentHP <= 0)
+        {
+            currentHP = 0;
+            //Die();
+        }
+        if (vHUDController.instance != null)
+        {
+            vHUDController.instance.healthSlider.value = currentHP;
+        }
+
+        if (ProfileManager.CurrentProfile != null)
+        {
+            ProfileManager.CurrentProfile.HP = currentHP;
+        }
+
+        Debug.Log($"Người chơi bị trúng đòn! HP còn lại: {currentHP}");
+    }
+
 }

@@ -24,7 +24,7 @@ public class BossAttackEffect : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerStatss stats = other.GetComponent<PlayerStatss>();
+            PlayerStats stats = other.GetComponent<PlayerStats>();
             if (stats != null)
             {
                 stats.TakeDamage(damageAmount);
