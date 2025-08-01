@@ -148,7 +148,7 @@ public class InventoryUpgradeUI : MonoBehaviour
             int gemCostNext = upgradeTable[currentLevel - 1].gemCost;
             int goldCostNext = upgradeTable[currentLevel - 1].goldCost;
 
-            if (gemCountText) gemCountText.text = $"💎 {playerGem} / {gemCostNext}";
+            if (gemCountText) gemCountText.text = $"{playerGem} / {gemCostNext}";
 
             // 👉 CHỈ cập nhật số vàng phải trả trong Text con của Coin
             if (coinText) coinText.text = $"{goldCostNext}";
