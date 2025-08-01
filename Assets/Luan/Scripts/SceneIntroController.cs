@@ -22,10 +22,13 @@ public class SceneIntroController : MonoBehaviour
 
         if (introTimeline != null)
         {
-            introTimeline.Play();
+            introTimeline.time = 0;                  
+            introTimeline.Evaluate();                
             introTimeline.stopped -= OnTimelineFinished;
             introTimeline.stopped += OnTimelineFinished;
+            introTimeline.Play();                     
         }
+
 
         if (skipButton != null)
         {
@@ -35,13 +38,13 @@ public class SceneIntroController : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (introTimeline != null && introTimeline.time >= introTimeline.duration && !hasEnded)
-        {
-            EndIntro();
-        }
-    }
+    //void Update()
+    //{
+    //    if (introTimeline != null && introTimeline.time >= introTimeline.duration && !hasEnded)
+    //    {
+    //        EndIntro();
+    //    }
+    //}
 
     public void SkipTimeline()
     {

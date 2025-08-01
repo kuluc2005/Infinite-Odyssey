@@ -22,7 +22,7 @@ MonoBehaviour:
     - Locale-vi
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
-  m_Settings: {fileID: 11400000, guid: ac9ea2aa0a2c0664fb17324ee627dd9e, type: 2}
+  m_Settings: {fileID: 11400000, guid: 48d9bba0f170e9742adf81bae9666000, type: 2}
   m_SchemaSet:
     m_Schemas:
     - {fileID: 11400000, guid: b304ef42bc2721348b10f71b1e205ac5, type: 2}
