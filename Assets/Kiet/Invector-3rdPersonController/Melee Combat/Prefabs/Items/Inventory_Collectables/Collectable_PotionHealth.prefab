@@ -5918,7 +5918,7 @@ MonoBehaviour:
       value: 25
       isOpen: 0
       isBool: 0
-    changeAttributes: 0
+    changeAttributes: 1
     autoEquip: 0
     addToEquipArea: 0
     indexArea: 0

@@ -10,6 +10,7 @@ public class UpgradeStats
     public int damageIncrease;    // ✅ Damage tăng mỗi cấp
     public int staminaDecrease;   // ✅ StaminaCost giảm mỗi cấp
     public int gemCost;           // ✅ Gem cần để nâng cấp
+    public int goldCost;          // ✅ Vàng cần để nâng cấp
 }
 
 public class InventoryUpgradeUI : MonoBehaviour
@@ -29,11 +30,11 @@ public class InventoryUpgradeUI : MonoBehaviour
     public TMP_Text rightLevelText;
 
     public TMP_Text gemCountText;
+    public TMP_Text coinText;   // 🆕 👉 Text con trong GameObject Coin (dùng để hiển thị số vàng phải trả)
     public TMP_Text leftAttack;
     public TMP_Text rightAttackPreview;
     public TMP_Text leftStamina;
     public TMP_Text rightStaminaPreview;
-    public TMP_Text goldCostText;
     public TMP_Text successRateText;
     public TMP_Text levelDisplayText;
     public Button upgradeButton;
@@ -46,9 +47,10 @@ public class InventoryUpgradeUI : MonoBehaviour
     public int maxLevel = 3;   // chỉ có 3 level
 
     private vItem currentSelectedItem;
-    private int playerGem = 100;   // Gem test
+    private int playerGem = 100;
+    private int playerGold = 1000;   // ✅ Gold của người chơi
 
-    // 🆕 Dictionary lưu damage gốc cho từng vũ khí (dựa theo id)
+    // 🆕 Lưu damage gốc cho từng vũ khí
     private Dictionary<int, int> baseDamageTable = new Dictionary<int, int>();
 
     void Start()
@@ -61,13 +63,10 @@ public class InventoryUpgradeUI : MonoBehaviour
         if (upgradeButton != null)
             upgradeButton.onClick.AddListener(OnUpgradeClicked);
 
-        if (upgradeCanvas != null)
-            upgradeCanvas.SetActive(false);
     }
 
     void Update()
     {
-        // Ấn phím V để mở/tắt UI
         if (Input.GetKeyDown(KeyCode.V))
         {
             if (upgradeCanvas != null)
@@ -81,7 +80,6 @@ public class InventoryUpgradeUI : MonoBehaviour
         }
     }
 
-    /// ✅ Load danh sách item từ kho sang panel bên phải
     public void RefreshInventoryUI()
     {
         foreach (Transform child in itemListParent)
@@ -96,7 +94,6 @@ public class InventoryUpgradeUI : MonoBehaviour
             foreach (Transform child in buttonObj.GetComponentsInChildren<Transform>(true))
                 child.gameObject.SetActive(true);
 
-            // lấy UI con
             Image icon = buttonObj.transform.Find("Icon")?.GetComponent<Image>();
             TMP_Text nameText = buttonObj.transform.Find("Name")?.GetComponent<TMP_Text>();
             TMP_Text attackText = buttonObj.transform.Find("Attack")?.GetComponent<TMP_Text>();
@@ -109,14 +106,12 @@ public class InventoryUpgradeUI : MonoBehaviour
             int damageVal = GetAttributeValue(item, vItemAttributes.Damage);
             int staminaVal = GetAttributeValue(item, vItemAttributes.StaminaCost);
 
-            // 🆕 Lưu damage gốc nếu chưa có
             if (!baseDamageTable.ContainsKey(item.id))
                 baseDamageTable[item.id] = damageVal;
 
             if (attackText != null) attackText.text = "Damage: " + damageVal;
             if (healthText != null) healthText.text = "StaminaCost: " + staminaVal;
 
-            // 🆕 Tính cấp độ dựa trên damage tăng thêm
             int calculatedLevel = CalculateLevel(item.id, damageVal);
 
             if (levelBadge != null)
@@ -126,7 +121,6 @@ public class InventoryUpgradeUI : MonoBehaviour
         }
     }
 
-    /// ✅ Khi click item bên phải → cập nhật thông tin bên trái
     void OnItemClicked(vItem item)
     {
         currentSelectedItem = item;
@@ -137,37 +131,36 @@ public class InventoryUpgradeUI : MonoBehaviour
         int damageVal = GetAttributeValue(item, vItemAttributes.Damage);
         int staminaVal = GetAttributeValue(item, vItemAttributes.StaminaCost);
 
-        // 🟡 Tính level hiện tại & level kế
         int currentLevel = CalculateLevel(item.id, damageVal);
         int nextLevel = Mathf.Clamp(currentLevel + 1, 1, maxLevel);
 
-        // 🆕 Hiển thị level trên 2 hình
         if (leftLevelText) leftLevelText.text = $"Lv.{currentLevel}";
         if (rightLevelText) rightLevelText.text = currentLevel < maxLevel ? $"Lv.{nextLevel}" : "MAX";
 
-        // ✅ Hiển thị Damage & StaminaCost hiện tại (bên trái)
         if (leftAttack) leftAttack.text = $"Damage: {damageVal}";
         if (leftStamina) leftStamina.text = $"StaminaCost: {staminaVal}";
 
-        // ✅ Hiển thị Level ở panel trái
         if (levelDisplayText) levelDisplayText.text = $"Lv. {currentLevel}";
 
-        // ✅ HIỂN THỊ GEM COST CHUẨN
+        // ✅ HIỂN THỊ GEM COST & GOLD COST (trong coinText)
         if (currentLevel < maxLevel)
         {
-            // 🔥 Dùng currentLevel - 1 để hiển thị Gem cost cho LẦN NÂNG CẤP TIẾP THEO
             int gemCostNext = upgradeTable[currentLevel - 1].gemCost;
-            if (gemCountText) gemCountText.text = $"{playerGem} / {gemCostNext}";
+            int goldCostNext = upgradeTable[currentLevel - 1].goldCost;
+
+            if (gemCountText) gemCountText.text = $"💎 {playerGem} / {gemCostNext}";
+
+            // 👉 CHỈ cập nhật số vàng phải trả trong Text con của Coin
+            if (coinText) coinText.text = $"{goldCostNext}";
         }
         else
         {
             if (gemCountText) gemCountText.text = "MAX LEVEL";
+            if (coinText) coinText.text = "MAX";
         }
 
-        if (goldCostText) goldCostText.text = "Tốn:";
         if (successRateText) successRateText.text = "Tỉ lệ thành công: 100%";
 
-        // ✅ PREVIEW Damage & Stamina sau khi nâng cấp
         if (currentLevel < maxLevel)
         {
             UpgradeStats nextStats = upgradeTable[currentLevel - 1];
@@ -182,9 +175,10 @@ public class InventoryUpgradeUI : MonoBehaviour
             rightAttackPreview.text = "MAX";
             rightStaminaPreview.text = "MAX";
         }
+        // ✅ Thêm đoạn này để đảm bảo lần click đầu tiên mở luôn UI
+        OpenUpgrade();
     }
 
-    /// ✅ Nâng cấp vũ khí khi nhấn Upgrade
     void OnUpgradeClicked()
     {
         if (currentSelectedItem == null)
@@ -202,7 +196,6 @@ public class InventoryUpgradeUI : MonoBehaviour
             return;
         }
 
-        // ✅ LẤY ĐÚNG GEM COST CỦA LẦN NÂNG CẤP TIẾP THEO
         UpgradeStats stats = upgradeTable[currentLevel - 1];
 
         if (playerGem < stats.gemCost)
@@ -211,17 +204,23 @@ public class InventoryUpgradeUI : MonoBehaviour
             return;
         }
 
-        // ✅ Trừ Gem
-        playerGem -= stats.gemCost;
+        if (playerGold < stats.goldCost)
+        {
+            Debug.Log("❌ Không đủ Gold để nâng cấp!");
+            return;
+        }
 
-        // ✅ Cập nhật Damage và Stamina
+        // ✅ Trừ Gem & Gold
+        playerGem -= stats.gemCost;
+        playerGold -= stats.goldCost;
+
         var dmgAttr = currentSelectedItem.GetItemAttribute(vItemAttributes.Damage);
         var staminaAttr = currentSelectedItem.GetItemAttribute(vItemAttributes.StaminaCost);
 
         if (dmgAttr != null) dmgAttr.value += stats.damageIncrease;
         if (staminaAttr != null) staminaAttr.value = Mathf.Max(0, staminaAttr.value - stats.staminaDecrease);
 
-        Debug.Log($"✅ {currentSelectedItem.name} nâng cấp lên Level {currentLevel + 1}: +{stats.damageIncrease} Damage, -{stats.staminaDecrease} StaminaCost (Gem còn {playerGem})");
+        Debug.Log($"✅ {currentSelectedItem.name} nâng cấp lên Level {currentLevel + 1}: +{stats.damageIncrease} Damage, -{stats.staminaDecrease} StaminaCost (Gem còn {playerGem}, Gold còn {playerGold})");
 
         RefreshInventoryUI();
         OnItemClicked(currentSelectedItem);
@@ -252,7 +251,6 @@ public class InventoryUpgradeUI : MonoBehaviour
         }
     }
 
-    // 🏗 Logic tính level dựa trên damage gốc
     private int CalculateLevel(int itemId, int currentDamage)
     {
         if (!baseDamageTable.ContainsKey(itemId))
@@ -262,14 +260,13 @@ public class InventoryUpgradeUI : MonoBehaviour
         int extraDamage = currentDamage - baseDamage;
 
         if (extraDamage < 5)
-            return 1;   // Level 1
+            return 1;
         else if (extraDamage < 15)
-            return 2;   // Level 2
+            return 2;
         else
-            return 3;   // Level 3
+            return 3;
     }
 
-    // 🔧 Hàm phụ lấy attribute
     private int GetAttributeValue(vItem item, vItemAttributes attr)
     {
         var attribute = item.GetItemAttribute(attr);

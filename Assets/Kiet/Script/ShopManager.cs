@@ -95,9 +95,7 @@ public class ShopManager : MonoBehaviour
         if (iconDisplay != null) iconDisplay.sprite = item.icon;
         if (nameText != null) nameText.text = item.itemName;
 
-        // 👉 Chuẩn bị biến Damage và StaminaCost mặc định là "??"
-        string dmgText = "??";
-        string staminaText = "??";
+        string displayText = $"{item.description}\n";
 
         // 👉 Tìm vItem gốc từ ItemListData trong vItemManager
         if (playerItemManager != null)
@@ -105,12 +103,50 @@ public class ShopManager : MonoBehaviour
             vItem vitem = playerItemManager.itemListData.items.Find(i => i.id == item.itemID);
             if (vitem != null)
             {
-                // ✅ Lấy Damage và StaminaCost từ attribute
                 var dmgAttr = vitem.GetItemAttribute(vItemAttributes.Damage);
-                var staminaAttr = vitem.GetItemAttribute(vItemAttributes.StaminaCost);
 
-                if (dmgAttr != null) dmgText = dmgAttr.value.ToString();
-                if (staminaAttr != null) staminaText = staminaAttr.value.ToString();
+                // 👉 Lấy StaminaCost trước, nếu không có thì lấy Stamina
+                var staminaAttr = vitem.GetItemAttribute(vItemAttributes.StaminaCost);
+                if (staminaAttr == null)
+                    staminaAttr = vitem.GetItemAttribute(vItemAttributes.MaxStamina);  
+
+                var healthAttr = vitem.GetItemAttribute(vItemAttributes.Health);
+
+
+                // 🔥 🆕 PHÂN BIỆT THEO ITEM TYPE + TÊN ITEM
+                if (item.type == ItemType.Melee)
+                {
+                    // 👉 Vũ khí chỉ hiển thị Damage + StaminaCost
+                    if (dmgAttr != null)
+                        displayText += $"<color=#FFD700>Damage: </color> {dmgAttr.value}\n";
+                    if (staminaAttr != null)
+                        displayText += $"<color=#00FF00>Stamina Cost: </color> {staminaAttr.value}\n";
+                }
+                else if (item.type == ItemType.Consumable)
+                {
+                    // 👉 Nếu là Health Potion
+                    if (item.itemName.ToLower().Contains("health"))
+                    {
+                        if (healthAttr != null)
+                            displayText += $"<color=#FF4C4C>Health: </color> {healthAttr.value}\n";
+                    }
+                    // 👉 Nếu là Stamina Potion
+                    else if (item.itemName.ToLower().Contains("stamina"))
+                    {
+                        if (staminaAttr != null)
+                            displayText += $"<color=#00FF00>Stamina: </color> {staminaAttr.value}\n";
+                    }
+                }
+                else
+                {
+                    // 👉 Trường hợp còn lại hiển thị tất cả
+                    if (dmgAttr != null)
+                        displayText += $"<color=#FFD700>Damage: </color> {dmgAttr.value}\n";
+                    if (staminaAttr != null)
+                        displayText += $"<color=#00FF00>Stamina Cost: </color> {staminaAttr.value}\n";
+                    if (healthAttr != null)
+                        displayText += $"<color=#FF4C4C>Health: </color> {healthAttr.value}\n";
+                }
             }
             else
             {
@@ -118,17 +154,13 @@ public class ShopManager : MonoBehaviour
             }
         }
 
-        // 🆕 👉 Hiển thị description + Damage + StaminaCost ngay trong 1 TMP_Text duy nhất
+        // 👉 Gán text hiển thị lên UI
         if (descriptionText != null)
-        {
-            descriptionText.text =
-                $"{item.description}\n" +
-                $"<color=#FFD700>Damage: </color> {dmgText}\n" +
-                $"<color=#00FF00>StaminaCost: </color> {staminaText}";
-        }
+            descriptionText.text = displayText;
 
         if (priceText != null) priceText.text = item.price.ToString();
     }
+
 
 
     void BuyItem()
