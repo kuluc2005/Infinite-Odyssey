@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using Invector.vItemManager;
+using Invector.vCharacterController;
+
 
 public class ShopManager : MonoBehaviour
 {
@@ -111,6 +113,8 @@ public class ShopManager : MonoBehaviour
                 itemRef.amount = 1;
                 itemRef.addToEquipArea = false;
                 playerItemManager.AddItem(itemRef, true);
+
+                FindFirstObjectByType<InventorySyncManager>()?.SaveInventoryToServer();
             }
         }
         else
@@ -131,9 +135,15 @@ public class ShopManager : MonoBehaviour
             shopCanvas.SetActive(true);
 
         IsAnyShopOpen = true;
+
+        foreach (var input in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+        {
+            if (input is vThirdPersonInput || input.GetType().Name.Contains("MeleeCombatInput"))
+                input.enabled = false;
+        }
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
         UpdateCoinUI();
     }
 
@@ -143,6 +153,13 @@ public class ShopManager : MonoBehaviour
             shopCanvas.SetActive(false);
 
         IsAnyShopOpen = false;
+
+        foreach (var input in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+        {
+            if (input is vThirdPersonInput || input.GetType().Name.Contains("MeleeCombatInput"))
+                input.enabled = true;
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
