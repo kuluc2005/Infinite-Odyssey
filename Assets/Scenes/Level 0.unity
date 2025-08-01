@@ -9783,7 +9783,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MLEE
+  m_text: Item
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12857,8 +12857,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: bf566e80557acbc45b9a695fcaa25327, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -19808,7 +19808,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shopItems:
   - itemName: Katana_short
-    description: Damage cao
+    description: 
     icon: {fileID: 21300000, guid: 56e79d7e38be01c4c9171802884dfb05, type: 3}
     price: 20
     type: 0
@@ -19816,7 +19816,7 @@ MonoBehaviour:
     itemID: 8
     quantity: 1
   - itemName: Axe
-    description: Damage cao
+    description: 
     icon: {fileID: 21300000, guid: b2158c09d5bc7284989f53a47f7638e3, type: 3}
     price: 30
     type: 0
@@ -19824,7 +19824,7 @@ MonoBehaviour:
     itemID: 0
     quantity: 1
   - itemName: Magic_Staff
-    description: Damage cao
+    description: 
     icon: {fileID: 21300000, guid: 711d9e1db66d2334aa75bb3d48a326c5, type: 3}
     price: 300
     type: 0
@@ -19832,7 +19832,7 @@ MonoBehaviour:
     itemID: 16
     quantity: 1
   - itemName: Katana_long
-    description: Damage cao
+    description: 
     icon: {fileID: 21300000, guid: 75c369d61ea60a54e877b01a25ae0916, type: 3}
     price: 10
     type: 0
@@ -19840,7 +19840,7 @@ MonoBehaviour:
     itemID: 8
     quantity: 1
   - itemName: Health
-    description: Health
+    description: 
     icon: {fileID: 21300000, guid: 862e9f0d31ea667448a05c4d0ec24492, type: 3}
     price: 10
     type: 1
@@ -19868,7 +19868,7 @@ MonoBehaviour:
   - {fileID: 1336359462}
   iconDisplay: {fileID: 1993674104}
   nameText: {fileID: 878757137}
-  descriptionText: {fileID: 0}
+  descriptionText: {fileID: 1946294270}
   priceText: {fileID: 1661250475}
   buyButton: {fileID: 131985755}
   coinText: {fileID: 1992607971}
@@ -21713,7 +21713,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.2500229, y: -71.48369}
+  m_AnchoredPosition: {x: 10, y: -85}
   m_SizeDelta: {x: 249.5, y: 97.2744}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1946294270
@@ -21801,7 +21801,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -0.04160307, y: 0, z: 15.721031, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Invector.vItemManager;
 using Invector.vCharacterController;
 
-
 public class ShopManager : MonoBehaviour
 {
     [Header("Item List")]
@@ -28,7 +27,6 @@ public class ShopManager : MonoBehaviour
     private ShopItem currentSelectedItem;
     public GameObject shopCanvas;
     public static bool IsAnyShopOpen = false;
-
 
     private vItemManager playerItemManager;
 
@@ -94,7 +92,67 @@ public class ShopManager : MonoBehaviour
 
         if (iconDisplay != null) iconDisplay.sprite = item.icon;
         if (nameText != null) nameText.text = item.itemName;
-        if (descriptionText != null) descriptionText.text = item.description;
+
+        string displayText = $"{item.description}\n";
+
+        // 👉 Tìm vItem gốc từ ItemListData trong vItemManager
+        if (playerItemManager != null)
+        {
+            vItem vitem = playerItemManager.itemListData.items.Find(i => i.id == item.itemID);
+            if (vitem != null)
+            {
+                var dmgAttr = vitem.GetItemAttribute(vItemAttributes.Damage);
+
+                // 👉 Lấy StaminaCost trước, nếu không có thì lấy Stamina
+                var staminaAttr = vitem.GetItemAttribute(vItemAttributes.StaminaCost);
+                if (staminaAttr == null)
+                    staminaAttr = vitem.GetItemAttribute(vItemAttributes.MaxStamina);
+
+                var healthAttr = vitem.GetItemAttribute(vItemAttributes.Health);
+
+
+                if (item.type == ItemType.Melee)
+                {
+                    if (dmgAttr != null)
+                        displayText += $"<color=#FFD700>Damage: </color> {dmgAttr.value}\n";
+                    if (staminaAttr != null)
+                        displayText += $"<color=#00FF00>Stamina Cost: </color> {staminaAttr.value}\n";
+                }
+                else if (item.type == ItemType.Consumable)
+                {
+                    // 👉 Nếu là Health Potion
+                    if (item.itemName.ToLower().Contains("health"))
+                    {
+                        if (healthAttr != null)
+                            displayText += $"<color=#FF4C4C>Health: </color> {healthAttr.value}\n";
+                    }
+                    // 👉 Nếu là Stamina Potion
+                    else if (item.itemName.ToLower().Contains("stamina"))
+                    {
+                        if (staminaAttr != null)
+                            displayText += $"<color=#00FF00>Stamina: </color> {staminaAttr.value}\n";
+                    }
+                }
+                else
+                {
+                    // 👉 Trường hợp còn lại hiển thị tất cả
+                    if (dmgAttr != null)
+                        displayText += $"<color=#FFD700>Damage: </color> {dmgAttr.value}\n";
+                    if (staminaAttr != null)
+                        displayText += $"<color=#00FF00>Stamina Cost: </color> {staminaAttr.value}\n";
+                    if (healthAttr != null)
+                        displayText += $"<color=#FF4C4C>Health: </color> {healthAttr.value}\n";
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Không tìm thấy vItem ID {item.itemID} trong ItemManager!");
+            }
+        }
+
+        if (descriptionText != null)
+            descriptionText.text = displayText;
+
         if (priceText != null) priceText.text = item.price.ToString();
     }
 
@@ -163,5 +221,4 @@ public class ShopManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
 }

@@ -1299,7 +1299,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cutsceneSceneName: CutSceneLevel2
   nextLevelName: Level 2
-  targetSpawnPoint: {fileID: 0}
 --- !u!1001 &260069938
 PrefabInstance:
   m_ObjectHideFlags: 0

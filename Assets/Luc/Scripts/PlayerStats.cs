@@ -211,4 +211,32 @@ public class PlayerStats : MonoBehaviour
         Debug.Log($"Người chơi bị trúng đòn! HP còn lại: {currentHP}");
     }
 
+    public IEnumerator SaveExpBeforeSceneChange(System.Action onDone)
+    {
+        var ppm = GetComponent<PlayerPositionManager>();
+        if (ppm != null)
+        {
+            bool finished = false;
+            ppm.UpdateProfile(profile =>
+            {
+                profile.exp = currentExp;
+            });
+
+            StartCoroutine(WaitForProfileUpdate(() => {
+                finished = true;
+            }));
+
+            yield return new WaitUntil(() => finished);
+        }
+        onDone?.Invoke();
+    }
+
+    private IEnumerator WaitForProfileUpdate(System.Action onComplete)
+    {
+        yield return null;
+        yield return new WaitForSeconds(1f);
+        onComplete?.Invoke();
+    }
+
+
 }
