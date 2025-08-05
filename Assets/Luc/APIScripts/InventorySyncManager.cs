@@ -79,7 +79,7 @@ public class InventorySyncManager : MonoBehaviour
 
             foreach (var data in loaded.items)
             {
-                Debug.Log("Try to add item id: " + data.id + ", amount: " + data.amount);
+                //Debug.Log("Try to add item id: " + data.id + ", amount: " + data.amount);
                 var itemRef = new ItemReference(data.id);
                 itemRef.amount = data.amount;
                 bool exist = itemManager.itemListData.items.Any(i => i.id == data.id);
