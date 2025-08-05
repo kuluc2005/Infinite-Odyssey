@@ -1340,6 +1340,7 @@ GameObject:
   - component: {fileID: 8406962401255938247}
   - component: {fileID: 4287555403474874633}
   - component: {fileID: 2981958087613114105}
+  - component: {fileID: -3982549345963828651}
   m_Layer: 9
   m_Name: Sandman
   m_TagString: Enemy
@@ -1831,6 +1832,19 @@ MonoBehaviour:
   onResetHealth:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-3982549345963828651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015888037590445927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e65d2d5ef309f5429f1ac7820f9446e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyID: Enemy
 --- !u!1 &2262021695510121656
 GameObject:
   m_ObjectHideFlags: 0

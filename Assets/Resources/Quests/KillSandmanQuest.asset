@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ef25a45707a4742a6dd06dd774531d, type: 3}
+  m_Name: KillSandmanQuest
+  m_EditorClassIdentifier: 
+  questID: KillSandmanQuest
+  questName: "Ti\xEAu di\u1EC7t Sandman"
+  questDescription: "Ti\xEAu di\u1EC7t c\xE1c Sandman \u0111ang qu\u1EA5y ph\xE1
+    \u1EDF th\u1EBF gi\u1EDBi c\xE1t n\xE0y."
+  targetTag: 
+  targetKillCount: 1
+  objectives:
+  - objectiveDescription: 
+    type: 0
+    targetID: Enemy
+    requiredAmount: 3
+    currentAmount: 0
+  goldReward: 0
+  healthIncreaseReward: 0
+  damageIncreaseReward: 0
+  startDialogue: []
+  progressDialogue: []
+  completeDialogue: []
+  nextQuest: {fileID: 0}
