@@ -24185,8 +24185,8 @@ GameObject:
   - component: {fileID: 3806039598199004521}
   - component: {fileID: 3806039598199004522}
   - component: {fileID: 3806039598199004523}
-  - component: {fileID: -1367734493635812828}
-  - component: {fileID: 4556322670019872593}
+  - component: {fileID: 8136599909808400674}
+  - component: {fileID: 3301986104994948563}
   m_Layer: 0
   m_Name: FX_Fire_03_2
   m_TagString: Untagged
@@ -24204,7 +24204,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.67, y: 2.55, z: -5.35}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3806039597038410502}
@@ -29023,7 +29023,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &-1367734493635812828
+--- !u!114 &8136599909808400674
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29032,22 +29032,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 3806039598199004532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f421297964672ed4b8246b0b1ee0ef17, type: 3}
+  m_Script: {fileID: 11500000, guid: 0afc60094ed31ec4bb8ccb56d71ada05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnWhenFinish: {fileID: 0}
-  speed: 10
-  distance: 30
---- !u!114 &4556322670019872593
-MonoBehaviour:
+  targetPlayer: {fileID: 6405518517103791451, guid: e5db7ef12146ee64cb91dccc0c44c374, type: 3}
+  radius: 2
+  rotateSpeed: 50
+  heightOffset: 1
+  homingSpeed: 15
+  damage: 20
+--- !u!135 &3301986104994948563
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3806039598199004532}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44a90e496c63f6c4db2728c61c5ff894, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeTime: 3
+  serializedVersion: 3
+  m_Radius: 1.2209618
+  m_Center: {x: 0, y: -0.101342596, z: -0.0009314219}

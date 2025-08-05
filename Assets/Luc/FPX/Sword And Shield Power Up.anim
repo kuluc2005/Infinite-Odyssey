@@ -63598,14 +63598,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.53333336
-    functionName: SpawnBuffVFX
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 2.1
-    functionName: DestroyBuffVFX
+    functionName: SpawnFireballsAroundPlayer
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -44,6 +44,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CutSceneLevel3.unity
     guid: 23638615b43bb634fb5a307ca10c27ae
+  - enabled: 1
+    path: Assets/Scenes/LossScene.unity
+    guid: 32fd6c0e04add3840bd4d163f79a7e4b
+  - enabled: 1
+    path: Assets/Scenes/WinSCene.unity
+    guid: 1d8fe657b8bc8454d99b92424fa707e6
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 59d3e19d28de66d418ce920cb1fd6ed5, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

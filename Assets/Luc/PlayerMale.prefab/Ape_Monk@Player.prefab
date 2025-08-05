@@ -14253,15 +14253,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 5755361083071080648}
-  projectilePrefab: {fileID: 3020920808754819069, guid: d860dbff6d19af4448c7d0e478fa5cef, type: 3}
+  projectilePrefab: {fileID: 6111486948785554852, guid: f7967f33aeac15f48a3732e3fd3ac36c, type: 3}
   projectileSpawnPoint: {fileID: 4804773804245718676}
   skill1Cooldown: 3
+  fireballPrefab: {fileID: 3806039598199004532, guid: bd1386d4ee3726342be61ab90aefa917, type: 3}
+  numberOfFireballs: 5
+  orbitRadius: 2
+  orbitSpeed: 60
   skill2Cooldown: 3
+  skill2AttackRange: 15
+  buffVFXPrefab: {fileID: 7155335147208632822, guid: 97c43495f80a3244fad1301dfafbe252, type: 3}
+  buffVFXSpawnPoint: {fileID: 5555781051578603022}
   skill3EffectPrefab: {fileID: 7357505684978977878, guid: d4d5034b499b0f648a09af6ff95e5bad, type: 3}
   skill3Cooldown: 10
   skill3CooldownTimer: 0
-  buffVFXPrefab: {fileID: 7155335147208632822, guid: 97c43495f80a3244fad1301dfafbe252, type: 3}
-  buffVFXSpawnPoint: {fileID: 5555781051578603022}
+  skill3AttackRange: 15
 --- !u!114 &-9189656699026346942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65233,6 +65239,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2269452753376889932, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c5c51b2f31fb9de4c9e1984320adab97, type: 3}
+    - target: {fileID: 2269452753376889932, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2269452753376889932, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2269452753376889932, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2499494512720260843, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_Name
       value: Skill2
@@ -65240,6 +65262,10 @@ PrefabInstance:
     - target: {fileID: 2946932263531344733, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_Name
       value: Skill3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2946932263531344733, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2952074436561213802, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_Name
@@ -65361,6 +65387,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 51
       objectReference: {fileID: 0}
+    - target: {fileID: 6678282058074751232, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 51
+      objectReference: {fileID: 0}
+    - target: {fileID: 6678282058074751232, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 51
+      objectReference: {fileID: 0}
     - target: {fileID: 6821502605282026239, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_Name
       value: Skill2
@@ -65371,15 +65405,15 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 63505779c3342bf44a7d398d4d3f5c88, type: 3}
     - target: {fileID: 6918651390577143947, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.9245283
       objectReference: {fileID: 0}
     - target: {fileID: 6918651390577143947, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.9245283
       objectReference: {fileID: 0}
     - target: {fileID: 6918651390577143947, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.9245283
       objectReference: {fileID: 0}
     - target: {fileID: 7691455599225129784, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_Sprite
@@ -65409,9 +65443,33 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8970829653196015887, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7735f38d8f644df46a802c2388170fa3, type: 3}
+    - target: {fileID: 8970829653196015887, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8970829653196015887, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8970829653196015887, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9127683993397130769, guid: 709c5b483c7a72945a235663750bed17, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9163932488583655286, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 51
+      objectReference: {fileID: 0}
+    - target: {fileID: 9163932488583655286, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 51
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -65454,6 +65512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownMask: {fileID: 2504093304928048201}
+  skillIcon: {fileID: 5043298560608161681}
   skillManager: {fileID: 613174528642146097}
   skillIndex: 3
 --- !u!114 &1413457882973471160 stripped
@@ -65485,13 +65544,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownMask: {fileID: 6602049126148944021}
+  skillIcon: {fileID: 2809428238429588178}
   skillManager: {fileID: 613174528642146097}
   skillIndex: 2
+--- !u!114 &2809428238429588178 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2269452753376889932, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+  m_PrefabInstance: {fileID: 4144348875710514846}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3315084426405423217 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1693956956589453039, guid: 709c5b483c7a72945a235663750bed17, type: 3}
   m_PrefabInstance: {fileID: 4144348875710514846}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5043298560608161681 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8970829653196015887, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+  m_PrefabInstance: {fileID: 4144348875710514846}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5561694534858032108 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8407293539115992434, guid: 709c5b483c7a72945a235663750bed17, type: 3}
@@ -65501,6 +65583,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6449246545377179157 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6918651390577143947, guid: 709c5b483c7a72945a235663750bed17, type: 3}
+  m_PrefabInstance: {fileID: 4144348875710514846}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6602049126148944021 stripped
@@ -65570,6 +65663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownMask: {fileID: 9133502873379898808}
+  skillIcon: {fileID: 6449246545377179157}
   skillManager: {fileID: 613174528642146097}
   skillIndex: 1
 --- !u!114 &9133502873379898808 stripped
