@@ -16,6 +16,6 @@ public class EnemyDeathHandler : MonoBehaviour
 
     void OnDeadEvent(GameObject enemy)
     {
-        Destroy(enemy, 3f);  // Enemy sẽ tự biến mất sau 3 giây
+        Destroy(enemy, 1.5f); 
     }
 }

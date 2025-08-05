@@ -4,6 +4,7 @@ namespace Invector.vCharacterController
 {
     using vEventSystems;
     using vMelee;
+    using static NPCDialogueTrigger;
 
     // here you can modify the Melee Combat inputs
     // if you want to modify the Basic Locomotion inputs, go to the vThirdPersonInput
@@ -71,12 +72,31 @@ namespace Invector.vCharacterController
             base.FixedUpdate();
         }
 
+        //public override void InputHandle()
+        //{
+        //    if (cc == null || cc.isDead)
+        //    {
+        //        return;
+        //    }
+
+        //    base.InputHandle();
+
+        //    if (MeleeAttackConditions() && !lockMeleeInput)
+        //    {
+        //        MeleeWeakAttackInput();
+        //        MeleeStrongAttackInput();
+        //        BlockingInput();
+        //    }
+        //    else
+        //    {
+        //        ResetAttackTriggers();
+        //        isBlocking = false;
+        //    }
+        //}
         public override void InputHandle()
         {
-            if (cc == null || cc.isDead)
-            {
+            if (cc == null || cc.isDead || DialogueSystemState.IsTalkingWithNPC)
                 return;
-            }
 
             base.InputHandle();
 

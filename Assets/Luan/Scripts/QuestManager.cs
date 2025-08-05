@@ -16,8 +16,11 @@ public class PlayerQuestListWrapper
     public PlayerQuestDto[] data;
 }
 
+
 public class QuestManager : MonoBehaviour
 {
+    public bool isLoggingOut = false;
+
     public static QuestManager instance { get; private set; }
 
     public Dictionary<string, QuestData> activeQuests = new Dictionary<string, QuestData>();
@@ -46,6 +49,14 @@ public class QuestManager : MonoBehaviour
     public void StartQuest(QuestData quest)
     {
         if (quest == null || activeQuests.ContainsKey(quest.questID)) return;
+
+        if (quest.hideFlags == HideFlags.None) 
+        {
+            quest = ScriptableObject.Instantiate(quest);
+            Debug.LogWarning($"[QuestManager] Đã clone lại QuestData: {quest.questID}");
+        }
+
+        // Reset tiến độ
         foreach (var obj in quest.objectives)
             obj.currentAmount = 0;
 
@@ -54,12 +65,15 @@ public class QuestManager : MonoBehaviour
         Debug.Log($"[DEBUG][StartQuest] Trước khi save: questID={quest.questID}, currentAmount={quest.objectives[0].currentAmount}, requiredAmount={quest.objectives[0].requiredAmount}");
         SaveQuestToApi(quest, "active");
         Debug.Log($"[QuestManager] Bắt đầu nhiệm vụ: {quest.questName}");
+
         FindFirstObjectByType<QuestPanelToggle>()?.UpdateBadge();
     }
 
 
+
     public void UpdateQuestObjective(ObjectiveType type, string targetID, int amount = 1)
     {
+        if (isLoggingOut) return;
         foreach (var quest in activeQuests.Values)
         {
             foreach (var obj in quest.objectives)
@@ -69,6 +83,7 @@ public class QuestManager : MonoBehaviour
                     obj.currentAmount += amount;
                     Debug.Log($"[QuestManager] Đã cập nhật mục tiêu: {obj.objectiveDescription} ({obj.currentAmount}/{obj.requiredAmount})");
                     SaveQuestToApi(quest, "active");
+                    //Debug.Log("[DEBUG] Đã gọi SaveQuestToApi sau UpdateQuestObjective.");
                     return;
                 }
             }
@@ -152,6 +167,9 @@ public class QuestManager : MonoBehaviour
     // Hàm nhận dữ liệu từ API về và map lại vào game
     void OnLoadedQuestsFromApi(string json)
     {
+        activeQuests.Clear();
+        completedQuests.Clear();
+        //=====================//
         if (string.IsNullOrEmpty(json))
         {
             Debug.LogWarning("Không nhận được dữ liệu quest từ API!");
@@ -163,9 +181,6 @@ public class QuestManager : MonoBehaviour
         // Chỉ clear khi dữ liệu thực sự hợp lệ và khác rỗng!
         if (questListWrapper != null && questListWrapper.data != null && questListWrapper.data.Length > 0)
         {
-            activeQuests.Clear();
-            completedQuests.Clear();
-
             Debug.Log($"[OnLoadedQuestsFromApi] Nhận {questListWrapper.data.Length} quest từ API:");
             foreach (var questDto in questListWrapper.data)
             {
@@ -181,6 +196,8 @@ public class QuestManager : MonoBehaviour
                 QuestData questData = ScriptableObject.Instantiate(questDataAsset);
 
                 var objectives = JsonHelper.FromJson<QuestObjectiveProgress>(questDto.progressJSON);
+                //Debug.Log($"[DEBUG][ProgressJSON Raw]: {questDto.progressJSON}");
+
                 if (objectives != null)
                 {
                     foreach (var obj in objectives)
@@ -210,9 +227,6 @@ public class QuestManager : MonoBehaviour
 
         FindFirstObjectByType<QuestPanelToggle>()?.UpdateBadge();
     }
-
-
-
 
     public void SaveQuestToApi(QuestData quest, string status, System.Action<bool> callback = null)
     {

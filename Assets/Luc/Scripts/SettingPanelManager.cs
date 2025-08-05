@@ -75,6 +75,8 @@ public class SettingPanelManager : MonoBehaviour
 
     private IEnumerator SaveAndLogout()
     {
+        QuestManager.instance.isLoggingOut = true;
+
         // Lưu vị trí
         var ppm = GetCurrentPlayerPositionManager();
         if (ppm != null)

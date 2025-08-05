@@ -17,14 +17,14 @@ MonoBehaviour:
   questDescription: "Ti\xEAu di\u1EC7t c\xE1c Sandman \u0111ang qu\u1EA5y ph\xE1
     \u1EDF th\u1EBF gi\u1EDBi c\xE1t n\xE0y."
   targetTag: 
-  targetKillCount: 1
+  targetKillCount: 3
   objectives:
-  - objectiveDescription: 
+  - objectiveDescription: "Ti\xEAu di\u1EC7t Sandman"
     type: 0
     targetID: Enemy
     requiredAmount: 3
-    currentAmount: 0
-  goldReward: 0
+    currentAmount: 3
+  goldReward: 300
   healthIncreaseReward: 0
   damageIncreaseReward: 0
   startDialogue: []

@@ -421,7 +421,7 @@ MonoBehaviour:
   dropObject: {fileID: 2197774501603174495, guid: 7dcfb29ec0c968041b99dd41d13cec28, type: 3}
   attributes:
   - name: 2
-    value: 25
+    value: 50
     isOpen: 0
     isBool: 0
   - name: 3
