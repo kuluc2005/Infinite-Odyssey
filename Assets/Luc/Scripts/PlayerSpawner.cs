@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class PlayerSpawner : MonoBehaviour
@@ -24,7 +25,6 @@ public class PlayerSpawner : MonoBehaviour
         StartCoroutine(LoadCharacterAndSpawn(characterId));
     }
 
-
     IEnumerator LoadCharacterAndSpawn(int characterId)
     {
         string url = $"http://localhost:5186/api/character/profile/{characterId}";
@@ -46,8 +46,9 @@ public class PlayerSpawner : MonoBehaviour
             string characterClass = wrapper.data.characterClass;
             GameObject prefabToSpawn = characterClass == "Female" ? femalePrefab : malePrefab;
 
-            // ==== Lấy vị trí lưu ====
+            // ==== Xác định vị trí spawn ====
             Vector3 spawnPos = spawnPoint.position;
+<<<<<<< HEAD
 
             if (!string.IsNullOrEmpty(wrapper.data.currentCheckpoint) && wrapper.data.currentCheckpoint.Contains(":"))
             {
@@ -74,34 +75,61 @@ public class PlayerSpawner : MonoBehaviour
                     else
                     {
                         Debug.Log("Vị trí lưu thuộc scene khác, sẽ spawn tại spawnPoint!");
+=======
+            string currentScene = SceneManager.GetActiveScene().name;
+            Debug.Log("Scene hiện tại: " + currentScene);
+            Debug.Log("Scene lưu trong lastScene: " + wrapper.data.lastScene);
+
+            if (!string.IsNullOrEmpty(wrapper.data.lastScene) && wrapper.data.lastScene == currentScene)
+            {
+                if (!string.IsNullOrEmpty(wrapper.data.currentCheckpoint) && wrapper.data.currentCheckpoint.Contains(","))
+                {
+                    string[] values = wrapper.data.currentCheckpoint.Split(',');
+                    if (values.Length == 3)
+                    {
+                        float x = float.Parse(values[0]);
+                        float y = float.Parse(values[1]);
+                        float z = float.Parse(values[2]);
+                        spawnPos = new Vector3(x, y, z);
+                        Debug.Log($"✅ Đã lấy lại vị trí lưu cho scene hiện tại: {spawnPos}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("⚠️ currentCheckpoint sai định dạng: " + wrapper.data.currentCheckpoint);
+>>>>>>> Back-Up_Hoang
                     }
                 }
             }
             else
             {
+<<<<<<< HEAD
                 Debug.Log("Không có vị trí lưu hợp lệ, sẽ spawn tại spawnPoint");
+=======
+                Debug.Log("⛔ lastScene không trùng scene hiện tại. Sử dụng spawnPoint mặc định.");
+>>>>>>> Back-Up_Hoang
             }
 
-            // ==== Spawn tại vị trí đã lưu (hoặc spawnPoint nếu chưa có dữ liệu) ====
+            // ==== Spawn nhân vật ====
             GameObject player = Instantiate(prefabToSpawn, spawnPos, spawnPoint.rotation);
             PlayerPositionManager ppm = player.GetComponent<PlayerPositionManager>();
             if (ppm != null)
             {
                 ppm.characterId = wrapper.data.characterId;
+<<<<<<< HEAD
             }
 
             InventorySyncManager ism = player.GetComponent<InventorySyncManager>();
             if (ism != null)
             {
                 ism.characterId = wrapper.data.characterId;
+=======
+>>>>>>> Back-Up_Hoang
             }
         }
         else
         {
-            Debug.LogError("Không thể đọc dữ liệu nhân vật từ phản hồi.");
+            Debug.LogError("❌ Không thể đọc dữ liệu nhân vật từ phản hồi.");
         }
-
-
     }
 
     [System.Serializable]
