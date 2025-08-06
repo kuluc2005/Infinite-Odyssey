@@ -12,7 +12,7 @@ namespace Invector.vMelee
         public float endDamage = 0.9f;        
         public int damageMultiplier;
         public int recoilID;
-        public int reactionID;
+        public int reactionID;  
 
         public vAttackType meleeAttackType = vAttackType.Unarmed;
         [Tooltip("You can use a name as reference to trigger a custom HitDamageParticle")]
