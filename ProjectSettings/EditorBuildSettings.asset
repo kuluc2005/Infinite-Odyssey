@@ -18,11 +18,11 @@ EditorBuildSettings:
     path: Assets/Scenes/CreateCharacterScene.unity
     guid: 9cf8dd06212f7de4ca9e591f4f201778
   - enabled: 1
-    path: Assets/Scenes/Menu.unity
-    guid: 32d0d7be79976db44a11ecb48344d924
-  - enabled: 1
     path: Assets/Scenes/Level 3.unity
     guid: 82f4ec3f15db8c648b1df0ff25f35d86
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 32d0d7be79976db44a11ecb48344d924
   - enabled: 1
     path: Assets/Scenes/RegisterScene.unity
     guid: 251136d03486bc345acbd76749ef128c
