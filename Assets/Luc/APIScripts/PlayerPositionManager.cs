@@ -73,7 +73,7 @@ public class PlayerPositionManager : MonoBehaviour
         Vector3 pos = transform.position;
         string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-        string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene" };
+        string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene", "ResultScene" };
         bool isGameScene = !skipScenes.Contains(sceneName);
 
 

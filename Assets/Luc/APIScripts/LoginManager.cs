@@ -77,7 +77,8 @@ public class LoginManager : MonoBehaviour
 
             if (loginResult != null && loginResult.status && loginResult.data != null)
             {
-                PlayerPrefs.SetInt("PlayerId", loginResult.data.id);
+                int loggedInPlayerId = loginResult.data.id; // đổi tên để không trùng
+                PlayerPrefs.SetInt("PlayerId", loggedInPlayerId);
                 PlayerPrefs.SetInt("CharacterId", -1);
                 PlayerPrefs.Save();
 
@@ -85,21 +86,30 @@ public class LoginManager : MonoBehaviour
                 yield return new WaitForSeconds(1.2f);
                 errorPanelManager.HideError();
 
-                int playerId = loginResult.data.id;
-                string charUrl = $"http://localhost:5186/api/character/list/{playerId}";
+                string charUrl = $"http://localhost:5186/api/character/list/{loggedInPlayerId}";
                 UnityWebRequest charListRequest = UnityWebRequest.Get(charUrl);
                 yield return charListRequest.SendWebRequest();
 
                 if (charListRequest.result == UnityWebRequest.Result.Success)
                 {
                     CharacterListWrapper wrapper = JsonUtility.FromJson<CharacterListWrapper>(charListRequest.downloadHandler.text);
-                    if (wrapper.data != null && wrapper.data.Length > 0)
+
+                    bool hasCharacters = wrapper.data != null && wrapper.data.Length > 0;
+                    string introKey = $"IntroSeen_{loggedInPlayerId}";
+                    bool seenIntro = PlayerPrefs.GetInt(introKey, 0) == 1;
+
+                    if (!seenIntro && !hasCharacters)
                     {
-                        UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelectScene");
+                        PlayerPrefs.SetInt("PlayerId", loggedInPlayerId);
+                        PlayerPrefs.Save();
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("IntroScene");
                     }
                     else
                     {
-                        UnityEngine.SceneManagement.SceneManager.LoadScene("CreateCharacterScene");
+                        if (hasCharacters)
+                            UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelectScene");
+                        else
+                            UnityEngine.SceneManagement.SceneManager.LoadScene("CreateCharacterScene");
                     }
                 }
                 else

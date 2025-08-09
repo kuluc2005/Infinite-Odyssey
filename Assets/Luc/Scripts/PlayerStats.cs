@@ -12,6 +12,7 @@ public class PlayerStats : MonoBehaviour
     public int level;
     public int currentExp;
     public int expToLevelUp = 100;
+    private bool _isDeadHandled = false;
 
     private void Awake()
     {
@@ -202,14 +203,22 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHP -= amount;
-        if (currentHP <= 0)
+        if (currentHP <= 0 && !_isDeadHandled)
         {
+            _isDeadHandled = true;
             currentHP = 0;
-            //Die();
+
+            string curLevel = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            PlayerPrefs.SetString("LastResult", "Lose");
+            PlayerPrefs.SetString("LastLevel", curLevel);
+
+            // Chuyển sang ResultScene
+            UnityEngine.SceneManagement.SceneManager.LoadScene("ResultScene");
         }
 
         Debug.Log($"Người chơi bị trúng đòn! HP còn lại: {currentHP}");
     }
+
 
     public IEnumerator SaveExpBeforeSceneChange(System.Action onDone)
     {

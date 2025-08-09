@@ -9388,7 +9388,7 @@ PlayableDirector:
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 3bb3fd66210bc0f4c8eb1d6cc7bb7b03, type: 2}
   m_InitialState: 1
-  m_WrapMode: 0
+  m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
@@ -17395,9 +17395,9 @@ MonoBehaviour:
         z: 7.1822786
       Rotation:
         value:
-          x: 0.0122273145
+          x: 0.012227314
           y: 0.743342
-          z: 0.011696824
+          z: 0.011696823
           w: -0.66869754
     - Position:
         x: -32.78588
@@ -18932,6 +18932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060e4ad60a2a3734986042451ab32b2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLoggingOut: 0
   completedQuests: []
 --- !u!1 &1958777026
 GameObject:

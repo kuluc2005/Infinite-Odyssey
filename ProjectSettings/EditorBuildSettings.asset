@@ -6,50 +6,50 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Level 0.unity
-    guid: 8ba0a6d03f273c44091c6952ec2b02cb
-  - enabled: 1
-    path: Assets/Scenes/Level 2.unity
-    guid: 4485d8936976c3446972e50f86a0ceb6
-  - enabled: 1
-    path: Assets/Scenes/Level 1.unity
-    guid: 4ae7708ca68730847873f457602667ce
-  - enabled: 1
-    path: Assets/Scenes/CreateCharacterScene.unity
-    guid: 9cf8dd06212f7de4ca9e591f4f201778
-  - enabled: 1
-    path: Assets/Scenes/Menu.unity
-    guid: 32d0d7be79976db44a11ecb48344d924
-  - enabled: 1
-    path: Assets/Scenes/Level 3.unity
-    guid: 82f4ec3f15db8c648b1df0ff25f35d86
-  - enabled: 1
     path: Assets/Scenes/RegisterScene.unity
     guid: 251136d03486bc345acbd76749ef128c
-  - enabled: 1
-    path: Assets/Scenes/ChangePasswordScene.unity
-    guid: fad556c2543079147b44e2a9390ee6b5
   - enabled: 1
     path: Assets/Scenes/LoginScene.unity
     guid: 89c2cb3d3ea1764498d776733c424881
   - enabled: 1
+    path: Assets/Scenes/CreateCharacterScene.unity
+    guid: 9cf8dd06212f7de4ca9e591f4f201778
+  - enabled: 1
     path: Assets/Scenes/CharacterSelectScene.unity
     guid: def508ef870c02a42868d42191d29424
+  - enabled: 1
+    path: Assets/Scenes/ChangePasswordScene.unity
+    guid: fad556c2543079147b44e2a9390ee6b5
+  - enabled: 1
+    path: Assets/Scenes/Level 0.unity
+    guid: 8ba0a6d03f273c44091c6952ec2b02cb
+  - enabled: 1
+    path: Assets/Scenes/Level 1.unity
+    guid: 4ae7708ca68730847873f457602667ce
+  - enabled: 1
+    path: Assets/Scenes/Level 2.unity
+    guid: 4485d8936976c3446972e50f86a0ceb6
+  - enabled: 1
+    path: Assets/Scenes/Level 3.unity
+    guid: 82f4ec3f15db8c648b1df0ff25f35d86
+  - enabled: 1
+    path: Assets/Scenes/ResultScene.unity
+    guid: 1d8fe657b8bc8454d99b92424fa707e6
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 32d0d7be79976db44a11ecb48344d924
+  - enabled: 1
+    path: Assets/Scenes/IntroScene.unity
+    guid: c3ef41f2a568847408da1ec393512df7
   - enabled: 1
     path: Assets/Scenes/CutSceneLevel1.unity
     guid: 2cdcda36d2c486b42b16d2b5428791df
   - enabled: 1
     path: Assets/Scenes/CutSceneLevel2.unity
-    guid: f81c48a8a0d906b48ad1b3cf191b3956
+    guid: d97431fded3372e4890c056c3854c446
   - enabled: 1
     path: Assets/Scenes/CutSceneLevel3.unity
-    guid: 23638615b43bb634fb5a307ca10c27ae
-  - enabled: 1
-    path: Assets/Scenes/LossScene.unity
-    guid: 32fd6c0e04add3840bd4d163f79a7e4b
-  - enabled: 1
-    path: Assets/Scenes/WinSCene.unity
-    guid: 1d8fe657b8bc8454d99b92424fa707e6
+    guid: 2de5a602f843993478ac952db38c813d
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 59d3e19d28de66d418ce920cb1fd6ed5, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

@@ -72,7 +72,7 @@ public class SceneIntroController : MonoBehaviour
             skipButton.gameObject.SetActive(false);
 
         // Lấy Level đích từ PlayerPrefs
-        string nextLevel = PlayerPrefs.GetString("NextLevel", "Level 1");
+        string nextLevel = PlayerPrefs.GetString("NextLevel", "Level 0");
         Debug.Log($"Cutscene kết thúc → load {nextLevel}");
         SceneManager.LoadScene(nextLevel);
     }
