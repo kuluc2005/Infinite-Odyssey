@@ -119,6 +119,26 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &648482532 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5437908959472863688, guid: 309d343545151c745afd77e66478efb3, type: 3}
+  m_PrefabInstance: {fileID: 5087979263264797134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &648482534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648482532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba4f98876b3b1764893a4de3ea813d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionName: 
+  keyText: {fileID: 0}
+  rebindButton: {fileID: 0}
 --- !u!1 &1445296626
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +477,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6114177668773733394, guid: 309d343545151c745afd77e66478efb3, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6891586328261998182, guid: 309d343545151c745afd77e66478efb3, type: 3}
       propertyPath: m_AnchorMax.x
@@ -473,7 +493,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7592037350640694845, guid: 309d343545151c745afd77e66478efb3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7767787729073517416, guid: 309d343545151c745afd77e66478efb3, type: 3}
       propertyPath: m_AnchorMax.x
@@ -530,7 +550,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5437908959472863688, guid: 309d343545151c745afd77e66478efb3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 648482534}
   m_SourcePrefab: {fileID: 100100000, guid: 309d343545151c745afd77e66478efb3, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

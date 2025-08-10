@@ -1,432 +1,461 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 
-namespace SlimUI.ModernMenu{
-	public class UISettingsManager : MonoBehaviour {
+namespace SlimUI.ModernMenu
+{
+    public class UISettingsManager : MonoBehaviour
+    {
+        [Header("VIDEO SETTINGS")]
+        public GameObject fullscreentext;
+        public GameObject ambientocclusiontext;
+        public GameObject shadowofftextLINE;
+        public GameObject shadowlowtextLINE;
+        public GameObject shadowhightextLINE;
+        public GameObject aaofftextLINE;
+        public GameObject aa2xtextLINE;
+        public GameObject aa4xtextLINE;
+        public GameObject aa8xtextLINE;
+        public GameObject vsynctext;
+        public GameObject motionblurtext;
+        public GameObject texturelowtextLINE;
+        public GameObject texturemedtextLINE;
+        public GameObject texturehightextLINE;
+        public GameObject cameraeffectstext;
 
-		public enum Platform {Desktop, Mobile};
-		public Platform platform;
-		// toggle buttons
-		[Header("MOBILE SETTINGS")]
-		public GameObject mobileSFXtext;
-		public GameObject mobileMusictext;
-		public GameObject mobileShadowofftextLINE;
-		public GameObject mobileShadowlowtextLINE;
-		public GameObject mobileShadowhightextLINE;
+        [Header("GAME SETTINGS")]
+        public GameObject showhudtext;
+        public GameObject tooltipstext;
+        public GameObject difficultynormaltextLINE;
+        public GameObject difficultyhardcoretextLINE;
 
-		[Header("VIDEO SETTINGS")]
-		public GameObject fullscreentext;
-		public GameObject ambientocclusiontext;
-		public GameObject shadowofftextLINE;
-		public GameObject shadowlowtextLINE;
-		public GameObject shadowhightextLINE;
-		public GameObject aaofftextLINE;
-		public GameObject aa2xtextLINE;
-		public GameObject aa4xtextLINE;
-		public GameObject aa8xtextLINE;
-		public GameObject vsynctext;
-		public GameObject motionblurtext;
-		public GameObject texturelowtextLINE;
-		public GameObject texturemedtextLINE;
-		public GameObject texturehightextLINE;
-		public GameObject cameraeffectstext; 
+        [Header("CONTROLS SETTINGS")]
+        public GameObject invertmousetext;
 
-		[Header("GAME SETTINGS")]
-		public GameObject showhudtext;
-		public GameObject tooltipstext;
-		public GameObject difficultynormaltext;
-		public GameObject difficultynormaltextLINE;
-		public GameObject difficultyhardcoretext;
-		public GameObject difficultyhardcoretextLINE;
+        [Header("TOOLTIPS TARGET")]
+        public GameObject controlHintsImage; // Image hoặc root hiển thị tooltip
 
-		[Header("CONTROLS SETTINGS")]
-		public GameObject invertmousetext;
+        [Header("HUD TARGET")]
+        public GameObject hudRoot; // Root HUD
 
-		// sliders
-		public GameObject musicSlider;
-		public GameObject sensitivityXSlider;
-		public GameObject sensitivityYSlider;
-		public GameObject mouseSmoothSlider;
+        [Header("RESOLUTION DROPDOWN")]
+        public TMP_Dropdown resolutionDropdown; // Kéo TMP_Dropdown vào đây
 
-		private float sliderValue = 0.0f;
-		private float sliderValueXSensitivity = 0.0f;
-		private float sliderValueYSensitivity = 0.0f;
-		private float sliderValueSmoothing = 0.0f;
-		
+        // sliders
+        public GameObject musicSlider;
+        public GameObject sensitivityXSlider;
+        public GameObject sensitivityYSlider;
+        public GameObject mouseSmoothSlider;
 
-		public void  Start (){
-			// check difficulty
-			if(PlayerPrefs.GetInt("NormalDifficulty") == 1){
-				difficultynormaltextLINE.gameObject.SetActive(true);
-				difficultyhardcoretextLINE.gameObject.SetActive(false);
-			}
-			else
-			{
-				difficultyhardcoretextLINE.gameObject.SetActive(true);
-				difficultynormaltextLINE.gameObject.SetActive(false);
-			}
+        // cache
+        private Resolution[] availableRes;
+        private int currentResIndex = 0;
 
-			// check slider values
-			musicSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVolume");
-			sensitivityXSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("XSensitivity");
-			sensitivityYSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("YSensitivity");
-			mouseSmoothSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MouseSmoothing");
+        private float sliderValueXSensitivity = 0.0f;
+        private float sliderValueYSensitivity = 0.0f;
+        private float sliderValueSmoothing = 0.0f;
 
-			// check full screen
-			if(Screen.fullScreen == true){
-				fullscreentext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(Screen.fullScreen == false){
-				fullscreentext.GetComponent<TMP_Text>().text = "off";
-			}
+        void Start()
+        {
+            // difficulty
+            if (PlayerPrefs.GetInt("NormalDifficulty") == 1)
+            {
+                difficultynormaltextLINE.SetActive(true);
+                difficultyhardcoretextLINE.SetActive(false);
+            }
+            else
+            {
+                difficultyhardcoretextLINE.SetActive(true);
+                difficultynormaltextLINE.SetActive(false);
+            }
 
-			// check hud value
-			if(PlayerPrefs.GetInt("ShowHUD")==0){
-				showhudtext.GetComponent<TMP_Text>().text = "off";
-			}
-			else{
-				showhudtext.GetComponent<TMP_Text>().text = "on";
-			}
+            // sliders
+            musicSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVolume");
+            sensitivityXSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("XSensitivity");
+            sensitivityYSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("YSensitivity");
+            mouseSmoothSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MouseSmoothing");
 
-			// check tool tip value
-			if(PlayerPrefs.GetInt("ToolTips")==0){
-				tooltipstext.GetComponent<TMP_Text>().text = "off";
-			}
-			else{
-				tooltipstext.GetComponent<TMP_Text>().text = "on";
-			}
+            // resolutions → đổ dropdown
+            SetupResolutionsDropdown();
 
-			// check shadow distance/enabled
-			if(platform == Platform.Desktop){
-				if(PlayerPrefs.GetInt("Shadows") == 0){
-					QualitySettings.shadowCascades = 0;
-					QualitySettings.shadowDistance = 0;
-					shadowofftextLINE.gameObject.SetActive(true);
-					shadowlowtextLINE.gameObject.SetActive(false);
-					shadowhightextLINE.gameObject.SetActive(false);
-				}
-				else if(PlayerPrefs.GetInt("Shadows") == 1){
-					QualitySettings.shadowCascades = 2;
-					QualitySettings.shadowDistance = 75;
-					shadowofftextLINE.gameObject.SetActive(false);
-					shadowlowtextLINE.gameObject.SetActive(true);
-					shadowhightextLINE.gameObject.SetActive(false);
-				}
-				else if(PlayerPrefs.GetInt("Shadows") == 2){
-					QualitySettings.shadowCascades = 4;
-					QualitySettings.shadowDistance = 500;
-					shadowofftextLINE.gameObject.SetActive(false);
-					shadowlowtextLINE.gameObject.SetActive(false);
-					shadowhightextLINE.gameObject.SetActive(true);
-				}
-			}else if(platform == Platform.Mobile){
-				if(PlayerPrefs.GetInt("MobileShadows") == 0){
-					QualitySettings.shadowCascades = 0;
-					QualitySettings.shadowDistance = 0;
-					mobileShadowofftextLINE.gameObject.SetActive(true);
-					mobileShadowlowtextLINE.gameObject.SetActive(false);
-					mobileShadowhightextLINE.gameObject.SetActive(false);
-				}
-				else if(PlayerPrefs.GetInt("MobileShadows") == 1){
-					QualitySettings.shadowCascades = 2;
-					QualitySettings.shadowDistance = 75;
-					mobileShadowofftextLINE.gameObject.SetActive(false);
-					mobileShadowlowtextLINE.gameObject.SetActive(true);
-					mobileShadowhightextLINE.gameObject.SetActive(false);
-				}
-				else if(PlayerPrefs.GetInt("MobileShadows") == 2){
-					QualitySettings.shadowCascades = 4;
-					QualitySettings.shadowDistance = 100;
-					mobileShadowofftextLINE.gameObject.SetActive(false);
-					mobileShadowlowtextLINE.gameObject.SetActive(false);
-					mobileShadowhightextLINE.gameObject.SetActive(true);
-				}
-			}
+            // fullscreen text
+            if (fullscreentext) fullscreentext.GetComponent<TMP_Text>().text = Screen.fullScreen ? "on" : "off";
 
+            // HUD
+            bool hudOn = PlayerPrefs.GetInt("ShowHUD", 1) == 1;
+            showhudtext.GetComponent<TMP_Text>().text = hudOn ? "on" : "off";
+            if (hudRoot) hudRoot.SetActive(hudOn);
 
-			// check vsync
-			if(QualitySettings.vSyncCount == 0){
-				vsynctext.GetComponent<TMP_Text>().text = "off";
-			}
-			else if(QualitySettings.vSyncCount == 1){
-				vsynctext.GetComponent<TMP_Text>().text = "on";
-			}
+            // tooltips
+            bool tooltipsOn = PlayerPrefs.GetInt("ToolTips", 1) == 1;
+            tooltipstext.GetComponent<TMP_Text>().text = tooltipsOn ? "on" : "off";
+            if (controlHintsImage) controlHintsImage.SetActive(tooltipsOn);
 
-			// check mouse inverse
-			if(PlayerPrefs.GetInt("Inverted")==0){
-				invertmousetext.GetComponent<TMP_Text>().text = "off";
-			}
-			else if(PlayerPrefs.GetInt("Inverted")==1){
-				invertmousetext.GetComponent<TMP_Text>().text = "on";
-			}
+            // shadows
+            int sh = PlayerPrefs.GetInt("Shadows");
+            if (sh == 0)
+            {
+                QualitySettings.shadowCascades = 0;
+                QualitySettings.shadowDistance = 0;
+                shadowofftextLINE.SetActive(true);
+                shadowlowtextLINE.SetActive(false);
+                shadowhightextLINE.SetActive(false);
+            }
+            else if (sh == 1)
+            {
+                QualitySettings.shadowCascades = 2;
+                QualitySettings.shadowDistance = 75;
+                shadowofftextLINE.SetActive(false);
+                shadowlowtextLINE.SetActive(true);
+                shadowhightextLINE.SetActive(false);
+            }
+            else
+            {
+                QualitySettings.shadowCascades = 4;
+                QualitySettings.shadowDistance = 500;
+                shadowofftextLINE.SetActive(false);
+                shadowlowtextLINE.SetActive(false);
+                shadowhightextLINE.SetActive(true);
+            }
 
-			// check motion blur
-			if(PlayerPrefs.GetInt("MotionBlur")==0){
-				motionblurtext.GetComponent<TMP_Text>().text = "off";
-			}
-			else if(PlayerPrefs.GetInt("MotionBlur")==1){
-				motionblurtext.GetComponent<TMP_Text>().text = "on";
-			}
+            // vsync
+            vsynctext.GetComponent<TMP_Text>().text = QualitySettings.vSyncCount == 0 ? "off" : "on";
 
-			// check ambient occlusion
-			if(PlayerPrefs.GetInt("AmbientOcclusion")==0){
-				ambientocclusiontext.GetComponent<TMP_Text>().text = "off";
-			}
-			else if(PlayerPrefs.GetInt("AmbientOcclusion")==1){
-				ambientocclusiontext.GetComponent<TMP_Text>().text = "on";
-			}
+            // invert mouse
+            invertmousetext.GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("Inverted") == 0 ? "off" : "on";
 
-			// check texture quality
-			if(PlayerPrefs.GetInt("Textures") == 0){
-				QualitySettings.globalTextureMipmapLimit = 2;
-				texturelowtextLINE.gameObject.SetActive(true);
-				texturemedtextLINE.gameObject.SetActive(false);
-				texturehightextLINE.gameObject.SetActive(false);
-			}
-			else if(PlayerPrefs.GetInt("Textures") == 1){
-				QualitySettings.globalTextureMipmapLimit = 1;
-				texturelowtextLINE.gameObject.SetActive(false);
-				texturemedtextLINE.gameObject.SetActive(true);
-				texturehightextLINE.gameObject.SetActive(false);
-			}
-			else if(PlayerPrefs.GetInt("Textures") == 2){
-				QualitySettings.globalTextureMipmapLimit = 0;
-				texturelowtextLINE.gameObject.SetActive(false);
-				texturemedtextLINE.gameObject.SetActive(false);
-				texturehightextLINE.gameObject.SetActive(true);
-			}
-		}
+            // motion blur
+            motionblurtext.GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("MotionBlur") == 0 ? "off" : "on";
 
-		public void Update (){
-			//sliderValue = musicSlider.GetComponent<Slider>().value;
-			sliderValueXSensitivity = sensitivityXSlider.GetComponent<Slider>().value;
-			sliderValueYSensitivity = sensitivityYSlider.GetComponent<Slider>().value;
-			sliderValueSmoothing = mouseSmoothSlider.GetComponent<Slider>().value;
-		}
+            // ambient occlusion
+            ambientocclusiontext.GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("AmbientOcclusion") == 0 ? "off" : "on";
 
-		public void FullScreen (){
-			Screen.fullScreen = !Screen.fullScreen;
+            // texture quality
+            int tx = PlayerPrefs.GetInt("Textures");
+            if (tx == 0)
+            {
+                QualitySettings.globalTextureMipmapLimit = 2;
+                texturelowtextLINE.SetActive(true);
+                texturemedtextLINE.SetActive(false);
+                texturehightextLINE.SetActive(false);
+            }
+            else if (tx == 1)
+            {
+                QualitySettings.globalTextureMipmapLimit = 1;
+                texturelowtextLINE.SetActive(false);
+                texturemedtextLINE.SetActive(true);
+                texturehightextLINE.SetActive(false);
+            }
+            else
+            {
+                QualitySettings.globalTextureMipmapLimit = 0;
+                texturelowtextLINE.SetActive(false);
+                texturemedtextLINE.SetActive(false);
+                texturehightextLINE.SetActive(true);
+            }
+        }
 
-			if(Screen.fullScreen == true){
-				fullscreentext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(Screen.fullScreen == false){
-				fullscreentext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+        void SetupResolutionsDropdown()
+        {
+            if (!resolutionDropdown) return;
 
-		public void MusicSlider (){
-			//PlayerPrefs.SetFloat("MusicVolume", sliderValue);
-			PlayerPrefs.SetFloat("MusicVolume", musicSlider.GetComponent<Slider>().value);
-		}
+            availableRes = Screen.resolutions; // tự lấy tất cả res máy hỗ trợ
+            resolutionDropdown.ClearOptions();
 
-		public void SensitivityXSlider (){
-			PlayerPrefs.SetFloat("XSensitivity", sliderValueXSensitivity);
-		}
+            var options = new System.Collections.Generic.List<string>();
+            int savedIndex = PlayerPrefs.GetInt("ResolutionIndex", -1);
+            int currentMatch = 0;
 
-		public void SensitivityYSlider (){
-			PlayerPrefs.SetFloat("YSensitivity", sliderValueYSensitivity);
-		}
+            for (int i = 0; i < availableRes.Length; i++)
+            {
+                var r = availableRes[i];
+#if UNITY_2022_2_OR_NEWER
+                string label = $"{r.width} x {r.height} @ {r.refreshRateRatio.value:F0}Hz";
+#else
+                string label = $"{r.width} x {r.height} @ {r.refreshRate}Hz";
+#endif
+                options.Add(label);
 
-		public void SensitivitySmoothing (){
-			PlayerPrefs.SetFloat("MouseSmoothing", sliderValueSmoothing);
-			Debug.Log(PlayerPrefs.GetFloat("MouseSmoothing"));
-		}
+                // khớp với currentResolution để chọn sẵn
+                if (r.width == Screen.currentResolution.width &&
+                    r.height == Screen.currentResolution.height)
+                {
+                    currentMatch = i;
+                }
+            }
 
-		// the playerprefs variable that is checked to enable hud while in game
-		public void ShowHUD (){
-			if(PlayerPrefs.GetInt("ShowHUD")==0){
-				PlayerPrefs.SetInt("ShowHUD",1);
-				showhudtext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(PlayerPrefs.GetInt("ShowHUD")==1){
-				PlayerPrefs.SetInt("ShowHUD",0);
-				showhudtext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+            resolutionDropdown.AddOptions(options);
 
-		// the playerprefs variable that is checked to enable mobile sfx while in game
-		public void MobileSFXMute (){
-			if(PlayerPrefs.GetInt("Mobile_MuteSfx")==0){
-				PlayerPrefs.SetInt("Mobile_MuteSfx",1);
-				mobileSFXtext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(PlayerPrefs.GetInt("Mobile_MuteSfx")==1){
-				PlayerPrefs.SetInt("Mobile_MuteSfx",0);
-				mobileSFXtext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+            currentResIndex = (savedIndex >= 0 && savedIndex < availableRes.Length) ? savedIndex : currentMatch;
+            resolutionDropdown.SetValueWithoutNotify(currentResIndex);
+            resolutionDropdown.RefreshShownValue();
 
-		public void MobileMusicMute (){
-			if(PlayerPrefs.GetInt("Mobile_MuteMusic")==0){
-				PlayerPrefs.SetInt("Mobile_MuteMusic",1);
-				mobileMusictext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(PlayerPrefs.GetInt("Mobile_MuteMusic")==1){
-				PlayerPrefs.SetInt("Mobile_MuteMusic",0);
-				mobileMusictext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+            // lưu trạng thái hiện tại
+            PlayerPrefs.SetInt("ResolutionIndex", currentResIndex);
+            PlayerPrefs.SetInt("Fullscreen", Screen.fullScreen ? 1 : 0);
+        }
 
-		// show tool tips like: 'How to Play' control pop ups
-		public void ToolTips (){
-			if(PlayerPrefs.GetInt("ToolTips")==0){
-				PlayerPrefs.SetInt("ToolTips",1);
-				tooltipstext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(PlayerPrefs.GetInt("ToolTips")==1){
-				PlayerPrefs.SetInt("ToolTips",0);
-				tooltipstext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+        void Update()
+        {
+            sliderValueXSensitivity = sensitivityXSlider.GetComponent<Slider>().value;
+            sliderValueYSensitivity = sensitivityYSlider.GetComponent<Slider>().value;
+            sliderValueSmoothing = mouseSmoothSlider.GetComponent<Slider>().value;
+        }
 
-		public void NormalDifficulty (){
-			difficultyhardcoretextLINE.gameObject.SetActive(false);
-			difficultynormaltextLINE.gameObject.SetActive(true);
-			PlayerPrefs.SetInt("NormalDifficulty",1);
-			PlayerPrefs.SetInt("HardCoreDifficulty",0);
-		}
+        // =============== RESOLUTION HANDLERS ===============
 
-		public void HardcoreDifficulty (){
-			difficultyhardcoretextLINE.gameObject.SetActive(true);
-			difficultynormaltextLINE.gameObject.SetActive(false);
-			PlayerPrefs.SetInt("NormalDifficulty",0);
-			PlayerPrefs.SetInt("HardCoreDifficulty",1);
-		}
+        // Gọi từ TMP_Dropdown.OnValueChanged(int)
+        public void ResolutionDropdownChanged(int index)
+        {
+            if (availableRes == null || availableRes.Length == 0) return;
+            currentResIndex = Mathf.Clamp(index, 0, availableRes.Length - 1);
+            PlayerPrefs.SetInt("ResolutionIndex", currentResIndex);
 
-		public void ShadowsOff (){
-			PlayerPrefs.SetInt("Shadows",0);
-			QualitySettings.shadowCascades = 0;
-			QualitySettings.shadowDistance = 0;
-			shadowofftextLINE.gameObject.SetActive(true);
-			shadowlowtextLINE.gameObject.SetActive(false);
-			shadowhightextLINE.gameObject.SetActive(false);
-		}
+            bool fs = PlayerPrefs.GetInt("Fullscreen", Screen.fullScreen ? 1 : 0) == 1;
+            ApplyResolution(currentResIndex, fs);
+        }
 
-		public void ShadowsLow (){
-			PlayerPrefs.SetInt("Shadows",1);
-			QualitySettings.shadowCascades = 2;
-			QualitySettings.shadowDistance = 75;
-			shadowofftextLINE.gameObject.SetActive(false);
-			shadowlowtextLINE.gameObject.SetActive(true);
-			shadowhightextLINE.gameObject.SetActive(false);
-		}
+        void ApplyResolution(int index, bool fullscreen)
+        {
+            var r = availableRes[index];
 
-		public void ShadowsHigh (){
-			PlayerPrefs.SetInt("Shadows",2);
-			QualitySettings.shadowCascades = 4;
-			QualitySettings.shadowDistance = 500;
-			shadowofftextLINE.gameObject.SetActive(false);
-			shadowlowtextLINE.gameObject.SetActive(false);
-			shadowhightextLINE.gameObject.SetActive(true);
-		}
+#if UNITY_2022_2_OR_NEWER
+            // Unity mới: tham số 3 là FullScreenMode + refreshRateRatio
+            var mode = fullscreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
+            Screen.SetResolution(r.width, r.height, mode, r.refreshRateRatio);
+#else
+            // Unity cũ: có overload dùng bool + refreshRate (int)
+            Screen.SetResolution(r.width, r.height, fullscreen, r.refreshRate);
+#endif
 
-		public void MobileShadowsOff (){
-			PlayerPrefs.SetInt("MobileShadows",0);
-			QualitySettings.shadowCascades = 0;
-			QualitySettings.shadowDistance = 0;
-			mobileShadowofftextLINE.gameObject.SetActive(true);
-			mobileShadowlowtextLINE.gameObject.SetActive(false);
-			mobileShadowhightextLINE.gameObject.SetActive(false);
-		}
+            if (fullscreentext) fullscreentext.GetComponent<TMP_Text>().text = fullscreen ? "on" : "off";
+        }
 
-		public void MobileShadowsLow (){
-			PlayerPrefs.SetInt("MobileShadows",1);
-			QualitySettings.shadowCascades = 2;
-			QualitySettings.shadowDistance = 75;
-			mobileShadowofftextLINE.gameObject.SetActive(false);
-			mobileShadowlowtextLINE.gameObject.SetActive(true);
-			mobileShadowhightextLINE.gameObject.SetActive(false);
-		}
+        public void FullScreen()
+        {
+            // Toggle giữ nguyên size theo dropdown
+            bool newFS = !Screen.fullScreen;
+            PlayerPrefs.SetInt("Fullscreen", newFS ? 1 : 0);
 
-		public void MobileShadowsHigh (){
-			PlayerPrefs.SetInt("MobileShadows",2);
-			QualitySettings.shadowCascades = 4;
-			QualitySettings.shadowDistance = 500;
-			mobileShadowofftextLINE.gameObject.SetActive(false);
-			mobileShadowlowtextLINE.gameObject.SetActive(false);
-			mobileShadowhightextLINE.gameObject.SetActive(true);
-		}
+            if (availableRes == null || availableRes.Length == 0)
+            {
+#if UNITY_2022_2_OR_NEWER
+                var modeOnly = newFS ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
+                // Không đổi size/refresh, chỉ đổi mode:
+                Screen.fullScreenMode = modeOnly;
+#else
+                Screen.fullScreen = newFS; // fallback
+#endif
+            }
+            else
+            {
+                int idx = PlayerPrefs.GetInt("ResolutionIndex", currentResIndex);
+                idx = Mathf.Clamp(idx, 0, availableRes.Length - 1);
+                ApplyResolution(idx, newFS);
+            }
 
-		public void vsync (){
-			if(QualitySettings.vSyncCount == 0){
-				QualitySettings.vSyncCount = 1;
-				vsynctext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(QualitySettings.vSyncCount == 1){
-				QualitySettings.vSyncCount = 0;
-				vsynctext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+            if (fullscreentext) fullscreentext.GetComponent<TMP_Text>().text = newFS ? "on" : "off";
+        }
 
-		public void InvertMouse (){
-			if(PlayerPrefs.GetInt("Inverted")==0){
-				PlayerPrefs.SetInt("Inverted",1);
-				invertmousetext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(PlayerPrefs.GetInt("Inverted")==1){
-				PlayerPrefs.SetInt("Inverted",0);
-				invertmousetext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+        // =============== OTHER SETTINGS ===============
 
-		public void MotionBlur (){
-			if(PlayerPrefs.GetInt("MotionBlur")==0){
-				PlayerPrefs.SetInt("MotionBlur",1);
-				motionblurtext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(PlayerPrefs.GetInt("MotionBlur")==1){
-				PlayerPrefs.SetInt("MotionBlur",0);
-				motionblurtext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+        public void MusicSlider()
+        {
+            PlayerPrefs.SetFloat("MusicVolume", musicSlider.GetComponent<Slider>().value);
+        }
 
-		public void AmbientOcclusion (){
-			if(PlayerPrefs.GetInt("AmbientOcclusion")==0){
-				PlayerPrefs.SetInt("AmbientOcclusion",1);
-				ambientocclusiontext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(PlayerPrefs.GetInt("AmbientOcclusion")==1){
-				PlayerPrefs.SetInt("AmbientOcclusion",0);
-				ambientocclusiontext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+        public void SensitivityXSlider()
+        {
+            PlayerPrefs.SetFloat("XSensitivity", sliderValueXSensitivity);
+        }
 
-		public void CameraEffects (){
-			if(PlayerPrefs.GetInt("CameraEffects")==0){
-				PlayerPrefs.SetInt("CameraEffects",1);
-				cameraeffectstext.GetComponent<TMP_Text>().text = "on";
-			}
-			else if(PlayerPrefs.GetInt("CameraEffects")==1){
-				PlayerPrefs.SetInt("CameraEffects",0);
-				cameraeffectstext.GetComponent<TMP_Text>().text = "off";
-			}
-		}
+        public void SensitivityYSlider()
+        {
+            PlayerPrefs.SetFloat("YSensitivity", sliderValueYSensitivity);
+        }
 
-		public void TexturesLow (){
-			PlayerPrefs.SetInt("Textures",0);
-			QualitySettings.globalTextureMipmapLimit = 2;
-			texturelowtextLINE.gameObject.SetActive(true);
-			texturemedtextLINE.gameObject.SetActive(false);
-			texturehightextLINE.gameObject.SetActive(false);
-		}
+        public void SensitivitySmoothing()
+        {
+            PlayerPrefs.SetFloat("MouseSmoothing", sliderValueSmoothing);
+        }
 
-		public void TexturesMed (){
-			PlayerPrefs.SetInt("Textures",1);
-			QualitySettings.globalTextureMipmapLimit = 1;
-			texturelowtextLINE.gameObject.SetActive(false);
-			texturemedtextLINE.gameObject.SetActive(true);
-			texturehightextLINE.gameObject.SetActive(false);
-		}
+        public void ShowHUD()
+        {
+            bool on;
+            if (PlayerPrefs.GetInt("ShowHUD", 1) == 0)
+            {
+                PlayerPrefs.SetInt("ShowHUD", 1);
+                showhudtext.GetComponent<TMP_Text>().text = "on";
+                on = true;
+            }
+            else
+            {
+                PlayerPrefs.SetInt("ShowHUD", 0);
+                showhudtext.GetComponent<TMP_Text>().text = "off";
+                on = false;
+            }
+            if (hudRoot) hudRoot.SetActive(on);
+        }
 
-		public void TexturesHigh (){
-			PlayerPrefs.SetInt("Textures",2);
-			QualitySettings.globalTextureMipmapLimit = 0;
-			texturelowtextLINE.gameObject.SetActive(false);
-			texturemedtextLINE.gameObject.SetActive(false);
-			texturehightextLINE.gameObject.SetActive(true);
-		}
-	}
+        public void ToolTips()
+        {
+            bool on;
+            if (PlayerPrefs.GetInt("ToolTips", 1) == 0)
+            {
+                PlayerPrefs.SetInt("ToolTips", 1);
+                tooltipstext.GetComponent<TMP_Text>().text = "on";
+                on = true;
+            }
+            else
+            {
+                PlayerPrefs.SetInt("ToolTips", 0);
+                tooltipstext.GetComponent<TMP_Text>().text = "off";
+                on = false;
+            }
+            if (controlHintsImage) controlHintsImage.SetActive(on);
+        }
+
+        public void NormalDifficulty()
+        {
+            difficultyhardcoretextLINE.SetActive(false);
+            difficultynormaltextLINE.SetActive(true);
+            PlayerPrefs.SetInt("NormalDifficulty", 1);
+            PlayerPrefs.SetInt("HardCoreDifficulty", 0);
+        }
+
+        public void HardcoreDifficulty()
+        {
+            difficultyhardcoretextLINE.SetActive(true);
+            difficultynormaltextLINE.SetActive(false);
+            PlayerPrefs.SetInt("NormalDifficulty", 0);
+            PlayerPrefs.SetInt("HardCoreDifficulty", 1);
+        }
+
+        public void ShadowsOff()
+        {
+            PlayerPrefs.SetInt("Shadows", 0);
+            QualitySettings.shadowCascades = 0;
+            QualitySettings.shadowDistance = 0;
+            shadowofftextLINE.SetActive(true);
+            shadowlowtextLINE.SetActive(false);
+            shadowhightextLINE.SetActive(false);
+        }
+
+        public void ShadowsLow()
+        {
+            PlayerPrefs.SetInt("Shadows", 1);
+            QualitySettings.shadowCascades = 2;
+            QualitySettings.shadowDistance = 75;
+            shadowofftextLINE.SetActive(false);
+            shadowlowtextLINE.SetActive(true);
+            shadowhightextLINE.SetActive(false);
+        }
+
+        public void ShadowsHigh()
+        {
+            PlayerPrefs.SetInt("Shadows", 2);
+            QualitySettings.shadowCascades = 4;
+            QualitySettings.shadowDistance = 500;
+            shadowofftextLINE.SetActive(false);
+            shadowlowtextLINE.SetActive(false);
+            shadowhightextLINE.SetActive(true);
+        }
+
+        public void vsync()
+        {
+            if (QualitySettings.vSyncCount == 0)
+            {
+                QualitySettings.vSyncCount = 1;
+                vsynctext.GetComponent<TMP_Text>().text = "on";
+            }
+            else
+            {
+                QualitySettings.vSyncCount = 0;
+                vsynctext.GetComponent<TMP_Text>().text = "off";
+            }
+        }
+
+        public void InvertMouse()
+        {
+            if (PlayerPrefs.GetInt("Inverted") == 0)
+            {
+                PlayerPrefs.SetInt("Inverted", 1);
+                invertmousetext.GetComponent<TMP_Text>().text = "on";
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Inverted", 0);
+                invertmousetext.GetComponent<TMP_Text>().text = "off";
+            }
+        }
+
+        public void MotionBlur()
+        {
+            if (PlayerPrefs.GetInt("MotionBlur") == 0)
+            {
+                PlayerPrefs.SetInt("MotionBlur", 1);
+                motionblurtext.GetComponent<TMP_Text>().text = "on";
+            }
+            else
+            {
+                PlayerPrefs.SetInt("MotionBlur", 0);
+                motionblurtext.GetComponent<TMP_Text>().text = "off";
+            }
+        }
+
+        public void AmbientOcclusion()
+        {
+            if (PlayerPrefs.GetInt("AmbientOcclusion") == 0)
+            {
+                PlayerPrefs.SetInt("AmbientOcclusion", 1);
+                ambientocclusiontext.GetComponent<TMP_Text>().text = "on";
+            }
+            else
+            {
+                PlayerPrefs.SetInt("AmbientOcclusion", 0);
+                ambientocclusiontext.GetComponent<TMP_Text>().text = "off";
+            }
+        }
+
+        public void CameraEffects()
+        {
+            if (PlayerPrefs.GetInt("CameraEffects") == 0)
+            {
+                PlayerPrefs.SetInt("CameraEffects", 1);
+                cameraeffectstext.GetComponent<TMP_Text>().text = "on";
+            }
+            else
+            {
+                PlayerPrefs.SetInt("CameraEffects", 0);
+                cameraeffectstext.GetComponent<TMP_Text>().text = "off";
+            }
+        }
+
+        public void TexturesLow()
+        {
+            PlayerPrefs.SetInt("Textures", 0);
+            QualitySettings.globalTextureMipmapLimit = 2;
+            texturelowtextLINE.SetActive(true);
+            texturemedtextLINE.SetActive(false);
+            texturehightextLINE.SetActive(false);
+        }
+
+        public void TexturesMed()
+        {
+            PlayerPrefs.SetInt("Textures", 1);
+            QualitySettings.globalTextureMipmapLimit = 1;
+            texturelowtextLINE.SetActive(false);
+            texturemedtextLINE.SetActive(true);
+            texturehightextLINE.SetActive(false);
+        }
+
+        public void TexturesHigh()
+        {
+            PlayerPrefs.SetInt("Textures", 2);
+            QualitySettings.globalTextureMipmapLimit = 0;
+            texturelowtextLINE.SetActive(false);
+            texturemedtextLINE.SetActive(false);
+            texturehightextLINE.SetActive(true);
+        }
+    }
 }

@@ -8,17 +8,20 @@ namespace SlimUI.ModernMenu
 {
     public class UIMenuManager : MonoBehaviour
     {
+        // Animator cũ dùng cho Position1/2 đã bỏ — giữ lại nếu bạn vẫn dùng ở nơi khác
         private Animator CameraObject;
 
         [Header("MENUS")]
-        [Tooltip("The Menu for when the MAIN menu buttons")]
         public GameObject mainMenu;
-        [Tooltip("THe first list of buttons")]
         public GameObject firstMenu;
-        [Tooltip("The Menu for when the PLAY button is clicked")]
-        public GameObject playMenu;
-        [Tooltip("The Menu for when the EXIT button is clicked")]
         public GameObject exitMenu;
+
+        [Header("PAUSE / SETTINGS")]
+        public GameObject pauseCanvas;      // Trùng với PauseManager.pauseCanvas
+        public GameObject settingsCanvas;   // Canvas settings
+
+        [Header("Refs")]
+        public PauseManager pauseManager;   // Kéo PauseManager vào đây trong Inspector
 
         public enum Theme { custom1, custom2, custom3 };
         [Header("THEME SETTINGS")]
@@ -61,10 +64,12 @@ namespace SlimUI.ModernMenu
         {
             CameraObject = transform.GetComponent<Animator>();
 
-            playMenu.SetActive(false);
-            exitMenu.SetActive(false);
-            firstMenu.SetActive(true);
-            mainMenu.SetActive(true);
+            if (exitMenu) exitMenu.SetActive(false);
+            if (firstMenu) firstMenu.SetActive(true);
+            if (mainMenu) mainMenu.SetActive(true);
+
+            if (pauseCanvas) pauseCanvas.SetActive(false);
+            if (settingsCanvas) settingsCanvas.SetActive(false);
 
             SetThemeColors();
         }
@@ -88,155 +93,114 @@ namespace SlimUI.ModernMenu
                     themeController.textColor = themeController.custom3.text3;
                     themeIndex = 2;
                     break;
-                default:
-                    Debug.Log("Invalid theme selected.");
-                    break;
             }
         }
 
-        public void PlayCampaign()
+        // ====== NÚT TRONG PAUSE MENU ======
+
+        // Continue: đóng pause & tiếp tục game
+        public void ContinueGame()
         {
-            exitMenu.SetActive(false);
-            playMenu.SetActive(true);
+            if (settingsCanvas) settingsCanvas.SetActive(false);
+            if (exitMenu) exitMenu.SetActive(false);
+
+            if (pauseManager != null)
+            {
+                pauseManager.ResumeGame();
+            }
+            else
+            {
+                if (pauseCanvas) pauseCanvas.SetActive(false);
+                Time.timeScale = 1f;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
 
-        public void PlayCampaignMobile()
+        // Settings: mở settings, vẫn giữ trạng thái pause
+        public void OpenSettings()
         {
-            exitMenu.SetActive(false);
-            playMenu.SetActive(true);
-            mainMenu.SetActive(false);
+            if (pauseCanvas) pauseCanvas.SetActive(false);
+            if (settingsCanvas) settingsCanvas.SetActive(true);
+            // Giữ Time.timeScale = 0 khi đang pause (do PauseManager đã dừng)
         }
+
+        // Return: quay lại pause menu (vẫn pause) — giống CloseSettings
+        public void Return()
+        {
+            if (settingsCanvas) settingsCanvas.SetActive(false);
+            if (pauseCanvas) pauseCanvas.SetActive(true);
+        }
+
+        // Close Settings: alias của Return cho tiện gắn nút
+        public void CloseSettings() => Return();
+
+        // Exit: mở panel xác nhận thoát, ẩn các panel khác (vẫn pause)
+        public void ShowExitMenu()
+        {
+            if (pauseCanvas) pauseCanvas.SetActive(false);
+            if (settingsCanvas) settingsCanvas.SetActive(false);
+            if (exitMenu) exitMenu.SetActive(true);
+        }
+
+        // Back từ Exit về Pause (không resume)
+        public void BackFromExitToPause()
+        {
+            if (exitMenu) exitMenu.SetActive(false);
+            if (pauseCanvas) pauseCanvas.SetActive(true);
+        }
+
+        // ====== PHẦN CÒN LẠI (nếu bạn vẫn dùng main menu / panels) ======
 
         public void ReturnMenu()
         {
-            playMenu.SetActive(false);
-            exitMenu.SetActive(false);
-            mainMenu.SetActive(true);
+            if (exitMenu) exitMenu.SetActive(false);
+            if (mainMenu) mainMenu.SetActive(true);
         }
 
         public void LoadScene(string scene)
         {
-            if (scene != "")
-            {
+            if (!string.IsNullOrEmpty(scene))
                 StartCoroutine(LoadAsynchronously(scene));
-            }
         }
 
-        public void DisablePlayCampaign()
-        {
-            playMenu.SetActive(false);
-        }
-
-        public void Position2()
-        {
-            DisablePlayCampaign();
-            CameraObject.SetFloat("Animate", 1);
-        }
-
-        public void Position1()
-        {
-            CameraObject.SetFloat("Animate", 0);
-        }
+        // ĐÃ GỠ Position1/Position2
 
         void DisablePanels()
         {
-            PanelControls.SetActive(false);
-            PanelVideo.SetActive(false);
-            PanelGame.SetActive(false);
-            PanelKeyBindings.SetActive(false);
+            if (PanelControls) PanelControls.SetActive(false);
+            if (PanelVideo) PanelVideo.SetActive(false);
+            if (PanelGame) PanelGame.SetActive(false);
+            if (PanelKeyBindings) PanelKeyBindings.SetActive(false);
 
-            lineGame.SetActive(false);
-            lineControls.SetActive(false);
-            lineVideo.SetActive(false);
-            lineKeyBindings.SetActive(false);
+            if (lineGame) lineGame.SetActive(false);
+            if (lineControls) lineControls.SetActive(false);
+            if (lineVideo) lineVideo.SetActive(false);
+            if (lineKeyBindings) lineKeyBindings.SetActive(false);
 
-            PanelMovement.SetActive(false);
-            lineMovement.SetActive(false);
-            PanelCombat.SetActive(false);
-            lineCombat.SetActive(false);
-            PanelGeneral.SetActive(false);
-            lineGeneral.SetActive(false);
+            if (PanelMovement) PanelMovement.SetActive(false);
+            if (lineMovement) lineMovement.SetActive(false);
+            if (PanelCombat) PanelCombat.SetActive(false);
+            if (lineCombat) lineCombat.SetActive(false);
+            if (PanelGeneral) PanelGeneral.SetActive(false);
+            if (lineGeneral) lineGeneral.SetActive(false);
         }
 
-        public void GamePanel()
-        {
-            DisablePanels();
-            PanelGame.SetActive(true);
-            lineGame.SetActive(true);
-        }
+        public void GamePanel() { DisablePanels(); if (PanelGame) { PanelGame.SetActive(true); if (lineGame) lineGame.SetActive(true); } }
+        public void VideoPanel() { DisablePanels(); if (PanelVideo) { PanelVideo.SetActive(true); if (lineVideo) lineVideo.SetActive(true); } }
+        public void ControlsPanel() { DisablePanels(); if (PanelControls) { PanelControls.SetActive(true); if (lineControls) lineControls.SetActive(true); } }
+        public void KeyBindingsPanel() { DisablePanels(); MovementPanel(); if (PanelKeyBindings) PanelKeyBindings.SetActive(true); if (lineKeyBindings) lineKeyBindings.SetActive(true); }
+        public void MovementPanel() { DisablePanels(); if (PanelKeyBindings) PanelKeyBindings.SetActive(true); if (PanelMovement) PanelMovement.SetActive(true); if (lineMovement) lineMovement.SetActive(true); }
+        public void CombatPanel() { DisablePanels(); if (PanelKeyBindings) PanelKeyBindings.SetActive(true); if (PanelCombat) PanelCombat.SetActive(true); if (lineCombat) lineCombat.SetActive(true); }
+        public void GeneralPanel() { DisablePanels(); if (PanelKeyBindings) PanelKeyBindings.SetActive(true); if (PanelGeneral) PanelGeneral.SetActive(true); if (lineGeneral) lineGeneral.SetActive(true); }
 
-        public void VideoPanel()
-        {
-            DisablePanels();
-            PanelVideo.SetActive(true);
-            lineVideo.SetActive(true);
-        }
-
-        public void ControlsPanel()
-        {
-            DisablePanels();
-            PanelControls.SetActive(true);
-            lineControls.SetActive(true);
-        }
-
-        public void KeyBindingsPanel()
-        {
-            DisablePanels();
-            MovementPanel();
-            PanelKeyBindings.SetActive(true);
-            lineKeyBindings.SetActive(true);
-        }
-
-        public void MovementPanel()
-        {
-            DisablePanels();
-            PanelKeyBindings.SetActive(true);
-            PanelMovement.SetActive(true);
-            lineMovement.SetActive(true);
-        }
-
-        public void CombatPanel()
-        {
-            DisablePanels();
-            PanelKeyBindings.SetActive(true);
-            PanelCombat.SetActive(true);
-            lineCombat.SetActive(true);
-        }
-
-        public void GeneralPanel()
-        {
-            DisablePanels();
-            PanelKeyBindings.SetActive(true);
-            PanelGeneral.SetActive(true);
-            lineGeneral.SetActive(true);
-        }
-
-        public void PlayHover()
-        {
-            hoverSound.Play();
-        }
-
-        public void PlaySFXHover()
-        {
-            sliderSound.Play();
-        }
-
-        public void PlaySwoosh()
-        {
-            swooshSound.Play();
-        }
+        public void PlayHover() { if (hoverSound) hoverSound.Play(); }
+        public void PlaySFXHover() { if (sliderSound) sliderSound.Play(); }
+        public void PlaySwoosh() { if (swooshSound) swooshSound.Play(); }
 
         public void AreYouSure()
         {
-            exitMenu.SetActive(true);
-            DisablePlayCampaign();
-        }
-
-        public void AreYouSureMobile()
-        {
-            exitMenu.SetActive(true);
-            mainMenu.SetActive(false);
-            DisablePlayCampaign();
+            if (exitMenu) exitMenu.SetActive(true);
         }
 
         public void QuitGame()
@@ -244,7 +208,7 @@ namespace SlimUI.ModernMenu
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-			Application.Quit();
+            Application.Quit();
 #endif
         }
 
@@ -252,23 +216,22 @@ namespace SlimUI.ModernMenu
         {
             AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
             operation.allowSceneActivation = false;
-            mainCanvas.SetActive(false);
-            loadingMenu.SetActive(true);
+
+            if (mainCanvas) mainCanvas.SetActive(false);
+            if (loadingMenu) loadingMenu.SetActive(true);
 
             while (!operation.isDone)
             {
                 float progress = Mathf.Clamp01(operation.progress / 0.95f);
-                loadingBar.value = progress;
+                if (loadingBar) loadingBar.value = progress;
 
                 if (operation.progress >= 0.9f && waitForInput)
                 {
-                    loadPromptText.text = "Press " + userPromptKey.ToString().ToUpper() + " to continue";
-                    loadingBar.value = 1;
+                    if (loadPromptText) loadPromptText.text = "Press " + userPromptKey.ToString().ToUpper() + " to continue";
+                    if (loadingBar) loadingBar.value = 1;
 
                     if (Input.GetKeyDown(userPromptKey))
-                    {
                         operation.allowSceneActivation = true;
-                    }
                 }
                 else if (operation.progress >= 0.9f && !waitForInput)
                 {
