@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using Invector.vMelee;
 
 public class PlayerSkillManager : MonoBehaviour
 {
@@ -30,10 +31,18 @@ public class PlayerSkillManager : MonoBehaviour
     public float skill3CooldownTimer = 0;
     public float skill3AttackRange = 15f;
 
+    public bool requireTargetInRangeForSkill3 = true;
+                     
+    [Header("Skill 1 — yêu cầu vũ khí")]
+    private vMeleeManager melee;
+    public string katanaNameContains = "Katana";
+
+
 
     private Invector.vCharacterController.vThirdPersonController controller;
     void Start()
     {
+        melee = GetComponent<vMeleeManager>();
         controller = GetComponent<Invector.vCharacterController.vThirdPersonController>();
     }
 
@@ -46,11 +55,21 @@ public class PlayerSkillManager : MonoBehaviour
         if (skill3CooldownTimer > 0) skill3CooldownTimer -= Time.deltaTime;
 
         // --- Skill 1 ---
+        // --- Skill 1 ---
         if (Input.GetKeyDown(KeyCode.Alpha2) && skill1CooldownTimer <= 0f)
         {
-            animator.SetTrigger("Skill1");
-            skill1CooldownTimer = skill1Cooldown;
+            if (IsHoldingKatana())
+            {
+                animator.SetTrigger("Skill1");
+                skill1CooldownTimer = skill1Cooldown;
+            }
+            else
+            {
+                // tùy chọn: feedback cho người chơi
+                Debug.LogWarning("Bạn chưa cầm Katana. Hãy rút Katana ra tay để dùng Skill 1.");
+            }
         }
+
 
         // --- Skill 2 ---
         if (Input.GetKeyDown(KeyCode.Alpha3) && skill2CooldownTimer <= 0f)
@@ -62,8 +81,11 @@ public class PlayerSkillManager : MonoBehaviour
         // --- Skill 3 ---
         if (Input.GetKeyDown(KeyCode.Alpha4) && skill3CooldownTimer <= 0f)
         {
-            animator.SetTrigger("Skill3");
-            skill3CooldownTimer = skill3Cooldown;
+            if (!requireTargetInRangeForSkill3 || IsEnemyInSkill3Range())
+            {
+                animator.SetTrigger("Skill3");
+                skill3CooldownTimer = skill3Cooldown;
+            }
         }
     }
 
@@ -181,7 +203,7 @@ public class PlayerSkillManager : MonoBehaviour
     // -----------------------------
     public void SpawnSkill3EffectAtNearestEnemy()
     {
-        GameObject nearestEnemy = FindNearestEnemy();
+        GameObject nearestEnemy = FindNearestEnemyInRange(skill3AttackRange);
         if (nearestEnemy != null && skill3EffectPrefab != null)
         {
             // --- Gây damage ---
@@ -204,7 +226,7 @@ public class PlayerSkillManager : MonoBehaviour
     }
 
 
-    private GameObject FindNearestEnemy()
+    private GameObject FindNearestEnemyInRange(float range)
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         GameObject nearest = null;
@@ -214,7 +236,7 @@ public class PlayerSkillManager : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             float dist = Vector3.Distance(currentPos, enemy.transform.position);
-            if (dist < minDist)
+            if (dist <= range && dist < minDist)
             {
                 minDist = dist;
                 nearest = enemy;
@@ -238,6 +260,34 @@ public class PlayerSkillManager : MonoBehaviour
 
         return false;
     }
+
+    private bool IsHoldingKatana()
+    {
+        if (melee == null) return false;
+
+        // Vũ khí đang cầm “thực sự” trên tay
+        var active = melee.CurrentActiveAttackWeapon;
+        if (active == null) return false;
+
+        // So khớp theo tên GameObject của vũ khí (đơn giản & ổn định)
+        // Nếu tên khác, sửa katanaNameContains trong Inspector
+        var goName = active.gameObject.name;
+        return !string.IsNullOrEmpty(goName) &&
+               !string.IsNullOrEmpty(katanaNameContains) &&
+               goName.IndexOf(katanaNameContains, System.StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    // === Cho UI & input dùng ===
+    public bool HasWeaponForSkill1()
+    {
+        if (melee == null) melee = GetComponent<vMeleeManager>();
+        var w = melee ? melee.CurrentActiveAttackWeapon : null;
+        if (w == null) return false;
+        var n = w.gameObject.name;
+        return !string.IsNullOrEmpty(n) &&
+               n.IndexOf(katanaNameContains, System.StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
 
 
     // -----------------------------

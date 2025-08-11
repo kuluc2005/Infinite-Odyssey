@@ -13015,7 +13015,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 9
+  selectedToolbar: 0
   _isDead: 1
   _currentHealth: 100
   isImmortal: 0
@@ -13233,7 +13233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 2
+  selectedToolbar: 1
   unlockCursorOnStart: 0
   showCursorOnStart: 0
   toggleWalk: 301
@@ -13588,7 +13588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 3
+  selectedToolbar: 0
   upDownAxis: {x: 1, y: 0, z: 0}
   strafeHeadWeight: 0.8
   strafeBodyWeight: 0.5
@@ -14281,6 +14281,8 @@ MonoBehaviour:
   skill3Cooldown: 10
   skill3CooldownTimer: 0
   skill3AttackRange: 15
+  requireTargetInRangeForSkill3: 1
+  katanaNameContains: Katana
 --- !u!114 &-9189656699026346942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64165,6 +64167,26 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 986480415771261881, guid: 89f73820c40355c478be49b3df52f731, type: 3}
+      propertyPath: m_Name
+      value: Skill1Mask
+      objectReference: {fileID: 0}
+    - target: {fileID: 2217803396191117868, guid: 89f73820c40355c478be49b3df52f731, type: 3}
+      propertyPath: m_Name
+      value: Skill3Icon
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745549563112432379, guid: 89f73820c40355c478be49b3df52f731, type: 3}
+      propertyPath: m_Name
+      value: Skill2Mask
+      objectReference: {fileID: 0}
+    - target: {fileID: 2980279553886510397, guid: 89f73820c40355c478be49b3df52f731, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c5c51b2f31fb9de4c9e1984320adab97, type: 3}
+    - target: {fileID: 3068082921390669655, guid: 89f73820c40355c478be49b3df52f731, type: 3}
+      propertyPath: m_Name
+      value: Skill1Icon
+      objectReference: {fileID: 0}
     - target: {fileID: 3415917085567988312, guid: 89f73820c40355c478be49b3df52f731, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -64189,9 +64211,21 @@ PrefabInstance:
       propertyPath: skillManager
       value: 
       objectReference: {fileID: 613174528642146097}
+    - target: {fileID: 6810029957553042222, guid: 89f73820c40355c478be49b3df52f731, type: 3}
+      propertyPath: requireTargetForSkill3
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532405950732350350, guid: 89f73820c40355c478be49b3df52f731, type: 3}
+      propertyPath: m_Name
+      value: Skill2Icon
+      objectReference: {fileID: 0}
     - target: {fileID: 8744995623337644209, guid: 89f73820c40355c478be49b3df52f731, type: 3}
       propertyPath: m_Name
       value: HUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 8908881427831539377, guid: 89f73820c40355c478be49b3df52f731, type: 3}
+      propertyPath: m_Name
+      value: Skill3Mask
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -64291,7 +64325,10 @@ MonoBehaviour:
   cooldownMask: {fileID: 9133502873379898808}
   skillIcon: {fileID: 6449246545377179157}
   skillManager: {fileID: 613174528642146097}
+  autoFindInParent: 1
   skillIndex: 1
+  requireTargetForSkill3: 0
+  requireWeaponForSkill1: 1
 --- !u!114 &9133502873379898808 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8170009210233180759, guid: 89f73820c40355c478be49b3df52f731, type: 3}

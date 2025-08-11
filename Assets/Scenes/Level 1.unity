@@ -4217,6 +4217,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
+    - target: {fileID: 6560661976121044507, guid: 9500e1ac8f95c984e9e0a7cd2e34826a, type: 3}
+      propertyPath: femalePrefab
+      value: 
+      objectReference: {fileID: 2991120363683973075, guid: 4ff19e940a4b3274db59bc5554abc96b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
