@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 using Invector.vItemManager;
 
@@ -30,7 +31,7 @@ public class InventoryUpgradeUI : MonoBehaviour
     public TMP_Text rightLevelText;
 
     public TMP_Text gemCountText;
-    public TMP_Text coinText;   // 🆕 👉 Text con trong GameObject Coin (dùng để hiển thị số vàng phải trả)
+    public TMP_Text coinText;   // 👉 Text con trong GameObject Coin (chỉ hiển thị số vàng phải trả)
     public TMP_Text leftAttack;
     public TMP_Text rightAttackPreview;
     public TMP_Text leftStamina;
@@ -46,12 +47,45 @@ public class InventoryUpgradeUI : MonoBehaviour
     public List<UpgradeStats> upgradeTable = new List<UpgradeStats>();
     public int maxLevel = 3;   // chỉ có 3 level
 
+    [Header("🟢/🔴 Thông báo nâng cấp")]
+    public TMP_Text resultText;
+    public Color successColor = new Color(0.2f, 0.8f, 0.2f);
+    public Color errorColor = new Color(0.9f, 0.2f, 0.2f);
+    public float messageDuration = 2f;
+
     private vItem currentSelectedItem;
     private int playerGem = 100;
-    private int playerGold = 1000;   // ✅ Gold của người chơi
+    private int playerGold = 1000;
 
-    // 🆕 Lưu damage gốc cho từng vũ khí
+    // Lưu damage gốc cho từng vũ khí
     private Dictionary<int, int> baseDamageTable = new Dictionary<int, int>();
+
+    // --- message helpers ---
+    private Coroutine messageCo;
+    private void ShowMessage(string msg, bool isSuccess)
+    {
+        if (resultText == null) return;
+
+        if (messageCo != null) StopCoroutine(messageCo);
+        resultText.text = msg;
+        resultText.color = isSuccess ? successColor : errorColor;
+        resultText.gameObject.SetActive(true);
+        messageCo = StartCoroutine(HideMessageAfterDelay());
+    }
+
+    private IEnumerator HideMessageAfterDelay()
+    {
+        yield return new WaitForSeconds(messageDuration);
+        if (resultText != null)
+            resultText.gameObject.SetActive(false);
+    }
+
+    private void ClearMessage()
+    {
+        if (resultText != null)
+            resultText.gameObject.SetActive(false);
+    }
+    // -----------------------
 
     void Start()
     {
@@ -63,6 +97,7 @@ public class InventoryUpgradeUI : MonoBehaviour
         if (upgradeButton != null)
             upgradeButton.onClick.AddListener(OnUpgradeClicked);
 
+        ClearMessage();
     }
 
     void Update()
@@ -76,6 +111,8 @@ public class InventoryUpgradeUI : MonoBehaviour
 
                 Cursor.lockState = isOpen ? CursorLockMode.Locked : CursorLockMode.None;
                 Cursor.visible = !isOpen;
+
+                if (!isOpen) ClearMessage(); // mở panel thì xóa thông báo cũ
             }
         }
     }
@@ -124,6 +161,7 @@ public class InventoryUpgradeUI : MonoBehaviour
     void OnItemClicked(vItem item)
     {
         currentSelectedItem = item;
+        ClearMessage(); // xóa thông báo khi đổi item
 
         if (leftIconCurrent) leftIconCurrent.sprite = item.icon;
         if (leftIconNext) leftIconNext.sprite = item.icon;
@@ -142,40 +180,30 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         if (levelDisplayText) levelDisplayText.text = $"Lv. {currentLevel}";
 
-        // ✅ HIỂN THỊ GEM COST & GOLD COST (trong coinText)
+        // HIỂN THỊ GEM & GOLD COST
         if (currentLevel < maxLevel)
         {
-            int gemCostNext = upgradeTable[currentLevel - 1].gemCost;
-            int goldCostNext = upgradeTable[currentLevel - 1].goldCost;
+            UpgradeStats nextStats = upgradeTable[currentLevel - 1];
+            if (gemCountText) gemCountText.text = $"{playerGem} / {nextStats.gemCost}";
+            if (coinText) coinText.text = $"{nextStats.goldCost}";
 
-            if (gemCountText) gemCountText.text = $"{playerGem} / {gemCostNext}";
+            int previewDamage = damageVal + nextStats.damageIncrease;
+            int previewStamina = Mathf.Max(0, staminaVal - nextStats.staminaDecrease);
 
-            // 👉 CHỈ cập nhật số vàng phải trả trong Text con của Coin
-            if (coinText) coinText.text = $"{goldCostNext}";
+            if (rightAttackPreview) rightAttackPreview.text = $"Damage: {previewDamage}";
+            if (rightStaminaPreview) rightStaminaPreview.text = $"StaminaCost: {previewStamina}";
         }
         else
         {
             if (gemCountText) gemCountText.text = "MAX LEVEL";
             if (coinText) coinText.text = "MAX";
+            if (rightAttackPreview) rightAttackPreview.text = "MAX";
+            if (rightStaminaPreview) rightStaminaPreview.text = "MAX";
         }
 
         if (successRateText) successRateText.text = "Tỉ lệ thành công: 100%";
 
-        if (currentLevel < maxLevel)
-        {
-            UpgradeStats nextStats = upgradeTable[currentLevel - 1];
-            int previewDamage = damageVal + nextStats.damageIncrease;
-            int previewStamina = Mathf.Max(0, staminaVal - nextStats.staminaDecrease);
-
-            rightAttackPreview.text = $"Damage: {previewDamage}";
-            rightStaminaPreview.text = $"StaminaCost: {previewStamina}";
-        }
-        else
-        {
-            rightAttackPreview.text = "MAX";
-            rightStaminaPreview.text = "MAX";
-        }
-        // ✅ Thêm đoạn này để đảm bảo lần click đầu tiên mở luôn UI
+        // đảm bảo lần click đầu mở UI
         OpenUpgrade();
     }
 
@@ -184,6 +212,7 @@ public class InventoryUpgradeUI : MonoBehaviour
         if (currentSelectedItem == null)
         {
             Debug.LogWarning("❌ Chưa chọn item để nâng cấp!");
+            ShowMessage("Chưa chọn vật phẩm!", false);
             return;
         }
 
@@ -193,6 +222,7 @@ public class InventoryUpgradeUI : MonoBehaviour
         if (currentLevel >= maxLevel)
         {
             Debug.Log("⚠ Đã đạt cấp tối đa!");
+            ShowMessage("Đã đạt cấp tối đa!", false);
             return;
         }
 
@@ -201,16 +231,18 @@ public class InventoryUpgradeUI : MonoBehaviour
         if (playerGem < stats.gemCost)
         {
             Debug.Log("❌ Không đủ Gem để nâng cấp!");
+            ShowMessage("Không đủ Gem!", false);
             return;
         }
 
         if (playerGold < stats.goldCost)
         {
             Debug.Log("❌ Không đủ Gold để nâng cấp!");
+            ShowMessage("Không đủ Gold!", false);
             return;
         }
 
-        // ✅ Trừ Gem & Gold
+        // Trừ Gem & Gold
         playerGem -= stats.gemCost;
         playerGold -= stats.goldCost;
 
@@ -220,10 +252,13 @@ public class InventoryUpgradeUI : MonoBehaviour
         if (dmgAttr != null) dmgAttr.value += stats.damageIncrease;
         if (staminaAttr != null) staminaAttr.value = Mathf.Max(0, staminaAttr.value - stats.staminaDecrease);
 
-        Debug.Log($"✅ {currentSelectedItem.name} nâng cấp lên Level {currentLevel + 1}: +{stats.damageIncrease} Damage, -{stats.staminaDecrease} StaminaCost (Gem còn {playerGem}, Gold còn {playerGold})");
+        Debug.Log($"✅ {currentSelectedItem.name} → Lv.{currentLevel + 1}: +{stats.damageIncrease} DMG, -{stats.staminaDecrease} STC (Gem {playerGem}, Gold {playerGold})");
+
+        // Thông báo thành công
+        ShowMessage($"Nâng cấp thành công → Lv.{currentLevel + 1}", true);
 
         RefreshInventoryUI();
-        OnItemClicked(currentSelectedItem);
+        OnItemClicked(currentSelectedItem); // cập nhật preview/cost mới
     }
 
     public void ForceRefresh()
@@ -238,6 +273,7 @@ public class InventoryUpgradeUI : MonoBehaviour
             upgradeCanvas.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            ClearMessage();
         }
     }
 
