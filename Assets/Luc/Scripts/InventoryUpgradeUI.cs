@@ -93,7 +93,6 @@ public class InventoryUpgradeUI : MonoBehaviour
             playerItemManager = FindObjectOfType<vItemManager>();
 
         RefreshInventoryUI();
-
         if (upgradeButton != null)
             upgradeButton.onClick.AddListener(OnUpgradeClicked);
 
@@ -171,7 +170,6 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         int currentLevel = CalculateLevel(item.id, damageVal);
         int nextLevel = Mathf.Clamp(currentLevel + 1, 1, maxLevel);
-
         if (leftLevelText) leftLevelText.text = $"Lv.{currentLevel}";
         if (rightLevelText) rightLevelText.text = currentLevel < maxLevel ? $"Lv.{nextLevel}" : "MAX";
 
