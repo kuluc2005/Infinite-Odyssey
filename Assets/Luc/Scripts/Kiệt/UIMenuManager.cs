@@ -11,6 +11,13 @@ namespace SlimUI.ModernMenu
         // Animator cũ dùng cho Position1/2 đã bỏ — giữ lại nếu bạn vẫn dùng ở nơi khác
         private Animator CameraObject;
 
+        // --- Helper: tìm PlayerPositionManager hiện tại (giống SettingPanelManager) ---
+        private PlayerPositionManager GetCurrentPlayerPositionManager()
+        {
+            var go = GameObject.FindGameObjectWithTag("Player");
+            return go ? go.GetComponent<PlayerPositionManager>() : null;
+        }
+
         [Header("MENUS")]
         public GameObject mainMenu;
         public GameObject firstMenu;
@@ -240,6 +247,134 @@ namespace SlimUI.ModernMenu
 
                 yield return null;
             }
+        }
+
+        public void OnRegisterClicked()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("RegisterScene");
+        }
+
+        public void OnLoginClicked()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("LoginScene");
+        }
+
+        public void OnChangePasswordClicked()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("CharacterSelectScene");
+        }
+
+        public void OnLogoutClicked()
+        {
+            StartCoroutine(SaveAndLogout());
+        }
+
+        public void OnExitGameClicked()
+        {
+            StartCoroutine(SaveAndQuit());
+        }
+
+        private IEnumerator SaveAndLogout()
+        {
+            // đánh dấu đang logout (nếu hệ quest cần)
+            if (QuestManager.instance != null) QuestManager.instance.isLoggingOut = true;
+
+            // Lưu vị trí
+            var ppm = GetCurrentPlayerPositionManager();
+            if (ppm != null)
+            {
+                ppm.SavePlayerPosition();
+                yield return new WaitForSecondsRealtime(0.5f);
+            }
+
+            // Lưu các quest active, đảm bảo gửi xong từng cái
+            if (QuestManager.instance != null)
+            {
+                if (QuestManager.instance.activeQuests.Count > 0)
+                {
+                    bool anyFail = false;
+
+                    foreach (var quest in QuestManager.instance.activeQuests.Values)
+                    {
+                        bool done = false;
+                        bool resultOk = false;
+
+                        Debug.Log($"[Logout] Gửi SaveQuestToApi: {quest.questID} | currentAmount={quest.objectives[0].currentAmount}/{quest.objectives[0].requiredAmount}");
+
+                        QuestManager.instance.SaveQuestToApi(quest, "active", ok => { done = true; resultOk = ok; });
+                        while (!done) yield return null;
+
+                        if (!resultOk)
+                        {
+                            Debug.LogWarning($"[Logout] Lưu quest {quest.questID} thất bại!");
+                            anyFail = true;
+                        }
+                    }
+
+                    if (anyFail)
+                    {
+                        Debug.LogError("[Logout] Có quest lưu thất bại. Hủy logout để tránh mất tiến độ.");
+                        yield break;
+                    }
+                }
+            }
+
+            // chuyển scene đăng nhập
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("LoginScene");
+        }
+
+        private IEnumerator SaveAndQuit()
+        {
+            // 1) Lưu vị trí nhân vật (API)
+            var ppm = GetCurrentPlayerPositionManager();
+            if (ppm != null)
+            {
+                ppm.SavePlayerPosition();
+                // cho API có thời gian chạy (tùy backend, bạn có thể tăng/giảm)
+                yield return new WaitForSecondsRealtime(0.5f);
+            }
+
+            // 2) Lưu toàn bộ quest đang active — chờ callback như nút Logout
+            if (QuestManager.instance != null && QuestManager.instance.activeQuests.Count > 0)
+            {
+                bool anyFail = false;
+
+                foreach (var quest in QuestManager.instance.activeQuests.Values)
+                {
+                    bool done = false;
+                    bool resultOk = false;
+
+                    Debug.Log($"[Quit] Gửi SaveQuestToApi: {quest.questID} | {quest.objectives[0].currentAmount}/{quest.objectives[0].requiredAmount}");
+                    // SaveQuestToApi(quest, "active", Action<bool> onFinished)
+                    QuestManager.instance.SaveQuestToApi(quest, "active", ok => { done = true; resultOk = ok; });
+
+                    while (!done) yield return null;
+
+                    if (!resultOk)
+                    {
+                        Debug.LogWarning($"[Quit] Lưu quest {quest.questID} thất bại — hủy thoát để tránh mất tiến độ.");
+                        anyFail = true;
+                    }
+                }
+
+                if (anyFail)
+                {
+                    // Bạn có thể bật popup báo lỗi tại đây thay vì chỉ log
+                    yield break;
+                }
+            }
+
+            // 3) Thoát game (không chuyển scene)
+            Time.timeScale = 1f; // trả thời gian về bình thường cho chắc
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
         }
     }
 }

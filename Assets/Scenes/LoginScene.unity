@@ -518,12 +518,20 @@ PrefabInstance:
       value: HideError
       objectReference: {fileID: 0}
     - target: {fileID: 7073742885526465037, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+    - target: {fileID: 7073742885526465037, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_VerticalAlignment
       value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 7073742885526465037, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_HorizontalAlignment
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7073742885526465037, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7403201111177450548, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_Name

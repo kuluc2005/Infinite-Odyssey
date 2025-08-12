@@ -16,14 +16,14 @@ public class UpgradeStats
 
 public class InventoryUpgradeUI : MonoBehaviour
 {
-    [Header("📜 Tham chiếu Inventory")]
+    [Header("Tham chiếu Inventory")]
     public vItemManager playerItemManager;
 
-    [Header("📜 ScrollView Bên Phải")]
+    [Header("ScrollView Bên Phải")]
     public Transform itemListParent;
     public GameObject itemButtonPrefab;
 
-    [Header("⬅️ Panel Bên Trái (Upgrade)")]
+    [Header("Panel Bên Trái (Upgrade)")]
     public Image leftIconCurrent;
     public Image leftIconNext;
 
@@ -40,14 +40,14 @@ public class InventoryUpgradeUI : MonoBehaviour
     public TMP_Text levelDisplayText;
     public Button upgradeButton;
 
-    [Header("⚙️ UI")]
+    [Header("UI")]
     public GameObject upgradeCanvas;   // panel chính của UI nâng cấp
 
-    [Header("📈 Bảng tăng cấp (có thể chỉnh trong Inspector)")]
+    [Header("Bảng tăng cấp (có thể chỉnh trong Inspector)")]
     public List<UpgradeStats> upgradeTable = new List<UpgradeStats>();
     public int maxLevel = 3;   // chỉ có 3 level
 
-    [Header("🟢/🔴 Thông báo nâng cấp (Toast)")]
+    [Header("Thông báo nâng cấp (Toast)")]
     public TMP_Text resultText;
     public Color successColor = new Color(0.2f, 0.8f, 0.2f);
     public Color errorColor = new Color(0.9f, 0.2f, 0.2f);
@@ -80,7 +80,7 @@ public class InventoryUpgradeUI : MonoBehaviour
     void Start()
     {
         if (playerItemManager == null)
-            playerItemManager = FindObjectOfType<vItemManager>();
+            playerItemManager = FindFirstObjectByType<vItemManager>();
 
         RefreshInventoryUI();
 
@@ -251,6 +251,8 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         // BÂY GIỜ mới show để không bị ClearMessage() xoá mất
         ShowMessage($"Nâng cấp thành công → Lv.{currentLevel + 1}", true);
+        var sync = FindFirstObjectByType<InventorySyncManager>();
+        if (sync != null) sync.SaveInventoryToServer();
     }
 
     public void ForceRefresh() => RefreshInventoryUI();

@@ -8,11 +8,20 @@ using UnityEngine.Networking;
 
 
 // --- Dùng cho serialize/deserialize ---
+
+[System.Serializable]
+public class ItemAttributeSave
+{
+    public string name;   // ví dụ: "Damage", "StaminaCost"
+    public int value;
+}
+
 [System.Serializable]
 public class ItemSaveData
 {
     public int id;
     public int amount;
+    public List<ItemAttributeSave> attrs = new List<ItemAttributeSave>();
 }
 
 [System.Serializable]
@@ -59,10 +68,17 @@ public class InventorySyncManager : MonoBehaviour
     // ===== Serialize inventory sang JSON =====
     public string SerializeInventoryToJson()
     {
-        var items = itemManager.items.Select(i => new ItemSaveData
+        var items = itemManager.items.Select(i =>
         {
-            id = i.id,
-            amount = i.amount
+            var data = new ItemSaveData { id = i.id, amount = i.amount };
+
+            var dmg = i.GetItemAttribute(vItemAttributes.Damage);
+            if (dmg != null) data.attrs.Add(new ItemAttributeSave { name = vItemAttributes.Damage.ToString(), value = dmg.value });
+
+            var stam = i.GetItemAttribute(vItemAttributes.StaminaCost);
+            if (stam != null) data.attrs.Add(new ItemAttributeSave { name = vItemAttributes.StaminaCost.ToString(), value = stam.value });
+
+            return data;
         }).ToList();
 
         var list = new ItemSaveDataList { items = items };
@@ -73,18 +89,26 @@ public class InventorySyncManager : MonoBehaviour
     public void DeserializeInventoryFromJson(string json)
     {
         var loaded = JsonUtility.FromJson<ItemSaveDataList>(json);
-        if (loaded != null && loaded.items != null)
-        {
-            itemManager.DestroyAllItems();
+        if (loaded == null || loaded.items == null) return;
 
-            foreach (var data in loaded.items)
+        itemManager.DestroyAllItems();
+
+        foreach (var data in loaded.items)
+        {
+            var itemRef = new ItemReference(data.id) { amount = data.amount };
+            itemManager.AddItem(itemRef, true);
+
+            // tìm instance trong inventory để set lại chỉ số
+            var inst = itemManager.items.FirstOrDefault(x => x.id == data.id);
+            if (inst == null || data.attrs == null) continue;
+
+            foreach (var a in data.attrs)
             {
-                //Debug.Log("Try to add item id: " + data.id + ", amount: " + data.amount);
-                var itemRef = new ItemReference(data.id);
-                itemRef.amount = data.amount;
-                bool exist = itemManager.itemListData.items.Any(i => i.id == data.id);
-                Debug.Log("Item ID " + data.id + " exists in database: " + exist);
-                itemManager.AddItem(itemRef, true);
+                if (System.Enum.TryParse<vItemAttributes>(a.name, out var attrEnum))
+                {
+                    var attr = inst.GetItemAttribute(attrEnum);
+                    if (attr != null) attr.value = a.value;
+                }
             }
         }
     }
