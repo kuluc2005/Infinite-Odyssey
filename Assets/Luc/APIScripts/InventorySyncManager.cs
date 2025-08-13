@@ -4,92 +4,108 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Networking;
+using System.Text;
 
-
-
-// --- Dùng cho serialize/deserialize ---
-
-[System.Serializable]
-public class ItemAttributeSave
-{
-    public string name;   // ví dụ: "Damage", "StaminaCost"
-    public int value;
-}
-
-[System.Serializable]
-public class ItemSaveData
-{
-    public int id;
-    public int amount;
-    public List<ItemAttributeSave> attrs = new List<ItemAttributeSave>();
-}
-
-[System.Serializable]
-public class ItemSaveDataList
-{
-    public List<ItemSaveData> items = new List<ItemSaveData>();
-}
-
-// --- Dùng cho deserialize từ backend ---
+[System.Serializable] public class ItemAttributeSave { public string name; public int value; }
+[System.Serializable] public class ItemSaveData { public int id; public int amount; public List<ItemAttributeSave> attrs = new List<ItemAttributeSave>(); }
+[System.Serializable] public class ItemSaveDataList { public List<ItemSaveData> items = new List<ItemSaveData>(); }
 
 public class InventorySyncManager : MonoBehaviour
 {
-    [Header("Setup")]
     public vItemManager itemManager;
-    public int characterId; // Gán đúng CharacterId của nhân vật (hoặc lấy từ PlayerPrefs)
+    public int characterId;
+
+    [Header("Auto Save")]
+    public float checkInterval = 0.5f;
+    public float minSaveInterval = 0.7f;
+
+    private bool isRestoring = false;
+    private bool forceDirty = false;
+    private string lastSnapshot = "";
+    private float lastSaveTime = -999f;
+    private Coroutine monitorCo;
 
     void Start()
     {
-        if (itemManager == null)
-            itemManager = GetComponent<vItemManager>();
+        if (itemManager == null) itemManager = GetComponent<vItemManager>();
+        if (characterId <= 0) characterId = PlayerPrefs.GetInt("CharacterId", -1);
 
-        if (characterId <= 0)
-            characterId = PlayerPrefs.GetInt("CharacterId", -1);
-
-        // --- Đăng ký auto-save inventory khi có thay đổi ---
         itemManager.onAddItem.RemoveAllListeners();
         itemManager.onUseItem.RemoveAllListeners();
-        itemManager.onAddItem.AddListener((item) => SaveInventoryToServer());
-        itemManager.onUseItem.AddListener((item) => SaveInventoryToServer());
+        itemManager.onAddItem.AddListener(_ => MarkDirty());
+        itemManager.onUseItem.AddListener(_ => MarkDirty());
 
-        Debug.Log("InventorySyncManager Start: characterId = " + characterId);
-
-        if (characterId <= 0)
-        {
-            Debug.LogError("InventorySyncManager: characterId không hợp lệ! Không load/sync inventory.");
-            return;
-        }
+        if (characterId <= 0) return;
 
         StartCoroutine(LoadInventoryFromServer());
+
+        if (monitorCo == null)
+            monitorCo = StartCoroutine(AutoMonitor());
     }
 
+    public void MarkDirty()
+    {
+        forceDirty = true;
+    }
 
+    IEnumerator AutoMonitor()
+    {
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(checkInterval);
+            if (isRestoring) continue;
 
-    // ===== Serialize inventory sang JSON =====
+            string snap = Snapshot();
+            bool changed = snap != lastSnapshot;
+
+            if ((changed || forceDirty) && (Time.unscaledTime - lastSaveTime) >= minSaveInterval)
+            {
+                SaveInventoryToServer_Internal(snap);
+            }
+
+            forceDirty = false;
+        }
+    }
+
+    string Snapshot()
+    {
+        var sb = new StringBuilder();
+        var list = itemManager.items.OrderBy(i => i.id).ToList();
+        foreach (var i in list)
+        {
+            int dmg = GetAttr(i, vItemAttributes.Damage);
+            int stam = GetAttr(i, vItemAttributes.StaminaCost);
+            sb.Append(i.id).Append('|').Append(i.amount).Append('|').Append(dmg).Append('|').Append(stam).Append(';');
+        }
+        return sb.ToString();
+    }
+
+    int GetAttr(vItem item, vItemAttributes attr)
+    {
+        var a = item.GetItemAttribute(attr);
+        return a != null ? a.value : 0;
+    }
+
     public string SerializeInventoryToJson()
     {
         var items = itemManager.items.Select(i =>
         {
-            var data = new ItemSaveData { id = i.id, amount = i.amount };
-
+            var d = new ItemSaveData { id = i.id, amount = i.amount };
             var dmg = i.GetItemAttribute(vItemAttributes.Damage);
-            if (dmg != null) data.attrs.Add(new ItemAttributeSave { name = vItemAttributes.Damage.ToString(), value = dmg.value });
-
+            if (dmg != null) d.attrs.Add(new ItemAttributeSave { name = vItemAttributes.Damage.ToString(), value = dmg.value });
             var stam = i.GetItemAttribute(vItemAttributes.StaminaCost);
-            if (stam != null) data.attrs.Add(new ItemAttributeSave { name = vItemAttributes.StaminaCost.ToString(), value = stam.value });
-
-            return data;
+            if (stam != null) d.attrs.Add(new ItemAttributeSave { name = vItemAttributes.StaminaCost.ToString(), value = stam.value });
+            return d;
         }).ToList();
-
-        var list = new ItemSaveDataList { items = items };
-        return JsonUtility.ToJson(list);
+        return JsonUtility.ToJson(new ItemSaveDataList { items = items });
     }
 
-    // ===== Deserialize inventory từ JSON về lại vItemManager =====
     public void DeserializeInventoryFromJson(string json)
     {
         var loaded = JsonUtility.FromJson<ItemSaveDataList>(json);
         if (loaded == null || loaded.items == null) return;
+
+        isRestoring = true;
 
         itemManager.DestroyAllItems();
 
@@ -98,7 +114,6 @@ public class InventorySyncManager : MonoBehaviour
             var itemRef = new ItemReference(data.id) { amount = data.amount };
             itemManager.AddItem(itemRef, true);
 
-            // tìm instance trong inventory để set lại chỉ số
             var inst = itemManager.items.FirstOrDefault(x => x.id == data.id);
             if (inst == null || data.attrs == null) continue;
 
@@ -111,74 +126,70 @@ public class InventorySyncManager : MonoBehaviour
                 }
             }
         }
+
+        lastSnapshot = Snapshot();
+        isRestoring = false;
     }
 
-    // ===== Lưu inventory lên API =====
     public void SaveInventoryToServer()
     {
-        string inventoryJson = SerializeInventoryToJson();
-        Debug.Log("<color=yellow>[DEBUG][Inventory] SaveInventoryToServer ĐƯỢC GỌI!</color> " + inventoryJson);
-        StartCoroutine(UpdateProfileInventoryCoroutine(inventoryJson));
+        var snap = Snapshot();
+        SaveInventoryToServer_Internal(snap);
     }
 
+    void SaveInventoryToServer_Internal(string snapshot)
+    {
+        string inventoryJson = SerializeInventoryToJson();
+
+        if (ProfileManager.CurrentProfile != null)
+            ProfileManager.CurrentProfile.inventoryJSON = inventoryJson;
+
+        lastSnapshot = snapshot;
+        lastSaveTime = Time.unscaledTime;
+
+        StartCoroutine(UpdateProfileInventoryCoroutine(inventoryJson));
+    }
 
     IEnumerator UpdateProfileInventoryCoroutine(string inventoryJson)
     {
         string url = $"http://localhost:5186/api/character/profile/{characterId}";
-        UnityWebRequest getReq = UnityWebRequest.Get(url);
+        var getReq = UnityWebRequest.Get(url);
         yield return getReq.SendWebRequest();
+        if (getReq.result != UnityWebRequest.Result.Success) yield break;
 
-        if (getReq.result != UnityWebRequest.Result.Success)
-        {
-            Debug.LogError("Lỗi khi lấy profile: " + getReq.error);
-            yield break;
-        }
-
-        var profileWrapper = JsonUtility.FromJson<PlayerProfileWrapper>(getReq.downloadHandler.text);
-        var profile = profileWrapper.data;
-
-        // Gán inventoryJson vào đúng field
+        var wrapper = JsonUtility.FromJson<PlayerProfileWrapper>(getReq.downloadHandler.text);
+        var profile = wrapper.data;
         profile.inventoryJSON = inventoryJson;
 
-        // PUT lên server
         string putUrl = "http://localhost:5186/api/character/profile/update";
         string json = JsonUtility.ToJson(profile);
-        UnityWebRequest putReq = new UnityWebRequest(putUrl, "PUT");
-        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
-        putReq.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        var putReq = new UnityWebRequest(putUrl, "PUT");
+        putReq.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
         putReq.downloadHandler = new DownloadHandlerBuffer();
         putReq.SetRequestHeader("Content-Type", "application/json");
         yield return putReq.SendWebRequest();
-
-        if (putReq.result == UnityWebRequest.Result.Success)
-            Debug.Log("Inventory đã được đồng bộ lên server!");
-        else
-            Debug.LogError("Lỗi đồng bộ inventory: " + putReq.error);
     }
 
-    // ===== Load inventory từ API backend =====
     IEnumerator LoadInventoryFromServer()
     {
         string url = $"http://localhost:5186/api/character/profile/{characterId}";
-        UnityWebRequest getReq = UnityWebRequest.Get(url);
+        var getReq = UnityWebRequest.Get(url);
         yield return getReq.SendWebRequest();
 
-        string raw = getReq.downloadHandler.text;
-        Debug.Log("Profile API response: " + raw);
-
-        PlayerProfileWrapper profileWrapper = JsonUtility.FromJson<PlayerProfileWrapper>(raw);
-        var profile = profileWrapper.data;
+        var wrapper = JsonUtility.FromJson<PlayerProfileWrapper>(getReq.downloadHandler.text);
+        var profile = wrapper.data;
 
         if (!string.IsNullOrEmpty(profile.inventoryJSON) && profile.inventoryJSON != "[]")
-        {
-            // Không cần đăng ký event lại ở đây!
             DeserializeInventoryFromJson(profile.inventoryJSON);
-            Debug.Log("Đã tải inventory từ server.");
-        }
         else
-        {
-            Debug.Log("Không có inventory để load.");
-        }
+            lastSnapshot = Snapshot();
+
+        var ui = FindFirstObjectByType<InventoryUpgradeUI>();
+        if (ui != null) ui.ForceRefresh();
     }
 
+    public void ForceReloadFromServer()
+    {
+        if (characterId > 0) StartCoroutine(LoadInventoryFromServer());
+    }
 }

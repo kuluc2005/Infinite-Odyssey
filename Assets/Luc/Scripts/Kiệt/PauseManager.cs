@@ -20,7 +20,7 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.F1))
         {
             // Nếu đang ở Option → không làm gì cả
             if (optionsCanvas != null && optionsCanvas.activeSelf)

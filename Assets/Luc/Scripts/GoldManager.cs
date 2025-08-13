@@ -1,3 +1,4 @@
+// GoldManager.cs
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
@@ -5,15 +6,24 @@ using System.Collections;
 public class GoldManager : MonoBehaviour
 {
     public static GoldManager Instance;
-
     public int CurrentGold { get; private set; }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void EnsureInstance()
+    {
+        if (Instance == null)
+        {
+            var go = new GameObject("GoldManager");
+            go.AddComponent<GoldManager>();
+        }
+    }
 
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); 
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -27,83 +37,44 @@ public class GoldManager : MonoBehaviour
         StartCoroutine(WaitForProfileAndLoadGold());
     }
 
-    private IEnumerator WaitForProfileAndLoadGold()
+    IEnumerator WaitForProfileAndLoadGold()
     {
-        while (ProfileManager.CurrentProfile == null)
-        {
-            Debug.Log("⏳ Đợi ProfileManager load profile...");
-            yield return null;
-        }
-
+        while (ProfileManager.CurrentProfile == null) yield return null;
         CurrentGold = ProfileManager.CurrentProfile.coins;
-        Debug.Log($"GoldManager Loaded Gold: {CurrentGold}");
     }
 
     public void AddCoins(int amount)
     {
         CurrentGold += amount;
-        if (ProfileManager.CurrentProfile != null)
-        {
-            ProfileManager.CurrentProfile.coins = CurrentGold;
-        }
+        if (ProfileManager.CurrentProfile != null) ProfileManager.CurrentProfile.coins = CurrentGold;
         StartCoroutine(UpdateCoinsToAPI());
     }
 
-    //Trừ vàng (ví dụ mua đồ)
     public bool SpendCoins(int amount)
     {
-        if (CurrentGold < amount)
-        {
-            Debug.Log("Không đủ vàng!");
-            return false;
-        }
-
+        if (CurrentGold < amount) return false;
         CurrentGold -= amount;
-        if (ProfileManager.CurrentProfile != null)
-        {
-            ProfileManager.CurrentProfile.coins = CurrentGold;
-        }
+        if (ProfileManager.CurrentProfile != null) ProfileManager.CurrentProfile.coins = CurrentGold;
         StartCoroutine(UpdateCoinsToAPI());
         return true;
     }
 
-    //Hàm gọi API PUT để cập nhật vàng
     public IEnumerator UpdateCoinsToAPI()
     {
-        if (ProfileManager.CurrentProfile == null)
-        {
-            Debug.LogError("Không có profile để update vàng!");
-            yield break;
-        }
-
+        if (ProfileManager.CurrentProfile == null) yield break;
         string url = "http://localhost:5186/api/character/profile/update";
         string json = JsonUtility.ToJson(ProfileManager.CurrentProfile);
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
-
-        UnityWebRequest request = new UnityWebRequest(url, "PUT");
-        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            Debug.Log($"API: Gold updated to {CurrentGold}");
-        }
-        else
-        {
-            Debug.LogError("API lỗi khi update vàng: " + request.error);
-        }
+        var req = new UnityWebRequest(url, "PUT");
+        req.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+        yield return req.SendWebRequest();
     }
 
     public void RefreshGoldFromProfile()
     {
         if (ProfileManager.CurrentProfile != null)
-        {
             CurrentGold = ProfileManager.CurrentProfile.coins;
-            Debug.Log($"GoldManager sync lại vàng từ Profile: {CurrentGold}");
-        }
     }
-
 }

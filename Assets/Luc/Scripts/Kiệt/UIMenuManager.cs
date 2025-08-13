@@ -311,37 +311,50 @@ namespace SlimUI.ModernMenu
         private IEnumerator SaveAndQuit()
         {
             var ppm = GetCurrentPlayerPositionManager();
+            var playerGo = ppm ? ppm.gameObject : null;
+            var stats = playerGo ? playerGo.GetComponent<PlayerStats>() : null;
+            var inv = playerGo ? playerGo.GetComponent<InventorySyncManager>() : null;
+
+            if (QuestManager.instance != null) QuestManager.instance.isLoggingOut = true;
+
+            // (1) Lưu vị trí/scene + coins + exp TRƯỚC (để lần ghi CUỐI là inventory)
             if (ppm != null)
             {
                 ppm.SavePlayerPosition();
-                yield return new WaitForSecondsRealtime(0.5f);
+                if (stats != null)
+                {
+                    ppm.UpdateProfile(p =>
+                    {
+                        p.exp = stats.currentExp;
+                        p.level = stats.level;
+                        p.maxHP = stats.maxHP;
+                        p.maxMP = stats.maxMP;
+                        p.HP = stats.currentHP;
+                        p.MP = stats.currentMP;
+                    });
+                }
             }
+            if (GoldManager.Instance != null)
+                CoroutineRunner.Run(GoldManager.Instance.UpdateCoinsToAPI());
 
+            // (2) GHI INVENTORY CUỐI CÙNG → đảm bảo inventoryJSON là giá trị sau cùng trên server
+            if (inv != null) inv.SaveInventoryToServer();
+
+            // (3) Chờ PUT hoàn tất 1 nhịp
+            yield return new WaitForSecondsRealtime(0.8f);
+
+            // (4) Giữ logic save quest cũ
             if (QuestManager.instance != null && QuestManager.instance.activeQuests.Count > 0)
             {
                 bool anyFail = false;
-
-                foreach (var quest in QuestManager.instance.activeQuests.Values)
+                foreach (var q in QuestManager.instance.activeQuests.Values)
                 {
-                    bool done = false;
-                    bool resultOk = false;
-
-                    Debug.Log($"[Quit] Gửi SaveQuestToApi: {quest.questID} | {quest.objectives[0].currentAmount}/{quest.objectives[0].requiredAmount}");
-                    QuestManager.instance.SaveQuestToApi(quest, "active", ok => { done = true; resultOk = ok; });
-
+                    bool done = false, ok = false;
+                    QuestManager.instance.SaveQuestToApi(q, "active", r => { done = true; ok = r; });
                     while (!done) yield return null;
-
-                    if (!resultOk)
-                    {
-                        Debug.LogWarning($"[Quit] Lưu quest {quest.questID} thất bại — hủy thoát để tránh mất tiến độ.");
-                        anyFail = true;
-                    }
+                    if (!ok) anyFail = true;
                 }
-
-                if (anyFail)
-                {
-                    yield break;
-                }
+                if (anyFail) yield break;
             }
 
             Time.timeScale = 1f;

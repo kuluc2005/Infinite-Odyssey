@@ -4,25 +4,21 @@ using UnityEngine;
 public class GoldUI : MonoBehaviour
 {
     public TMP_Text goldText;
-    private bool hasInitialized = false;
+
+    void OnEnable()
+    {
+        TryRefresh();
+    }
 
     void Update()
     {
-        if (GoldManager.Instance != null)
-        {
-            if (!hasInitialized && ProfileManager.CurrentProfile != null)
-            {
-                hasInitialized = true;
-            }
+        TryRefresh();
+    }
 
-            if (hasInitialized)
-            {
-                goldText.text = "Gold: " + GoldManager.Instance.CurrentGold.ToString();
-            }
-            else
-            {
-                goldText.text = "Gold: ..."; 
-            }
-        }
+    void TryRefresh()
+    {
+        if (goldText == null) return;
+        if (GoldManager.Instance == null) return;
+        goldText.text = "Gold: " + GoldManager.Instance.CurrentGold.ToString();
     }
 }

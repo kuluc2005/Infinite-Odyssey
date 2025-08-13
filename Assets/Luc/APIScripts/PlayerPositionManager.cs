@@ -10,8 +10,9 @@ public class PlayerPositionManager : MonoBehaviour
     // --- Hàm đa năng: Cập nhật bất kỳ trường nào ---
     public void UpdateProfile(System.Action<PlayerSpawner.PlayerProfile> modifyProfile)
     {
-        StartCoroutine(UpdateProfileCoroutine(modifyProfile));
+        CoroutineRunner.Run(UpdateProfileCoroutine(modifyProfile));
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -30,6 +31,7 @@ public class PlayerPositionManager : MonoBehaviour
             Debug.LogError("Không lấy được profile mới nhất: " + req.error);
             yield break;
         }
+
 
         PlayerSpawner.PlayerProfileWrapper wrapper = JsonUtility.FromJson<PlayerSpawner.PlayerProfileWrapper>(req.downloadHandler.text);
         if (wrapper == null || wrapper.data == null)
@@ -73,7 +75,7 @@ public class PlayerPositionManager : MonoBehaviour
         Vector3 pos = transform.position;
         string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-        string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene", "ResultScene" };
+        string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene", "ResultScene", "CutSceneLevel1", "CutSceneLevel2", "CutSceneLevel3" };
         bool isGameScene = !skipScenes.Contains(sceneName);
 
 
