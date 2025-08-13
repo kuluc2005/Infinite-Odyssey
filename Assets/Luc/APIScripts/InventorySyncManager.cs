@@ -158,11 +158,34 @@ public class InventorySyncManager : MonoBehaviour
         if (getReq.result != UnityWebRequest.Result.Success) yield break;
 
         var wrapper = JsonUtility.FromJson<PlayerProfileWrapper>(getReq.downloadHandler.text);
-        var profile = wrapper.data;
-        profile.inventoryJSON = inventoryJson;
+        if (wrapper == null || wrapper.data == null) yield break;
+
+        // 1) Luôn set inventory mới
+        var server = wrapper.data;
+        server.inventoryJSON = inventoryJson;
+
+        // 2) MERGE các field quan trọng từ local profile để không bị ghi đè EXP/Vàng/HP/MP/Scene
+        var local = ProfileManager.CurrentProfile;
+        if (local != null)
+        {
+            server.coins = local.coins;
+            server.exp = local.exp;
+            server.level = local.level;
+
+            server.maxHP = local.maxHP;
+            server.maxMP = local.maxMP;
+            server.HP = local.HP;
+            server.MP = local.MP;
+
+            if (!string.IsNullOrEmpty(local.lastScene))
+                server.lastScene = local.lastScene;
+
+            if (!string.IsNullOrEmpty(local.currentCheckpoint))
+                server.currentCheckpoint = local.currentCheckpoint;
+        }
 
         string putUrl = "http://localhost:5186/api/character/profile/update";
-        string json = JsonUtility.ToJson(profile);
+        string json = JsonUtility.ToJson(server);
         var putReq = new UnityWebRequest(putUrl, "PUT");
         putReq.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
         putReq.downloadHandler = new DownloadHandlerBuffer();

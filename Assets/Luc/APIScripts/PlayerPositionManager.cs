@@ -7,10 +7,14 @@ public class PlayerPositionManager : MonoBehaviour
 {
     [HideInInspector] public int characterId = -1;
 
-    // --- Hàm đa năng: Cập nhật bất kỳ trường nào ---
     public void UpdateProfile(System.Action<PlayerSpawner.PlayerProfile> modifyProfile)
     {
         CoroutineRunner.Run(UpdateProfileCoroutine(modifyProfile));
+    }
+
+    public IEnumerator UpdateProfileAndWait(System.Action<PlayerSpawner.PlayerProfile> modifyProfile)
+    {
+        yield return UpdateProfileCoroutine(modifyProfile);
     }
 
     void Update()
@@ -19,103 +23,141 @@ public class PlayerPositionManager : MonoBehaviour
             SavePlayerPosition();
     }
 
-
     IEnumerator UpdateProfileCoroutine(System.Action<PlayerSpawner.PlayerProfile> modifyProfile)
     {
-        int characterId = this.characterId;
-        string urlGet = $"http://localhost:5186/api/character/profile/{characterId}";
+        int id = characterId;
+
+        string urlGet = $"http://localhost:5186/api/character/profile/{id}";
         UnityWebRequest req = UnityWebRequest.Get(urlGet);
         yield return req.SendWebRequest();
         if (req.result != UnityWebRequest.Result.Success)
-        {
-            Debug.LogError("Không lấy được profile mới nhất: " + req.error);
             yield break;
-        }
 
-
-        PlayerSpawner.PlayerProfileWrapper wrapper = JsonUtility.FromJson<PlayerSpawner.PlayerProfileWrapper>(req.downloadHandler.text);
+        var wrapper = JsonUtility.FromJson<PlayerSpawner.PlayerProfileWrapper>(req.downloadHandler.text);
         if (wrapper == null || wrapper.data == null)
-        {
-            Debug.LogError("Không parse được profile");
             yield break;
-        }
 
-        // ================================
-        // GIỮ LẠI GIÁ TRỊ currentCheckpoint ĐÃ TỪNG LƯU
-        // ================================
-        if (string.IsNullOrEmpty(wrapper.data.currentCheckpoint) || wrapper.data.currentCheckpoint == "Start")
-        {
-            // Nếu chưa từng lưu vị trí, lấy vị trí hiện tại của player
-            Vector3 pos = transform.position;
-            wrapper.data.currentCheckpoint = $"{pos.x},{pos.y},{pos.z}";
-        }
-        // Nếu đã từng lưu vị trí rồi, GIỮ NGUYÊN, KHÔNG ghi đè = "Start"
-
-        // Sửa profile bằng hàm truyền vào
+        // KHÔNG tham chiếu transform ở đây nữa
+        // Chỉ sửa profile theo hàm truyền vào
         modifyProfile(wrapper.data);
 
-        // PUT lại profile đã chỉnh sửa
-        string url = "http://localhost:5186/api/character/profile/update";
+        string putUrl = "http://localhost:5186/api/character/profile/update";
         string json = JsonUtility.ToJson(wrapper.data);
-        Debug.Log("PUT JSON gửi lên API: " + json);
-        UnityWebRequest request = new UnityWebRequest(url, "PUT");
-        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
-        request.uploadHandler = new UploadHandlerRaw(body);
+        UnityWebRequest request = new UnityWebRequest(putUrl, "PUT");
+        request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
         yield return request.SendWebRequest();
-
-        Debug.Log(request.result == UnityWebRequest.Result.Success ? "Update profile thành công!" : "Update profile thất bại: " + request.error);
     }
 
-
-    // --- Gọi hàm này khi cần lưu vị trí ---
     public void SavePlayerPosition()
     {
         Vector3 pos = transform.position;
         string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-        string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene", "ResultScene", "CutSceneLevel1", "CutSceneLevel2", "CutSceneLevel3" };
-        bool isGameScene = !skipScenes.Contains(sceneName);
+        string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene", "ResultScene" };
+        bool isGameScene = !System.Linq.Enumerable.Contains(skipScenes, sceneName);
 
+        int curGold = (GoldManager.Instance != null)
+            ? GoldManager.Instance.CurrentGold
+            : (ProfileManager.CurrentProfile != null ? ProfileManager.CurrentProfile.coins : 0);
 
-        UpdateProfile(profile =>
+        int exp = 0, level = 0, maxHP = 0, maxMP = 0, hp = 0, mp = 0;
+        var stats = GetComponent<PlayerStats>();
+        if (stats != null)
         {
-            profile.currentCheckpoint = $"{sceneName}:{pos.x},{pos.y},{pos.z}";
-            if (isGameScene)
-                profile.lastScene = sceneName;
+            exp = stats.currentExp;
+            level = stats.level;
+            maxHP = stats.maxHP;
+            maxMP = stats.maxMP;
+            hp = stats.currentHP;
+            mp = stats.currentMP;
+        }
+        string checkpoint = $"{sceneName}:{pos.x},{pos.y},{pos.z}";
 
-            if (GoldManager.Instance != null)
-            {
-                profile.coins = GoldManager.Instance.CurrentGold;
-                Debug.Log($"[SavePlayerPosition] Lưu {profile.coins}");
-            }
-            var stats = GetComponent<PlayerStats>();
-            if (stats != null)
-            {
-                profile.exp = stats.currentExp;
-                Debug.Log($"[SavePlayerPosition] Lưu EXP: {stats.currentExp}");
-            }
+        if (ProfileManager.CurrentProfile != null)
+        {
+            ProfileManager.CurrentProfile.currentCheckpoint = checkpoint;
+            if (isGameScene) ProfileManager.CurrentProfile.lastScene = sceneName;
+            ProfileManager.CurrentProfile.coins = curGold;
+            ProfileManager.CurrentProfile.exp = exp;
+            ProfileManager.CurrentProfile.level = level;
+            ProfileManager.CurrentProfile.maxHP = maxHP;
+            ProfileManager.CurrentProfile.maxMP = maxMP;
+            ProfileManager.CurrentProfile.HP = hp;
+            ProfileManager.CurrentProfile.MP = mp;
+        }
+
+        UpdateProfile(p =>
+        {
+            p.currentCheckpoint = checkpoint;
+            if (isGameScene) p.lastScene = sceneName;
+
+            p.coins = curGold;
+            p.exp = exp;
+            p.level = level;
+            p.maxHP = maxHP;
+            p.maxMP = maxMP;
+            p.HP = hp;
+            p.MP = mp;
         });
     }
 
-
-
-
-    // --- Có thể gọi hàm này khi tăng level ---
-    public void LevelUp()
+    public IEnumerator SavePlayerPositionRoutine()
     {
-        UpdateProfile(profile =>
+        Vector3 pos = transform.position;
+        string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+        string[] skipScenes = { "LoginScene", "CharacterSelectScene", "CreateCharacterScene", "ChangePasswordScene", "RegisterScene", "ResultScene" };
+        bool isGameScene = !System.Linq.Enumerable.Contains(skipScenes, sceneName);
+
+        int curGold = (GoldManager.Instance != null)
+            ? GoldManager.Instance.CurrentGold
+            : (ProfileManager.CurrentProfile != null ? ProfileManager.CurrentProfile.coins : 0);
+
+        int exp = 0, level = 0, maxHP = 0, maxMP = 0, hp = 0, mp = 0;
+        var stats = GetComponent<PlayerStats>();
+        if (stats != null)
         {
-            profile.level += 1;
-            // Có thể chỉnh exp/coin ở đây nếu muốn
-            // KHÔNG động vào profile.currentCheckpoint!
+            exp = stats.currentExp;
+            level = stats.level;
+            maxHP = stats.maxHP;
+            maxMP = stats.maxMP;
+            hp = stats.currentHP;
+            mp = stats.currentMP;
+        }
+        string checkpoint = $"{sceneName}:{pos.x},{pos.y},{pos.z}";
+
+        if (ProfileManager.CurrentProfile != null)
+        {
+            ProfileManager.CurrentProfile.currentCheckpoint = checkpoint;
+            if (isGameScene) ProfileManager.CurrentProfile.lastScene = sceneName;
+            ProfileManager.CurrentProfile.coins = curGold;
+            ProfileManager.CurrentProfile.exp = exp;
+            ProfileManager.CurrentProfile.level = level;
+            ProfileManager.CurrentProfile.maxHP = maxHP;
+            ProfileManager.CurrentProfile.maxMP = maxMP;
+            ProfileManager.CurrentProfile.HP = hp;
+            ProfileManager.CurrentProfile.MP = mp;
+        }
+
+        yield return UpdateProfileAndWait(p =>
+        {
+            p.currentCheckpoint = checkpoint;
+            if (isGameScene) p.lastScene = sceneName;
+
+            p.coins = curGold;
+            p.exp = exp;
+            p.level = level;
+            p.maxHP = maxHP;
+            p.maxMP = maxMP;
+            p.HP = hp;
+            p.MP = mp;
         });
     }
 
     void OnApplicationQuit()
     {
-        Debug.Log("OnApplicationQuit được gọi!");
         SavePlayerPosition();
     }
 }

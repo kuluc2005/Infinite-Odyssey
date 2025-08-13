@@ -1,3 +1,4 @@
+// FlyingDragonBossManager.cs
 using UnityEngine;
 using Invector;
 using System.Collections;
@@ -23,6 +24,9 @@ public class FlyingDragonBossManager : MonoBehaviour
     [Header("Wake Zone Settings")]
     public float wakeUpDistance = 10f;
 
+    [Header("Win Settings")]
+    [Range(0f, 5f)] public float winDelay = 1.5f;
+
     private Animator animator;
     private vHealthController health;
     private Transform player;
@@ -35,6 +39,8 @@ public class FlyingDragonBossManager : MonoBehaviour
     private bool hasTakenOff = false;
     private bool isUsingBreath = false;
     private Coroutine returnToSleepCoroutine;
+
+    private bool winTriggered = false;
 
     void Start()
     {
@@ -61,7 +67,6 @@ public class FlyingDragonBossManager : MonoBehaviour
             else return;
         }
 
-        // Kiểm tra vùng đánh thức 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         if (!isPlayerInZone && distanceToPlayer <= wakeUpDistance)
@@ -86,12 +91,30 @@ public class FlyingDragonBossManager : MonoBehaviour
 
     void HandleDeath()
     {
+        if (isDead) return;
         isDead = true;
         isUsingBreath = false;
+
         animator.SetTrigger("IsDead");
         Debug.Log("Boss đã chết!");
-        GetComponent<Collider>().enabled = false;
+        var col = GetComponent<Collider>();
+        if (col) col.enabled = false;
+
+        if (!winTriggered)
+        {
+            winTriggered = true;
+            StartCoroutine(WinAfterDelay());
+        }
+
         Destroy(gameObject, 3f);
+    }
+
+    IEnumerator WinAfterDelay()
+    {
+        // đảm bảo delay < thời gian Destroy
+        float t = Mathf.Min(winDelay, 2.9f);
+        if (t > 0f) yield return new WaitForSeconds(t);
+        GameFlowManager.Win();
     }
 
     void RotateTowardsPlayer()
@@ -121,7 +144,11 @@ public class FlyingDragonBossManager : MonoBehaviour
         if (rb && player)
         {
             Vector3 dir = (player.position - fireballSpawnPoint.position).normalized;
+#if UNITY_6000_0_OR_NEWER
             rb.linearVelocity = dir * 3f;
+#else
+            rb.velocity = dir * 3f;
+#endif
         }
 
         Debug.Log("Boss bắn Fireball!");
@@ -134,7 +161,7 @@ public class FlyingDragonBossManager : MonoBehaviour
         {
             breathTimer = 0f;
             isUsingBreath = true;
-            animator.SetTrigger("TriggerBreath"); 
+            animator.SetTrigger("TriggerBreath");
         }
     }
 
@@ -149,7 +176,7 @@ public class FlyingDragonBossManager : MonoBehaviour
         Debug.Log("Coroutine UseFireBreath bắt đầu");
         isUsingBreath = true;
 
-        yield return new WaitForSeconds(0.5f); 
+        yield return new WaitForSeconds(0.5f);
 
         if (fireBreathEffectPrefab && fireBreathSpawnPoint)
         {
@@ -235,7 +262,6 @@ public class FlyingDragonBossManager : MonoBehaviour
         returnToSleepCoroutine = null;
     }
 
-    // OnDrawGizmos  debug vùng đánh thức trong Scene
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

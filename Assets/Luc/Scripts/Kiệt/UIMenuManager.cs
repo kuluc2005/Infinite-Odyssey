@@ -317,45 +317,36 @@ namespace SlimUI.ModernMenu
 
             if (QuestManager.instance != null) QuestManager.instance.isLoggingOut = true;
 
-            // (1) Lưu vị trí/scene + coins + exp TRƯỚC (để lần ghi CUỐI là inventory)
+            // 1) Lưu VỊ TRÍ trước (đợi hoàn tất)
             if (ppm != null)
-            {
-                ppm.SavePlayerPosition();
-                if (stats != null)
-                {
-                    ppm.UpdateProfile(p =>
-                    {
-                        p.exp = stats.currentExp;
-                        p.level = stats.level;
-                        p.maxHP = stats.maxHP;
-                        p.maxMP = stats.maxMP;
-                        p.HP = stats.currentHP;
-                        p.MP = stats.currentMP;
-                    });
-                }
-            }
+                yield return ppm.SavePlayerPositionRoutine();
+
+            // 2) PUT Gold (không block app, nhưng nên gọi)
             if (GoldManager.Instance != null)
                 CoroutineRunner.Run(GoldManager.Instance.UpdateCoinsToAPI());
 
-            // (2) GHI INVENTORY CUỐI CÙNG → đảm bảo inventoryJSON là giá trị sau cùng trên server
-            if (inv != null) inv.SaveInventoryToServer();
-
-            // (3) Chờ PUT hoàn tất 1 nhịp
-            yield return new WaitForSecondsRealtime(0.8f);
-
-            // (4) Giữ logic save quest cũ
-            if (QuestManager.instance != null && QuestManager.instance.activeQuests.Count > 0)
+            // 3) Lưu stat (đợi hoàn tất) & GÁN LẠI checkpoint (phòng race)
+            if (ppm != null && stats != null)
             {
-                bool anyFail = false;
-                foreach (var q in QuestManager.instance.activeQuests.Values)
+                string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                Vector3 pos = playerGo.transform.position;
+
+                yield return ppm.UpdateProfileAndWait(p =>
                 {
-                    bool done = false, ok = false;
-                    QuestManager.instance.SaveQuestToApi(q, "active", r => { done = true; ok = r; });
-                    while (!done) yield return null;
-                    if (!ok) anyFail = true;
-                }
-                if (anyFail) yield break;
+                    p.exp = stats.currentExp;
+                    p.level = stats.level;
+                    p.maxHP = stats.maxHP;
+                    p.maxMP = stats.maxMP;
+                    p.HP = stats.currentHP;
+                    p.MP = stats.currentMP;
+
+                    p.currentCheckpoint = $"{sceneName}:{pos.x},{pos.y},{pos.z}";
+                });
             }
+
+            if (inv != null) inv.SaveInventoryToServer();
+            yield return new WaitForSecondsRealtime(0.5f);
+
 
             Time.timeScale = 1f;
 #if UNITY_EDITOR

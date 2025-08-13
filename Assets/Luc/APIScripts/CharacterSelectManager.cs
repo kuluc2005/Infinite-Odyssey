@@ -84,25 +84,44 @@ public class CharacterSelectManager : MonoBehaviour
         if (ProfileManager.CurrentProfile != null)
         {
             if (GoldManager.Instance != null)
-            {
                 GoldManager.Instance.RefreshGoldFromProfile();
-                Debug.Log($"[CharacterSelectManager]Vàng đã sync lại cho nhân vật ID {characterId}: {GoldManager.Instance.CurrentGold}");
-            }
-            string lastScene = ProfileManager.CurrentProfile.lastScene;
 
-            if (!string.IsNullOrEmpty(lastScene)
-                && lastScene != "LoginScene"
-                && lastScene != "CharacterSelectScene"
-                && lastScene != "CreateCharacterScene"
-                && lastScene != "ChangePasswordScene"
-                && lastScene != "RegisterScene")
+            string[] skip = {
+            "LoginScene","CharacterSelectScene","CreateCharacterScene",
+            "ChangePasswordScene","RegisterScene","ResultScene"
+        };
+
+            bool IsPlayableScene(string s)
             {
-                SceneManager.LoadScene(lastScene);
+                if (string.IsNullOrEmpty(s)) return false;
+                foreach (var k in skip) if (s == k) return false;
+                return true;
             }
-            else
+
+            string targetScene = null;
+
+            var cp = ProfileManager.CurrentProfile.currentCheckpoint;
+            if (!string.IsNullOrEmpty(cp))
             {
-                SceneManager.LoadScene("Level 0");
+                int idx = cp.IndexOf(':');
+                if (idx > 0)
+                {
+                    string sceneFromCP = cp.Substring(0, idx);
+                    if (IsPlayableScene(sceneFromCP))
+                        targetScene = sceneFromCP;
+                }
             }
+
+            if (targetScene == null)
+            {
+                var last = ProfileManager.CurrentProfile.lastScene;
+                if (IsPlayableScene(last)) targetScene = last;
+            }
+
+            if (string.IsNullOrEmpty(targetScene))
+                targetScene = "Level 0";
+
+            UnityEngine.SceneManagement.SceneManager.LoadScene(targetScene);
         }
         else
         {

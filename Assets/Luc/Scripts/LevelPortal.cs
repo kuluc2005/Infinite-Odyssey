@@ -1,13 +1,12 @@
-﻿using UnityEngine;
+﻿// LevelPortal.cs (instant load, non-blocking save)
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using Invector.vItemManager;
 
 public class LevelPortal : MonoBehaviour
 {
     public string cutsceneSceneName;
     public string nextLevelName;
-    [Range(0f, 3f)] public float saveDelay = 0.6f;
+    public bool instant = true;   // true = vào cổng là chuyển scene ngay
 
     bool _processing;
 
@@ -15,19 +14,23 @@ public class LevelPortal : MonoBehaviour
     {
         if (_processing) return;
         if (!other.CompareTag("Player")) return;
-
         _processing = true;
+
         PlayerPrefs.SetString("NextLevel", nextLevelName);
-        StartCoroutine(HandlePortal(other.gameObject));
+
+        SaveAllNoBlock(other.gameObject);  
+
+        if (instant)
+        {
+            SceneManager.LoadScene(cutsceneSceneName);  
+        }
+        else
+        {
+            SceneManager.LoadScene(cutsceneSceneName);
+        }
     }
 
-    IEnumerator HandlePortal(GameObject player)
-    {
-        yield return SaveAllAndFlush(player);
-        SceneManager.LoadScene(cutsceneSceneName);
-    }
-
-    IEnumerator SaveAllAndFlush(GameObject player)
+    void SaveAllNoBlock(GameObject player)
     {
         var stats = player.GetComponent<PlayerStats>();
         var ppm = player.GetComponent<PlayerPositionManager>();
@@ -35,28 +38,45 @@ public class LevelPortal : MonoBehaviour
 
         if (inv != null) inv.SaveInventoryToServer();
 
+        var prof = ProfileManager.CurrentProfile;
+        if (prof != null)
+        {
+            if (stats != null)
+            {
+                prof.exp = stats.currentExp;
+                prof.level = stats.level;
+                prof.maxHP = stats.maxHP;
+                prof.maxMP = stats.maxMP;
+                prof.HP = stats.currentHP;
+                prof.MP = stats.currentMP;
+            }
+            if (GoldManager.Instance != null)
+                prof.coins = GoldManager.Instance.CurrentGold;
+
+            prof.lastScene = nextLevelName; 
+        }
+
         if (ppm != null)
         {
-            int curGold = GoldManager.Instance ? GoldManager.Instance.CurrentGold : (ProfileManager.CurrentProfile != null ? ProfileManager.CurrentProfile.coins : 0);
-
-            ppm.UpdateProfile(profile =>
+            ppm.UpdateProfile(p =>
             {
                 if (stats != null)
                 {
-                    profile.exp = stats.currentExp;
-                    profile.level = stats.level;
-                    profile.maxHP = stats.maxHP;
-                    profile.maxMP = stats.maxMP;
-                    profile.HP = stats.currentHP;
-                    profile.MP = stats.currentMP;
+                    p.exp = stats.currentExp;
+                    p.level = stats.level;
+                    p.maxHP = stats.maxHP;
+                    p.maxMP = stats.maxMP;
+                    p.HP = stats.currentHP;
+                    p.MP = stats.currentMP;
                 }
-                profile.coins = curGold;
+                if (GoldManager.Instance != null)
+                    p.coins = GoldManager.Instance.CurrentGold;
+
+                p.lastScene = nextLevelName;
             });
         }
 
         if (GoldManager.Instance != null)
             CoroutineRunner.Run(GoldManager.Instance.UpdateCoinsToAPI());
-
-        yield return new WaitForSecondsRealtime(Mathf.Max(0.2f, saveDelay));
     }
 }

@@ -513,7 +513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &570010170
 RectTransform:
   m_ObjectHideFlags: 0
@@ -793,7 +793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1283190883
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1557,7 +1557,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1637976520}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1281708443}
+        m_TargetAssemblyTypeName: ResultSceneController, Assembly-CSharp
+        m_MethodName: OnResetToLevel0
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1637976520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1935,7 +1947,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1751672080}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1281708443}
+        m_TargetAssemblyTypeName: ResultSceneController, Assembly-CSharp
+        m_MethodName: OnResetToLevel0
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1751672080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2542,7 +2566,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2084192051}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1281708443}
+        m_TargetAssemblyTypeName: ResultSceneController, Assembly-CSharp
+        m_MethodName: OnQuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2084192051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2663,7 +2699,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2126180324}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1281708443}
+        m_TargetAssemblyTypeName: ResultSceneController, Assembly-CSharp
+        m_MethodName: OnQuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2126180324
 MonoBehaviour:
   m_ObjectHideFlags: 0
