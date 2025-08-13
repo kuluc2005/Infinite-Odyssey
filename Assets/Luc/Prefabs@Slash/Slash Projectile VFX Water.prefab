@@ -43796,7 +43796,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e2a2c139f49cfa4eace87c280817222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 300
+  damage: 150
+  bonusDamage: 500
+  bonusEffectPrefab: {fileID: 2183146480622160771, guid: 131ad0e894ecda14eac32155d82d6c3d, type: 3}
+  bonusDelay: 0.2
+  destroyAfterHitDelay: 0.1
 --- !u!65 &7465651182830284755
 BoxCollider:
   m_ObjectHideFlags: 0
