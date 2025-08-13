@@ -5,15 +5,32 @@ public static class GameFlowManager
 {
     private const string RESULT_SCENE = "ResultScene";
 
-    // Danh sách level (đúng tên scene)
+    // Đặt tên scene cutscene theo ý bạn (đúng với Build Settings)
+    private const string CUTSCENE_WIN_MALE = "CutSceneEndMale";
+    private const string CUTSCENE_WIN_FEMALE = "CutSceneEndFemale";
+
     private static readonly string[] LEVELS = { "Level 0", "Level 1", "Level 2", "Level 3" };
 
     // ====== Public APIs sẽ gọi  ======
 
     public static void Win()
     {
-        SetCommonState("Win");
-        SceneManager.LoadScene(RESULT_SCENE);
+        SetCommonState("Win");                    
+        string cutscene = GetWinCutsceneName();   
+        SceneManager.LoadScene(cutscene);         
+    }
+
+    private static string GetWinCutsceneName()
+    {
+        string cls = ProfileManager.CurrentProfile != null ? ProfileManager.CurrentProfile.characterClass : null;
+        if (string.IsNullOrEmpty(cls)) return CUTSCENE_WIN_MALE;
+
+        cls = cls.ToLowerInvariant();
+        // tuỳ dữ liệu của bạn: "Female"/"Nữ" → female
+        if (cls.Contains("female") || cls.Contains("nu") || cls.Contains("nữ"))
+            return CUTSCENE_WIN_FEMALE;
+
+        return CUTSCENE_WIN_MALE;
     }
 
     public static void Lose()

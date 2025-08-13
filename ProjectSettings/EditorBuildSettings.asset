@@ -50,6 +50,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CutSceneLevel3.unity
     guid: 2de5a602f843993478ac952db38c813d
+  - enabled: 1
+    path: Assets/Scenes/CutSceneEndMale.unity
+    guid: 9e8dbc38f58343a4280d6b7606883981
+  - enabled: 1
+    path: Assets/Scenes/CutSceneEndFemale.unity
+    guid: bc74dd2e028181b4eb73fa3cb84a9a16
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 59d3e19d28de66d418ce920cb1fd6ed5, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
