@@ -13974,9 +13974,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
+  openCloseWindow: 1
   selectedToolbar: 0
-  hideWeaponsAutomatically: 1
+  hideWeaponsAutomatically: 0
   hideWeaponsTimer: 5
   lockInventoryInputOnLock: 0
   isLocked: 0
@@ -14275,6 +14275,9 @@ MonoBehaviour:
   orbitSpeed: 60
   skill2Cooldown: 3
   skill2AttackRange: 15
+  skill2MaxWaitForTargets: 10
+  skill2OrbsMaxLifetimeAfterLaunch: 6
+  skill2RetargetInterval: 0.15
   buffVFXPrefab: {fileID: 7155335147208632822, guid: 97c43495f80a3244fad1301dfafbe252, type: 3}
   buffVFXSpawnPoint: {fileID: 5555781051578603022}
   skill3EffectPrefab: {fileID: 7357505684978977878, guid: d4d5034b499b0f648a09af6ff95e5bad, type: 3}
@@ -14283,6 +14286,16 @@ MonoBehaviour:
   skill3AttackRange: 15
   requireTargetInRangeForSkill3: 1
   katanaNameContains: Katana
+  sfxSource: {fileID: 0}
+  useAnimationEventsOnly: 0
+  randomPitchRange: 0.08
+  sfxSkill1Cast: {fileID: 0}
+  sfxSkill1Impact: {fileID: 0}
+  sfxSkill2Start: {fileID: 8300000, guid: dd95c05909b86bd42bb5ec5123b90f6a, type: 3}
+  sfxSkill2Launch: {fileID: 0}
+  sfxSkill2Impact: {fileID: 0}
+  sfxSkill3Cast: {fileID: 0}
+  sfxSkill3Impact: {fileID: 8300000, guid: dd484108ef9d6534683cf92f5d4d16e8, type: 3}
 --- !u!114 &-9189656699026346942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64331,6 +64344,8 @@ MonoBehaviour:
   skillIndex: 1
   requireTargetForSkill3: 0
   requireWeaponForSkill1: 1
+  requireStaffForSkill2: 1
+  requireStaffForSkill3: 1
 --- !u!114 &9133502873379898808 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8170009210233180759, guid: 89f73820c40355c478be49b3df52f731, type: 3}

@@ -123,7 +123,7 @@ public class BossManager : MonoBehaviour
         if (!player || !skill2Effect) return;
 
         float radius = 10f;
-        int effectCount = 5;
+        int effectCount = 3;
 
         for (int i = 0; i < effectCount; i++)
         {

@@ -52,6 +52,6 @@ public class WinCutsceneController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        SceneManager.LoadScene("ResultScene");
+        SceneTransition.Load("ResultScene"); 
     }
 }

@@ -19,8 +19,13 @@ namespace SlimUI.ModernMenu
         [Header("RESOLUTION DROPDOWN")]
         public TMP_Dropdown resolutionDropdown;
 
-        [Header("MUSIC SLIDER")]
-        public GameObject musicSlider;
+        [Header("MUSIC SLIDER (BGM)")]
+        public GameObject musicSlider; // Slider chỉnh nhạc nền (BGM)
+
+        [Header("SFX SLIDER (NEW)")]
+        public GameObject sfxSlider;   // Slider chỉnh âm thanh hiệu ứng
+        [Tooltip("Kéo các AudioSource SFX vào đây để chỉnh âm lượng")]
+        public AudioSource[] sfxSources;
 
         // cache
         private Resolution[] availableRes;
@@ -28,9 +33,17 @@ namespace SlimUI.ModernMenu
 
         void Start()
         {
-            // music slider
+            // --- BGM ---
             if (musicSlider)
                 musicSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+
+            // --- SFX ---
+            if (sfxSlider)
+            {
+                float savedSFX = PlayerPrefs.GetFloat("SFXVolume", 1f);
+                sfxSlider.GetComponent<Slider>().value = savedSFX;
+                ApplySFXVolume(savedSFX);
+            }
 
             // resolution
             SetupResolutionsDropdown();
@@ -103,11 +116,30 @@ namespace SlimUI.ModernMenu
 #endif
         }
 
-        // Music Slider
+        // Music Slider (BGM)
         public void MusicSlider()
         {
             if (musicSlider)
                 PlayerPrefs.SetFloat("MusicVolume", musicSlider.GetComponent<Slider>().value);
+        }
+
+        // SFX Slider
+        public void SFXSlider()
+        {
+            if (!sfxSlider) return;
+
+            float value = sfxSlider.GetComponent<Slider>().value;
+            PlayerPrefs.SetFloat("SFXVolume", value);
+            ApplySFXVolume(value);
+        }
+
+        private void ApplySFXVolume(float value)
+        {
+            if (sfxSources == null) return;
+            foreach (var src in sfxSources)
+            {
+                if (src) src.volume = value;
+            }
         }
 
         // HUD & Tooltips

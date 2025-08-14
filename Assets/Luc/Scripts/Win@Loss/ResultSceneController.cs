@@ -5,14 +5,17 @@ using UnityEngine.Networking;
 
 public class ResultSceneController : MonoBehaviour
 {
+    [Header("Khai báo UI theo giới tính & kết quả")]
     public GameObject winMaleUI;
     public GameObject winFemaleUI;
     public GameObject loseMaleUI;
     public GameObject loseFemaleUI;
+
     public void OnRetryLevel() => GameFlowManager.RetryLastLevel();
 
     void Awake()
     {
+        // Tắt hết UI trước, chờ xác định kết quả + giới tính
         if (winMaleUI) winMaleUI.SetActive(false);
         if (winFemaleUI) winFemaleUI.SetActive(false);
         if (loseMaleUI) loseMaleUI.SetActive(false);
@@ -26,21 +29,20 @@ public class ResultSceneController : MonoBehaviour
     IEnumerator Start()
     {
         int guard = 0;
-        while (ProfileManager.CurrentProfile == null && guard < 300) 
+        while (ProfileManager.CurrentProfile == null && guard < 300)
         {
             guard++;
             yield return null;
         }
 
-        // Lấy class
         string cls = ProfileManager.CurrentProfile != null
             ? ProfileManager.CurrentProfile.characterClass
-            : PlayerPrefs.GetString("SelectedClass", "Male"); // dự phòng
+            : PlayerPrefs.GetString("SelectedClass", "Male");
 
         string result = PlayerPrefs.GetString("LastResult", "Win");
         bool isFemale = (!string.IsNullOrEmpty(cls) && cls == "Female");
 
-        // Bật đúng UI
+        // Bật đúng UI theo kết quả & giới tính
         if (result == "Win")
         {
             if (isFemale) { if (winFemaleUI) winFemaleUI.SetActive(true); }
@@ -53,10 +55,19 @@ public class ResultSceneController : MonoBehaviour
         }
     }
 
-    // ===== Buttons =====
+    // ======== Buttons / Actions ========
+
     public void OnBackToSelect()
     {
-        SceneManager.LoadScene("CharacterSelectScene");
+        SmoothLoad("CharacterSelectScene");
+    }
+
+    public void OnNextLevel()
+    {
+        string last = PlayerPrefs.GetString("LastLevel", "Level 0");
+        string next = GetNextLevelName(last);
+        if (!string.IsNullOrEmpty(next)) SmoothLoad(next);
+        else SmoothLoad("CharacterSelectScene"); // Hết level thì quay về chọn nhân vật
     }
 
     public void OnResetToLevel0()
@@ -64,21 +75,34 @@ public class ResultSceneController : MonoBehaviour
         StartCoroutine(ResetToNewGameRoutine());
     }
 
+    public void OnQuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    // ======== Logic Reset Về Trạng Thái Ban Đầu ========
+
     private IEnumerator ResetToNewGameRoutine()
     {
         int characterId = PlayerPrefs.GetInt("CharacterId", -1);
+
         if (characterId <= 0)
         {
-            SceneManager.LoadScene("Level 0");
+            SmoothLoad("Level 0");
             yield break;
         }
 
         string urlGet = $"http://localhost:5186/api/character/profile/{characterId}";
         UnityWebRequest get = UnityWebRequest.Get(urlGet);
         yield return get.SendWebRequest();
+
         if (get.result != UnityWebRequest.Result.Success)
         {
-            SceneManager.LoadScene("Level 0");
+            SmoothLoad("Level 0");
             yield break;
         }
 
@@ -94,8 +118,9 @@ public class ResultSceneController : MonoBehaviour
         profile.coins = 100;
 
         profile.lastScene = "Level 0";
-        profile.currentCheckpoint = ""; // để spawn tại spawnPoint mặc định
+        profile.currentCheckpoint = ""; 
 
+        // PUT cập nhật profile
         string putUrl = "http://localhost:5186/api/character/profile/update";
         string json = JsonUtility.ToJson(profile);
         UnityWebRequest put = new UnityWebRequest(putUrl, "PUT");
@@ -119,37 +144,17 @@ public class ResultSceneController : MonoBehaviour
         }
 
         GoldManager.Instance?.RefreshGoldFromProfile();
-        SceneManager.LoadScene("Level 0");
+
+        SmoothLoad("Level 0");
     }
 
-    public static void RetryLastLevel()
+    // ======== Helpers ========
+
+    private void SmoothLoad(string sceneName)
     {
-        string last = PlayerPrefs.GetString("LastLevel", "Level 0");
-        UnityEngine.SceneManagement.SceneManager.LoadScene(last);
+        SceneTransition.Load(sceneName);
     }
 
-
-    public void OnNextLevel()
-    {
-        string last = PlayerPrefs.GetString("LastLevel", "Level 0");
-        string next = GetNextLevelName(last);
-        if (!string.IsNullOrEmpty(next)) SceneManager.LoadScene(next);
-        else SceneManager.LoadScene("CharacterSelectScene"); // hết level
-    }
-
-    public void OnQuitGame()
-    {
-        //  test trong Unity Editor thì dừng Play Mode
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-    // Khi build ra, thoát hẳn game
-    Application.Quit();
-#endif
-    }
-
-
-    // Map 4 level
     private string GetNextLevelName(string current)
     {
         switch (current)
@@ -159,5 +164,11 @@ public class ResultSceneController : MonoBehaviour
             case "Level 2": return "Level 3";
             default: return null;
         }
+    }
+
+    public static void RetryLastLevel()
+    {
+        string last = PlayerPrefs.GetString("LastLevel", "Level 0");
+        SceneTransition.Load(last);
     }
 }

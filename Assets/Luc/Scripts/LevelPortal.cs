@@ -1,36 +1,53 @@
-﻿// LevelPortal.cs (instant load, non-blocking save)
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class LevelPortal : MonoBehaviour
 {
-    public string cutsceneSceneName;
-    public string nextLevelName;
-    public bool instant = true;   // true = vào cổng là chuyển scene ngay
+    [Header("Scene Names")]
+    public string cutsceneSceneName;  
+    public string nextLevelName;    
 
-    bool _processing;
+    [Header("Options")]
+    public bool instant = true;      
 
-    void OnTriggerEnter(Collider other)
+    private bool _processing;
+
+    private void OnTriggerEnter(Collider other)
     {
         if (_processing) return;
         if (!other.CompareTag("Player")) return;
         _processing = true;
 
-        PlayerPrefs.SetString("NextLevel", nextLevelName);
+        // Lưu để ResultScene/Next dùng
+        if (!string.IsNullOrEmpty(nextLevelName))
+            PlayerPrefs.SetString("NextLevel", nextLevelName);
 
-        SaveAllNoBlock(other.gameObject);  
+        SaveAllNoBlock(other.gameObject);
+
+
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (string.IsNullOrEmpty(cutsceneSceneName))
+        {
+            Debug.LogWarning("[LevelPortal] cutsceneSceneName trống, bỏ qua chuyển cảnh.");
+            return;
+        }
 
         if (instant)
         {
-            SceneManager.LoadScene(cutsceneSceneName);  
+            SceneTransition.Load(cutsceneSceneName);
         }
         else
         {
-            SceneManager.LoadScene(cutsceneSceneName);
+            SceneTransition.Load(cutsceneSceneName);
         }
     }
 
-    void SaveAllNoBlock(GameObject player)
+    /// <summary>
+    /// Lưu các chỉ số/Inventory/Profile mà KHÔNG chặn luồng chuyển scene.
+    /// </summary>
+    private void SaveAllNoBlock(GameObject player)
     {
         var stats = player.GetComponent<PlayerStats>();
         var ppm = player.GetComponent<PlayerPositionManager>();
@@ -53,7 +70,8 @@ public class LevelPortal : MonoBehaviour
             if (GoldManager.Instance != null)
                 prof.coins = GoldManager.Instance.CurrentGold;
 
-            prof.lastScene = nextLevelName; 
+            if (!string.IsNullOrEmpty(nextLevelName))
+                prof.lastScene = nextLevelName;
         }
 
         if (ppm != null)
@@ -72,7 +90,8 @@ public class LevelPortal : MonoBehaviour
                 if (GoldManager.Instance != null)
                     p.coins = GoldManager.Instance.CurrentGold;
 
-                p.lastScene = nextLevelName;
+                if (!string.IsNullOrEmpty(nextLevelName))
+                    p.lastScene = nextLevelName;
             });
         }
 

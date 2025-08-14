@@ -19341,6 +19341,15 @@ MonoBehaviour:
   skill3FireballMaxLifetime: 5
   StaffNameContains: Staff
   requireTargetInRangeForSkill3: 1
+  sfxSource: {fileID: 0}
+  useAnimationEventsOnly: 0
+  randomPitchRange: 0.08
+  sfxSkill1Cast: {fileID: 8300000, guid: 8ec25f7ffebaa244d8b41b104cdd2b5b, type: 3}
+  sfxSkill1Release: {fileID: 0}
+  sfxSkill2Cast: {fileID: 0}
+  sfxSkill2Impact: {fileID: 8300000, guid: dd484108ef9d6534683cf92f5d4d16e8, type: 3}
+  sfxSkill3Cast: {fileID: 0}
+  sfxSkill3Impact: {fileID: 8300000, guid: dd484108ef9d6534683cf92f5d4d16e8, type: 3}
 --- !u!114 &2853779603113675449
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -111,11 +111,11 @@ public class FlyingDragonBossManager : MonoBehaviour
 
     IEnumerator WinAfterDelay()
     {
-        // đảm bảo delay < thời gian Destroy
-        float t = Mathf.Min(winDelay, 0f);
+        float t = Mathf.Max(winDelay, 0f); 
         if (t > 0f) yield return new WaitForSeconds(t);
         GameFlowManager.Win();
     }
+
 
     void RotateTowardsPlayer()
     {

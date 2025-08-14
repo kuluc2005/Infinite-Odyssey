@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Invector.vMelee;
+
 public class PlayerStaffSkillManager : MonoBehaviour
 {
     public Animator animator;
@@ -39,11 +40,11 @@ public class PlayerStaffSkillManager : MonoBehaviour
     public float skill3CooldownTimer = 0f;
 
     [Header("Skill 3 - Fireball Burst")]
-    public GameObject skill3FireballPrefab;            
-    public Transform skill3FireballSpawnPoint;         
+    public GameObject skill3FireballPrefab;
+    public Transform skill3FireballSpawnPoint;
     public float skill3FireballSpeed = 22f;
     public float skill3FireballDamage = 60f;
-    public float skill3FireballMaxLifetime = 5f;      
+    public float skill3FireballMaxLifetime = 5f;
 
     private Transform skill3LockedTarget;
 
@@ -51,26 +52,61 @@ public class PlayerStaffSkillManager : MonoBehaviour
 
     [Header("Weapon Requirements")]
     public string StaffNameContains = "Staff";
-
     public bool requireTargetInRangeForSkill3 = true;
 
+    // ======= AUDIO / SFX =======
+    [Header("Audio — General")]
+    [Tooltip("AudioSource phát SFX. Nếu để trống sẽ tự tạo.")]
+    public AudioSource sfxSource;
 
-    void Start()                                     
+    [Tooltip("Chỉ phát âm thanh khi Animation Event gọi. Nếu false, code sẽ tự phát SFX ở các thời điểm hợp lý.")]
+    public bool useAnimationEventsOnly = false;
+
+    [Tooltip("Random pitch ±rng khi phát SFX (0 = tắt).")]
+    [Range(0f, 0.5f)] public float randomPitchRange = 0.08f;
+
+    [Header("Audio — Skill 1 (Fireball)")]
+    public AudioClip sfxSkill1Cast;
+    public AudioClip sfxSkill1Release;
+
+    [Header("Audio — Skill 2 (Ice AOE)")]
+    public AudioClip sfxSkill2Cast;
+    public AudioClip sfxSkill2Impact;
+
+    [Header("Audio — Skill 3 (Strike/Burst)")]
+    public AudioClip sfxSkill3Cast;
+    public AudioClip sfxSkill3Impact;
+
+    void Awake()
+    {
+        if (!sfxSource)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+            sfxSource.playOnAwake = false;
+            sfxSource.spatialBlend = 0f; // 2D
+            sfxSource.rolloffMode = AudioRolloffMode.Linear;
+        }
+    }
+
+    void Start()
     {
         melee = GetComponent<vMeleeManager>();
     }
+
     void Update()
     {
         if (skill1CooldownTimer > 0f) skill1CooldownTimer -= Time.deltaTime;
         if (skill2CooldownTimer > 0f) skill2CooldownTimer -= Time.deltaTime;
-        if (skill3CooldownTimer > 0f) skill3CooldownTimer -= Time.deltaTime; // NEW
+        if (skill3CooldownTimer > 0f) skill3CooldownTimer -= Time.deltaTime;
 
+        // Skill 1 (Alpha2)
         if (Input.GetKeyDown(KeyCode.Alpha2) && skill1CooldownTimer <= 0f)
         {
-            if (HasWeaponForSkill1()) 
+            if (HasStaffEquipped())
             {
                 animator.SetTrigger("StaffSkill1");
                 skill1CooldownTimer = skill1Cooldown;
+                if (!useAnimationEventsOnly) SFX_Play(sfxSkill1Cast);
             }
             else
             {
@@ -78,26 +114,42 @@ public class PlayerStaffSkillManager : MonoBehaviour
             }
         }
 
-            // Skill 2
-            if (Input.GetKeyDown(KeyCode.Alpha3) && skill2CooldownTimer <= 0f)
+        // Skill 2 (Alpha3) — yêu cầu cầm Staff, dùng đúng cooldown của Skill 2
+        if (Input.GetKeyDown(KeyCode.Alpha3) && skill2CooldownTimer <= 0f)
         {
-            animator.SetTrigger("StaffSkill2");
-            skill2CooldownTimer = skill2Cooldown;
+            if (HasStaffEquipped())
+            {
+                animator.SetTrigger("StaffSkill2");
+                skill2CooldownTimer = skill2Cooldown;
+                if (!useAnimationEventsOnly) SFX_Play(sfxSkill2Cast);
+            }
+            else
+            {
+                Debug.LogWarning("Bạn chưa cầm Staff. Hãy rút Staff ra tay để dùng Skill 2.");
+            }
         }
 
-        // Skill 3
+        // Skill 3 (Alpha4) — yêu cầu cầm Staff, dùng đúng cooldown của Skill 3
         if (Input.GetKeyDown(KeyCode.Alpha4) && skill3CooldownTimer <= 0f)
         {
-            if (!requireTargetInRangeForSkill3 || IsEnemyInSkill3Range())
+            if (HasStaffEquipped() && (!requireTargetInRangeForSkill3 || IsEnemyInSkill3Range()))
             {
                 animator.SetTrigger("StaffSkill3");
                 skill3CooldownTimer = skill3Cooldown;
+                if (!useAnimationEventsOnly) SFX_Play(sfxSkill3Cast);
+            }
+            else
+            {
+                Debug.LogWarning("Bạn chưa cầm Staff hoặc không có mục tiêu trong tầm để dùng Skill 3.");
             }
         }
     }
 
     // ===== Skill 1 =====
-    public void SpawnFireball() // Animation Event
+    public void SFX_Skill1_Cast() { SFX_Play(sfxSkill1Cast); }
+    public void SFX_Skill1_Release() { SFX_Play(sfxSkill1Release); }
+
+    public void SpawnFireball()
     {
         if (!fireballPrefab || !fireballSpawnPoint) return;
 
@@ -124,10 +176,14 @@ public class PlayerStaffSkillManager : MonoBehaviour
         }
 
         go.GetComponent<MaykerStudio.Demo.Projectile>()?.Fire();
+
+        if (!useAnimationEventsOnly) SFX_Play(sfxSkill1Release);
     }
 
     // ===== Skill 2 =====
-    public void SpawnSkill2VFX() // Animation Event
+    public void SFX_Skill2_Cast() { SFX_Play(sfxSkill2Cast); }
+
+    public void SpawnSkill2VFX()
     {
         if (!skill2VFXPrefab || !skill2VFXSpawnPoint) return;
 
@@ -139,7 +195,11 @@ public class PlayerStaffSkillManager : MonoBehaviour
         );
 
         DoSkill2Hit();
+
+        if (!useAnimationEventsOnly) SFX_Play(sfxSkill2Impact);
     }
+
+    public void SFX_Skill2_Impact() { SFX_Play(sfxSkill2Impact); }
 
     void DoSkill2Hit()
     {
@@ -182,7 +242,10 @@ public class PlayerStaffSkillManager : MonoBehaviour
     }
 
     // ===== Skill 3 =====
-    public void SpawnSkill3EffectAtNearestEnemy() // Animation Event
+    public void SFX_Skill3_Cast() { SFX_Play(sfxSkill3Cast); }
+    public void SFX_Skill3_Impact() { SFX_Play(sfxSkill3Impact); }
+
+    public void SpawnSkill3EffectAtNearestEnemy()
     {
         GameObject nearestEnemy = FindNearestEnemyInRange(skill3AttackRange);
         if (nearestEnemy == null) return;
@@ -204,6 +267,8 @@ public class PlayerStaffSkillManager : MonoBehaviour
         {
             Instantiate(skill3EffectPrefab, nearestEnemy.transform.position, Quaternion.identity);
         }
+
+        if (!useAnimationEventsOnly) SFX_Play(sfxSkill3Impact);
     }
 
     public void Skill3_OnStart_LockTarget() // Animation Event
@@ -212,8 +277,7 @@ public class PlayerStaffSkillManager : MonoBehaviour
         skill3LockedTarget = nearestEnemy ? nearestEnemy.transform : null;
     }
 
-    // Gọi 5 lần tại các keyframe trong clip Skill 3
-    public void Skill3_SpawnFireball() 
+    public void Skill3_SpawnFireball()
     {
         GameObject prefab = skill3FireballPrefab ? skill3FireballPrefab : fireballPrefab;
         Transform spawn = skill3FireballSpawnPoint ? skill3FireballSpawnPoint : fireballSpawnPoint;
@@ -239,7 +303,7 @@ public class PlayerStaffSkillManager : MonoBehaviour
         var prj = go.GetComponent<FireballProjectileplayer>();
         if (prj != null)
         {
-            prj.Init(dir, spd, dmg, transform); 
+            prj.Init(dir, spd, dmg, transform);
         }
         else
         {
@@ -249,7 +313,7 @@ public class PlayerStaffSkillManager : MonoBehaviour
 #if UNITY_6000_0_OR_NEWER
                 rb.linearVelocity = dir * spd;
 #else
-            rb.velocity = dir * spd;
+                rb.velocity = dir * spd;
 #endif
             }
             Destroy(go, skill3FireballMaxLifetime);
@@ -258,6 +322,7 @@ public class PlayerStaffSkillManager : MonoBehaviour
         go.GetComponent<MaykerStudio.Demo.Projectile>()?.Fire();
     }
 
+    // ===== Helpers =====
     private GameObject FindNearestEnemyInRange(float range)
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -270,6 +335,9 @@ public class PlayerStaffSkillManager : MonoBehaviour
         for (int i = 0; i < enemies.Length; i++)
         {
             var e = enemies[i];
+            var hp = e.GetComponent<Invector.vHealthController>();
+            if (hp != null && hp.isDead) continue;
+
             float dist = Vector3.Distance(pos, e.transform.position);
             if (dist < minDist && dist <= range)
             {
@@ -287,14 +355,16 @@ public class PlayerStaffSkillManager : MonoBehaviour
 
         for (int i = 0; i < enemies.Length; i++)
         {
+            var hp = enemies[i].GetComponent<Invector.vHealthController>();
+            if (hp != null && hp.isDead) continue;
             if (Vector3.Distance(transform.position, enemies[i].transform.position) <= skill3AttackRange)
                 return true;
         }
         return false;
     }
 
-    // === Cho UI & input dùng ===
-    public bool HasWeaponForSkill1()
+    // === Điều kiện cầm Staff ===
+    private bool HasStaffEquipped()
     {
         if (melee == null) melee = GetComponent<vMeleeManager>();
         var w = melee ? melee.CurrentActiveAttackWeapon : null;
@@ -303,6 +373,9 @@ public class PlayerStaffSkillManager : MonoBehaviour
         return !string.IsNullOrEmpty(n) &&
                n.IndexOf(StaffNameContains, System.StringComparison.OrdinalIgnoreCase) >= 0;
     }
+
+    // (Giữ method cũ nếu bạn đang gọi từ nơi khác)
+    public bool HasWeaponForSkill1() => HasStaffEquipped();
 
     void OnDrawGizmosSelected()
     {
@@ -327,4 +400,20 @@ public class PlayerStaffSkillManager : MonoBehaviour
     public float GetSkill1CooldownPercent() => Mathf.Clamp01(skill1CooldownTimer / Mathf.Max(0.0001f, skill1Cooldown));
     public float GetSkill2CooldownPercent() => Mathf.Clamp01(skill2CooldownTimer / Mathf.Max(0.0001f, skill2Cooldown));
     public float GetSkill3CooldownPercent() => Mathf.Clamp01(skill3CooldownTimer / Mathf.Max(0.0001f, skill3Cooldown));
+
+    // ===================== AUDIO CORE =====================
+    private void SFX_Play(AudioClip clip, float volume = 1f)
+    {
+        if (!clip || !sfxSource) return;
+
+        float original = sfxSource.pitch;
+        if (randomPitchRange > 0f)
+        {
+            float delta = Random.Range(-randomPitchRange, randomPitchRange);
+            sfxSource.pitch = Mathf.Clamp(1f + delta, 0.5f, 2f);
+        }
+
+        sfxSource.PlayOneShot(clip, Mathf.Clamp01(volume));
+        sfxSource.pitch = original;
+    }
 }
