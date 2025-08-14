@@ -66,7 +66,7 @@ public class CreateCharacterManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(name))
         {
-            errorPanelManager.ShowError("Hãy nhập tên nhân vật!", Color.red);
+            errorPanelManager.ShowError("Please enter character name!", Color.red);
             return;
         }
         if (playerId != -1 && !string.IsNullOrEmpty(selectedClass))

@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: KillSandmanQuest
   m_EditorClassIdentifier: 
   questID: KillSandmanQuest
-  questName: "Ti\xEAu di\u1EC7t Sandman"
-  questDescription: "Ti\xEAu di\u1EC7t c\xE1c Sandman \u0111ang qu\u1EA5y ph\xE1
-    \u1EDF th\u1EBF gi\u1EDBi c\xE1t n\xE0y."
+  questName: Destroy Sandman
+  questDescription: Destroy the Sandman that is causing trouble in this sand world.
   targetTag: 
   targetKillCount: 3
   objectives:
-  - objectiveDescription: "Ti\xEAu di\u1EC7t Sandman"
+  - objectiveDescription: Destroy Sandman
     type: 0
     targetID: Enemy
     requiredAmount: 3

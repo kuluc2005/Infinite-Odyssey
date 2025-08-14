@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: Quest_1_CollectCoin
   m_EditorClassIdentifier: 
   questID: Quest_1_CollectCoin
-  questName: "Thu th\u1EADp \u0111\u1ED3ng ti\u1EC1n c\u1ED5"
-  questDescription: "Thu th\u1EADp \u0111\u1ED3ng v\xE0ng \u1EDF c\xE1c con y\xEAu
-    qu\xE1i"
+  questName: Collecting ancient coins
+  questDescription: Collect gold coins from monsters
   targetTag: 
   targetKillCount: 0
   objectives:
-  - objectiveDescription: "Nh\u1EB7t 2 \u0111\u1ED3ng v\xE0ng c\u1ED5"
+  - objectiveDescription: Pick up 2 ancient gold coins
     type: 1
     targetID: 14
     requiredAmount: 2

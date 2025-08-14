@@ -22,37 +22,37 @@ public class RegisterManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(email))
         {
-            errorPanelManager.ShowError("Email không được để trống", Color.red);
+            errorPanelManager.ShowError("Email cannot be blank", Color.red);
             return;
         }
 
         if (!IsValidEmail(email))
         {
-            errorPanelManager.ShowError("Email không hợp lệ", Color.red);
+            errorPanelManager.ShowError("Invalid email", Color.red);
             return;
         }
 
         if (string.IsNullOrEmpty(password))
         {
-            errorPanelManager.ShowError("Mật khẩu không được để trống", Color.red);
+            errorPanelManager.ShowError("Password cannot be blank", Color.red);
             return;
         }
 
         if (password.Length < 6)
         {
-            errorPanelManager.ShowError("Mật khẩu phải có ít nhất 6 ký tự", Color.red);
+            errorPanelManager.ShowError("Password must be at least 6 characters", Color.red);
             return;
         }
 
         if (string.IsNullOrEmpty(username))
         {
-            errorPanelManager.ShowError("Tên người dùng không được để trống", Color.red);
+            errorPanelManager.ShowError("Username cannot be blank", Color.red);
             return;
         }
 
         if (username.Contains(" "))
         {
-            errorPanelManager.ShowError("Tên người dùng không được chứa khoảng trắng", Color.red);
+            errorPanelManager.ShowError("Username cannot contain spaces", Color.red);
             return;
         }
 
@@ -100,14 +100,14 @@ public class RegisterManager : MonoBehaviour
 
             if (response != null && response.status)
             {
-                errorPanelManager.ShowError("Đăng ký thành công!", Color.green);
+                errorPanelManager.ShowError("Registration successful!", Color.green);
                 yield return new WaitForSeconds(1.5f);
                 errorPanelManager.HideError();
                 UnityEngine.SceneManagement.SceneManager.LoadScene("LoginScene");
             }
             else
             {
-                errorPanelManager.ShowError("" + (response?.message ?? "Đăng ký thất bại."), Color.red);
+                errorPanelManager.ShowError("" + (response?.message ?? "Registration failed."), Color.red);
             }
         }
         else

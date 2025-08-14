@@ -15,7 +15,7 @@ public class WinCutsceneController : MonoBehaviour
     [Header("Cho phép bấm phím bất kỳ để bỏ qua")]
     public bool allowSkipAnyKey = true;
 
-    bool _done;
+    bool _done; 
 
     IEnumerator Start()
     {

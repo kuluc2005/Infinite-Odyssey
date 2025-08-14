@@ -11885,6 +11885,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5208101289250981342, guid: 1d09a360d3d8f394eb62b536e8c13c8e, type: 3}
+      propertyPath: m_text
+      value: Skip
+      objectReference: {fileID: 0}
     - target: {fileID: 6717888595162083240, guid: 1d09a360d3d8f394eb62b536e8c13c8e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -11896,6 +11900,10 @@ PrefabInstance:
     - target: {fileID: 8587872670383893008, guid: 1d09a360d3d8f394eb62b536e8c13c8e, type: 3}
       propertyPath: m_Name
       value: UIDialogueCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8876456507696460272, guid: 1d09a360d3d8f394eb62b536e8c13c8e, type: 3}
+      propertyPath: m_text
+      value: Continue
       objectReference: {fileID: 0}
     - target: {fileID: 9166424334399817389, guid: 1d09a360d3d8f394eb62b536e8c13c8e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -12155,6 +12163,10 @@ PrefabInstance:
     - target: {fileID: 8024782462058267706, guid: 9e640dda20b396541b07bb193ad47a11, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8288296936908757868, guid: 9e640dda20b396541b07bb193ad47a11, type: 3}
+      propertyPath: m_text
+      value: Skip
       objectReference: {fileID: 0}
     - target: {fileID: 8332363284032796778, guid: 9e640dda20b396541b07bb193ad47a11, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -17395,9 +17407,9 @@ MonoBehaviour:
         z: 7.1822786
       Rotation:
         value:
-          x: 0.012227314
+          x: 0.0122273145
           y: 0.743342
-          z: 0.011696823
+          z: 0.011696824
           w: -0.66869754
     - Position:
         x: -32.78588
@@ -17658,9 +17670,9 @@ MonoBehaviour:
       Rotation:
         value:
           x: 0.0019695812
-          y: 0.034606505
+          y: 0.0346065
           z: 0.09166817
-          w: 0.9951862
+          w: 0.9951861
     - Position:
         x: -18.214119
         y: -5.0657034

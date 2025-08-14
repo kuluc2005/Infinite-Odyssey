@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "B\u1EAFt \u0111\u1EA7u l\u1EA1i h\xE0nh tr\xECnh"
+  m_text: Start the journey again
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -312,7 +312,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "H\u1ED3i k\u1EBFt"
+  m_text: The End
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -513,7 +513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &570010170
 RectTransform:
   m_ObjectHideFlags: 0
@@ -833,7 +833,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "H\u1ED3i k\u1EBFt"
+  m_text: The End
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -921,6 +921,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 301072997}
     m_Modifications:
     - target: {fileID: 180437881709580760, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
+      propertyPath: m_text
+      value: Sad Ending
+      objectReference: {fileID: 0}
+    - target: {fileID: 180437881709580760, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_fontAsset
       value: 
       objectReference: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -935,6 +939,10 @@ PrefabInstance:
     - target: {fileID: 180437881709580760, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2491344947934995009, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
+      propertyPath: m_text
+      value: Leave this world
       objectReference: {fileID: 0}
     - target: {fileID: 2491344947934995009, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_fontAsset
@@ -1015,6 +1023,10 @@ PrefabInstance:
     - target: {fileID: 4993753087167167063, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5507686141451460230, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
+      propertyPath: m_text
+      value: Pick up where you left off
       objectReference: {fileID: 0}
     - target: {fileID: 5507686141451460230, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_fontAsset
@@ -1111,6 +1123,10 @@ PrefabInstance:
     - target: {fileID: 5929804100564861414, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559088446414339113, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
+      propertyPath: m_text
+      value: Try the journey again
       objectReference: {fileID: 0}
     - target: {fileID: 6559088446414339113, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_fontAsset
@@ -1396,7 +1412,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "B\u1EAFt \u0111\u1EA7u l\u1EA1i h\xE0nh tr\xECnh"
+  m_text: Start the journey again
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -1665,7 +1681,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "H\xE0nh Tr\xECnh \u0110\xE3 K\u1EBFt Th\xFAc"
+  m_text: The Journey Has Ended
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -2086,6 +2102,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 301072997}
     m_Modifications:
     - target: {fileID: 180437881709580760, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
+      propertyPath: m_text
+      value: Sad Ending
+      objectReference: {fileID: 0}
+    - target: {fileID: 180437881709580760, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_fontAsset
       value: 
       objectReference: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -2109,6 +2129,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: bf566e80557acbc45b9a695fcaa25327, type: 3}
+    - target: {fileID: 2491344947934995009, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
+      propertyPath: m_text
+      value: Leave this world
+      objectReference: {fileID: 0}
     - target: {fileID: 2491344947934995009, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -2188,6 +2212,10 @@ PrefabInstance:
     - target: {fileID: 4993753087167167063, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5507686141451460230, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
+      propertyPath: m_text
+      value: Pick up where you left off
       objectReference: {fileID: 0}
     - target: {fileID: 5507686141451460230, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_fontAsset
@@ -2284,6 +2312,10 @@ PrefabInstance:
     - target: {fileID: 5929804100564861414, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559088446414339113, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
+      propertyPath: m_text
+      value: Try the journey again
       objectReference: {fileID: 0}
     - target: {fileID: 6559088446414339113, guid: b59be38d783e70a439ed6f61aa7f50ad, type: 3}
       propertyPath: m_fontAsset
@@ -2405,7 +2437,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "H\xE0nh Tr\xECnh \u0110\xE3 K\u1EBFt Th\xFAc"
+  m_text: The Journey Has Ended
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}

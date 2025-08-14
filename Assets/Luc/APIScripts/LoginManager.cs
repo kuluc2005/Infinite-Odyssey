@@ -19,19 +19,19 @@ public class LoginManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(email))
         {
-            errorPanelManager.ShowError("Email không được để trống", Color.red);
+            errorPanelManager.ShowError("Email cannot be blank", Color.red);
             return;
         }
 
         if (!IsValidEmail(email))
         {
-            errorPanelManager.ShowError("Email không hợp lệ", Color.red);
+            errorPanelManager.ShowError("Invalid email", Color.red);
             return;
         }
 
         if (string.IsNullOrEmpty(password))
         {
-            errorPanelManager.ShowError("Mật khẩu không được để trống", Color.red);
+            errorPanelManager.ShowError("Password cannot be blank", Color.red);
             return;
         }
 
@@ -82,7 +82,7 @@ public class LoginManager : MonoBehaviour
                 PlayerPrefs.SetInt("CharacterId", -1);
                 PlayerPrefs.Save();
 
-                errorPanelManager.ShowError("Đăng nhập thành công!", Color.green);
+                errorPanelManager.ShowError("Login successful!", Color.green);
                 yield return new WaitForSeconds(1.2f);
                 errorPanelManager.HideError();
 
@@ -114,12 +114,12 @@ public class LoginManager : MonoBehaviour
                 }
                 else
                 {
-                    errorPanelManager.ShowError("Không thể lấy danh sách nhân vật!\n" + charListRequest.error, Color.red);
+                    errorPanelManager.ShowError("Unable to get character list!\n" + charListRequest.error, Color.red);
                 }
             }
             else
             {
-                errorPanelManager.ShowError("" + (loginResult?.message ?? "Đăng nhập thất bại."), Color.red);
+                errorPanelManager.ShowError("" + (loginResult?.message ?? "Login failed."), Color.red);
                 Debug.LogError("Đăng nhập API trả về lỗi: " + loginResult?.message);
             }
         }

@@ -14289,7 +14289,7 @@ MonoBehaviour:
   sfxSource: {fileID: 0}
   useAnimationEventsOnly: 0
   randomPitchRange: 0.08
-  sfxSkill1Cast: {fileID: 0}
+  sfxSkill1Cast: {fileID: 8300000, guid: 35ce13e44a0c24248a2f4ae7c17937c9, type: 3}
   sfxSkill1Impact: {fileID: 0}
   sfxSkill2Start: {fileID: 8300000, guid: dd95c05909b86bd42bb5ec5123b90f6a, type: 3}
   sfxSkill2Launch: {fileID: 0}
@@ -64344,6 +64344,7 @@ MonoBehaviour:
   skillIndex: 1
   requireTargetForSkill3: 0
   requireWeaponForSkill1: 1
+  requireKatanaForSkill3: 1
   requireStaffForSkill2: 1
   requireStaffForSkill3: 1
 --- !u!114 &9133502873379898808 stripped

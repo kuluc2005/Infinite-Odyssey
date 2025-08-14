@@ -43,7 +43,7 @@ public class QuestUI : MonoBehaviour
             bool readyToComplete = quest.objectives.All(obj => obj.currentAmount >= obj.requiredAmount);
             if (readyToComplete)
             {
-                progressText += "<color=yellow>Đã đủ vật phẩm! Hãy đến trả nhiệm vụ cho NPC.</color>\n";
+                progressText += "<color=yellow>Enough items! Go return the quest to the NPC.</color>\n";
             }
 
             questText.text = progressText;
@@ -57,6 +57,6 @@ public class QuestUI : MonoBehaviour
 
     public void ShowSuccess()
     {
-        questText.text = "<color=green><b>Nhiệm vụ hoàn thành!</b></color>";
+        questText.text = "<color=green><b>Mission accomplished!</b></color>";
     }
 }

@@ -22,37 +22,37 @@ public class ChangePasswordManager : MonoBehaviour
         // Kiểm tra lỗi người dùng nhập
         if (string.IsNullOrEmpty(email))
         {
-            errorPanelManager.ShowError("Email không được để trống", Color.red);
+            errorPanelManager.ShowError("Email cannot be blank", Color.red);
             return;
         }
 
         if (!IsValidEmail(email))
         {
-            errorPanelManager.ShowError("Email không hợp lệ", Color.red);
+            errorPanelManager.ShowError("Invalid email", Color.red);
             return;
         }
 
         if (string.IsNullOrEmpty(oldPass))
         {
-            errorPanelManager.ShowError("Mật khẩu cũ không được để trống", Color.red);
+            errorPanelManager.ShowError("Old password cannot be blank", Color.red);
             return;
         }
 
         if (string.IsNullOrEmpty(newPass))
         {
-            errorPanelManager.ShowError("Mật khẩu mới không được để trống", Color.red);
+            errorPanelManager.ShowError("New password cannot be blank", Color.red);
             return;
         }
 
         if (newPass.Length < 6)
         {
-            errorPanelManager.ShowError("Mật khẩu mới phải có ít nhất 6 ký tự", Color.red);
+            errorPanelManager.ShowError("New password must be at least 6 characters", Color.red);
             return;
         }
 
         if (oldPass == newPass)
         {
-            errorPanelManager.ShowError("Mật khẩu mới không được trùng mật khẩu cũ", Color.red);
+            errorPanelManager.ShowError("New password cannot be the same as old password", Color.red);
             return;
         }
 
@@ -99,14 +99,14 @@ public class ChangePasswordManager : MonoBehaviour
 
             if (response != null && response.status)
             {
-                errorPanelManager.ShowError("Đổi mật khẩu thành công!", Color.green);
+                errorPanelManager.ShowError("Password changed successfully!", Color.green);
                 yield return new WaitForSeconds(1.5f);
                 errorPanelManager.HideError();
                 UnityEngine.SceneManagement.SceneManager.LoadScene("LoginScene");
             }
             else
             {
-                errorPanelManager.ShowError("" + (response?.message ?? "Thay đổi thất bại!"), Color.red);
+                errorPanelManager.ShowError("" + (response?.message ?? "Change failed!"), Color.red);
                 Debug.LogWarning("API báo lỗi đổi mật khẩu: " + response?.message);
             }
         }

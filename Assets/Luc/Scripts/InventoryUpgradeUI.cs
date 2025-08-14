@@ -192,7 +192,7 @@ public class InventoryUpgradeUI : MonoBehaviour
             if (rightStaminaPreview) rightStaminaPreview.text = "MAX";
         }
 
-        if (successRateText) successRateText.text = "Tỉ lệ thành công: 100%";
+        if (successRateText) successRateText.text = "Success rate: 100%";
 
         OpenUpgrade();
     }
@@ -201,7 +201,7 @@ public class InventoryUpgradeUI : MonoBehaviour
     {
         if (currentSelectedItem == null)
         {
-            ShowMessage("Chưa chọn vật phẩm!", false);
+            ShowMessage("No item selected!", false);
             return;
         }
 
@@ -210,13 +210,13 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         if (currentLevel >= maxLevel)
         {
-            ShowMessage("Đã đạt cấp tối đa!", false);
+            ShowMessage("Maximum level reached!", false);
             return;
         }
 
         if (upgradeTable == null || upgradeTable.Count < currentLevel)
         {
-            ShowMessage("Bảng nâng cấp chưa đủ dữ liệu!", false);
+            ShowMessage("Upgrade table has insufficient data!", false);
             return;
         }
 
@@ -224,7 +224,7 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         if (playerGem < stats.gemCost)
         {
-            ShowMessage("Không đủ Gem!", false);
+            ShowMessage("Not enough Gems!", false);
             return;
         }
 
@@ -236,7 +236,7 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         if (!GoldManager.Instance.SpendCoins(stats.goldCost))
         {
-            ShowMessage("Không đủ Gold!", false);
+            ShowMessage("Not enough Gold!", false);
             return;
         }
 
@@ -253,7 +253,7 @@ public class InventoryUpgradeUI : MonoBehaviour
         OnItemClicked(currentSelectedItem);
         _suppressClearMessage = false;
 
-        ShowMessage($"Nâng cấp thành công → Lv.{currentLevel + 1}", true);
+        ShowMessage($"Upgrade successful → Lv.{currentLevel + 1}", true);
 
         var sync = FindFirstObjectByType<InventorySyncManager>();
         if (sync != null) sync.SaveInventoryToServer();

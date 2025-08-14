@@ -251,10 +251,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "T\u1EA1o nh\xE2n v\u1EADt"
+  m_text: Create a character
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -278,8 +278,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 16
+  m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -319,7 +319,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &95634115
@@ -1824,7 +1824,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1605271421}
+    m_TransformParent: {fileID: 1310987950}
     m_Modifications:
     - target: {fileID: 6587649274788222602, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1884,15 +1884,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8179285090228955726, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8179285090228955726, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8179285090228955726, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8179285090228955726, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1924,11 +1924,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8179285090228955726, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.1
+      value: 0.50002444
       objectReference: {fileID: 0}
     - target: {fileID: 8179285090228955726, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 33.4
+      value: 135.99997
       objectReference: {fileID: 0}
     - target: {fileID: 8179285090228955726, guid: f98045c151fd5f24bb86125f7e367772, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2066,6 +2066,7 @@ RectTransform:
   - {fileID: 738478393}
   - {fileID: 499880557}
   - {fileID: 38965706}
+  - {fileID: 1247086624}
   - {fileID: 444361020}
   - {fileID: 1605271421}
   m_Father: {fileID: 0}
@@ -2158,7 +2159,7 @@ MonoBehaviour:
 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2269,7 +2270,6 @@ RectTransform:
   - {fileID: 512748084}
   - {fileID: 1155523579}
   - {fileID: 662864432}
-  - {fileID: 1247086624}
   m_Father: {fileID: 1310987950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2375,7 +2375,7 @@ MonoBehaviour:
   m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
