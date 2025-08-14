@@ -1011,6 +1011,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sandman (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8406962401255938247, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
+      propertyPath: enemyID
+      value: Sandman
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1563,6 +1567,10 @@ PrefabInstance:
       propertyPath: pathArea
       value: 
       objectReference: {fileID: 1918755654}
+    - target: {fileID: 125798425773410241, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
+      propertyPath: selectedToolbar
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1203041444159944157, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.36
@@ -1605,6 +1613,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2015888037590445927, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
       propertyPath: m_Name
+      value: Sandman
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981958087613114105, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
+      propertyPath: selectedToolbar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8406962401255938247, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
+      propertyPath: enemyID
       value: Sandman
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -6452,6 +6468,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sandman (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8406962401255938247, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
+      propertyPath: enemyID
+      value: Sandman
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9515,6 +9535,10 @@ PrefabInstance:
     - target: {fileID: 8634319311610095047, guid: 0bde34949b1f4ac4798734462d55231c, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.16107534
+      objectReference: {fileID: 0}
+    - target: {fileID: 8692988824166999780, guid: 0bde34949b1f4ac4798734462d55231c, type: 3}
+      propertyPath: enemyID
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 9136362010213221219, guid: 0bde34949b1f4ac4798734462d55231c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -14204,6 +14228,10 @@ PrefabInstance:
     - target: {fileID: 2015888037590445927, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
       propertyPath: m_Name
       value: Sandman (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8406962401255938247, guid: d4ad26f04ea927e47919b32ac24eb016, type: 3}
+      propertyPath: enemyID
+      value: Sandman
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

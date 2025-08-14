@@ -205,41 +205,57 @@ public class PlayerStaffSkillManager : MonoBehaviour
     {
         if (!skill2VFXSpawnPoint) return;
 
+        // Tính box theo forward phẳng để VFX & hitbox khớp hướng
         Vector3 center = skill2VFXSpawnPoint.TransformPoint(skill2HitboxOffset);
         Vector3 flatFwd = Vector3.ProjectOnPlane(skill2VFXSpawnPoint.forward, Vector3.up).normalized;
         if (flatFwd.sqrMagnitude < 1e-4f) flatFwd = transform.forward;
         Quaternion rot = Quaternion.LookRotation(flatFwd, Vector3.up);
 
-        var triggerMode = QueryTriggerInteraction.Collide;
-
+        // Lấy mọi collider (cả trigger) trên các layer cho phép
         Collider[] hits = Physics.OverlapBox(
             center,
             skill2HitboxSize * 0.5f,
             rot,
             enemyLayers,
-            triggerMode
+            QueryTriggerInteraction.Collide
         );
+
+        // Tránh double-hit 1 enemy có nhiều collider
+        var damaged = new System.Collections.Generic.HashSet<Invector.vHealthController>();
 
         for (int i = 0; i < hits.Length; i++)
         {
-            var root = hits[i].transform.root;
+            var col = hits[i];
 
-            if (!root.CompareTag("Enemy") && !hits[i].CompareTag("Enemy")) continue;
+            var health = col.GetComponentInParent<Invector.vHealthController>();
+            if (health == null) continue; 
 
-            var health = root.GetComponent<Invector.vHealthController>();
-            if (health)
+            bool taggedEnemy =
+                  col.CompareTag("Enemy")
+               || (col.transform.root && col.transform.root.CompareTag("Enemy"))
+               || (health.transform.CompareTag("Enemy"));
+
+            // taggedEnemy = true;
+
+            if (!taggedEnemy) continue;
+
+            if (health.isDead) continue; 
+
+            if (damaged.Contains(health)) continue; 
+
+            // Gây damage
+            var dmg = new Invector.vDamage
             {
-                var dmg = new Invector.vDamage
-                {
-                    damageValue = Mathf.RoundToInt(skill2Damage),
-                    sender = transform,
-                    hitPosition = hits[i].bounds.center,
-                    hitReaction = true
-                };
-                health.TakeDamage(dmg);
-            }
+                damageValue = Mathf.RoundToInt(skill2Damage),
+                sender = transform,
+                hitPosition = col.bounds.center,
+                hitReaction = true
+            };
+            health.TakeDamage(dmg);
+            damaged.Add(health);
         }
     }
+
 
     // ===== Skill 3 =====
     public void SFX_Skill3_Cast() { SFX_Play(sfxSkill3Cast); }
