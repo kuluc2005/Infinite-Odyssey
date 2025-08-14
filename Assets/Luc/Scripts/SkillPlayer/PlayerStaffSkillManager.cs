@@ -38,6 +38,15 @@ public class PlayerStaffSkillManager : MonoBehaviour
     public float skill3Cooldown = 10f;
     public float skill3CooldownTimer = 0f;
 
+    [Header("Skill 3 - Fireball Burst")]
+    public GameObject skill3FireballPrefab;            
+    public Transform skill3FireballSpawnPoint;         
+    public float skill3FireballSpeed = 22f;
+    public float skill3FireballDamage = 60f;
+    public float skill3FireballMaxLifetime = 5f;      
+
+    private Transform skill3LockedTarget;
+
     private vMeleeManager melee;
 
     [Header("Weapon Requirements")]
@@ -195,6 +204,58 @@ public class PlayerStaffSkillManager : MonoBehaviour
         {
             Instantiate(skill3EffectPrefab, nearestEnemy.transform.position, Quaternion.identity);
         }
+    }
+
+    public void Skill3_OnStart_LockTarget() // Animation Event
+    {
+        GameObject nearestEnemy = FindNearestEnemyInRange(skill3AttackRange);
+        skill3LockedTarget = nearestEnemy ? nearestEnemy.transform : null;
+    }
+
+    // Gọi 5 lần tại các keyframe trong clip Skill 3
+    public void Skill3_SpawnFireball() 
+    {
+        GameObject prefab = skill3FireballPrefab ? skill3FireballPrefab : fireballPrefab;
+        Transform spawn = skill3FireballSpawnPoint ? skill3FireballSpawnPoint : fireballSpawnPoint;
+        float spd = skill3FireballSpeed > 0 ? skill3FireballSpeed : fireballSpeed;
+        float dmg = skill3FireballDamage > 0 ? skill3FireballDamage : fireballDamage;
+
+        if (!prefab || !spawn) return;
+
+        Vector3 dir;
+        if (skill3LockedTarget != null)
+        {
+            dir = (skill3LockedTarget.position - spawn.position).normalized;
+            if (dir.sqrMagnitude < 1e-4f) dir = spawn.forward;
+        }
+        else
+        {
+            dir = spawn.forward;
+        }
+
+        Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
+        GameObject go = Instantiate(prefab, spawn.position, rot);
+
+        var prj = go.GetComponent<FireballProjectileplayer>();
+        if (prj != null)
+        {
+            prj.Init(dir, spd, dmg, transform); 
+        }
+        else
+        {
+            var rb = go.GetComponent<Rigidbody>();
+            if (rb)
+            {
+#if UNITY_6000_0_OR_NEWER
+                rb.linearVelocity = dir * spd;
+#else
+            rb.velocity = dir * spd;
+#endif
+            }
+            Destroy(go, skill3FireballMaxLifetime);
+        }
+
+        go.GetComponent<MaykerStudio.Demo.Projectile>()?.Fire();
     }
 
     private GameObject FindNearestEnemyInRange(float range)

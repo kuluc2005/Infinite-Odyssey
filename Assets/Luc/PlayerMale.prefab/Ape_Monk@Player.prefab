@@ -14323,6 +14323,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemManager: {fileID: 2028152574366463850}
   characterId: 0
+  checkInterval: 0.5
+  minSaveInterval: 0.7
 --- !u!114 &8453145518483382483
 MonoBehaviour:
   m_ObjectHideFlags: 0

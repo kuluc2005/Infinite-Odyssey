@@ -11041,6 +11041,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cutsceneSceneName: CutSceneLevel1
   nextLevelName: Level 1
+  instant: 1
 --- !u!1 &1260488021
 GameObject:
   m_ObjectHideFlags: 0
@@ -18640,6 +18641,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7403909041509170725, guid: a4305f4b21bee114a8c1282ee93c8151, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: b1995918147c6474daa6b6e92037f089, type: 3}
+    - target: {fileID: 7403909041509170725, guid: a4305f4b21bee114a8c1282ee93c8151, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: b1995918147c6474daa6b6e92037f089, type: 3}
     - target: {fileID: 7426394484189416303, guid: a4305f4b21bee114a8c1282ee93c8151, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnChangeSelectedClicked

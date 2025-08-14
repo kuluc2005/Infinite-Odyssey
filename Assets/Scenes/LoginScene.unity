@@ -1326,7 +1326,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 19e0bc12554863e4d932f44fc7ca2cd6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1435,7 +1435,7 @@ PrefabInstance:
     - target: {fileID: 3007106843510077439, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
+      objectReference: {fileID: 21300000, guid: d5bda4f272648f34c8020e4e2772de3f, type: 3}
     - target: {fileID: 3613909955606565159, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Type
       value: 0
@@ -1443,7 +1443,7 @@ PrefabInstance:
     - target: {fileID: 3613909955606565159, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 19e0bc12554863e4d932f44fc7ca2cd6, type: 3}
+      objectReference: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
     - target: {fileID: 3849587672602011512, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -1531,7 +1531,7 @@ PrefabInstance:
     - target: {fileID: 5534731506063310781, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 19e0bc12554863e4d932f44fc7ca2cd6, type: 3}
+      objectReference: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
     - target: {fileID: 6198226668333456391, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_fontSize
       value: 24
@@ -1611,7 +1611,7 @@ PrefabInstance:
     - target: {fileID: 8058595706446701617, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
+      objectReference: {fileID: 21300000, guid: d5bda4f272648f34c8020e4e2772de3f, type: 3}
     - target: {fileID: 8258711256229100669, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Pivot.x
       value: 0

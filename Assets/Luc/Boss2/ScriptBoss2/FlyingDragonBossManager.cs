@@ -25,7 +25,7 @@ public class FlyingDragonBossManager : MonoBehaviour
     public float wakeUpDistance = 10f;
 
     [Header("Win Settings")]
-    [Range(0f, 5f)] public float winDelay = 1.5f;
+    [Range(0f, 5f)] public float winDelay = 0f;
 
     private Animator animator;
     private vHealthController health;
@@ -112,7 +112,7 @@ public class FlyingDragonBossManager : MonoBehaviour
     IEnumerator WinAfterDelay()
     {
         // đảm bảo delay < thời gian Destroy
-        float t = Mathf.Min(winDelay, 2.9f);
+        float t = Mathf.Min(winDelay, 0f);
         if (t > 0f) yield return new WaitForSeconds(t);
         GameFlowManager.Win();
     }

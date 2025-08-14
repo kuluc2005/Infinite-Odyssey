@@ -178,7 +178,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d5bda4f272648f34c8020e4e2772de3f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -884,7 +884,7 @@ PrefabInstance:
     - target: {fileID: 3007106843510077439, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
+      objectReference: {fileID: 21300000, guid: d5bda4f272648f34c8020e4e2772de3f, type: 3}
     - target: {fileID: 3613909955606565159, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Type
       value: 0
@@ -892,7 +892,7 @@ PrefabInstance:
     - target: {fileID: 3613909955606565159, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 19e0bc12554863e4d932f44fc7ca2cd6, type: 3}
+      objectReference: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
     - target: {fileID: 3613909955606565159, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -984,7 +984,7 @@ PrefabInstance:
     - target: {fileID: 5534731506063310781, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 19e0bc12554863e4d932f44fc7ca2cd6, type: 3}
+      objectReference: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
     - target: {fileID: 5534731506063310781, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -1078,7 +1078,7 @@ PrefabInstance:
     - target: {fileID: 8058595706446701617, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
+      objectReference: {fileID: 21300000, guid: d5bda4f272648f34c8020e4e2772de3f, type: 3}
     - target: {fileID: 8058595706446701617, guid: 4bdaa5480904ce148939fc1a9507430f, type: 3}
       propertyPath: m_Color.a
       value: 1
@@ -1401,7 +1401,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 19e0bc12554863e4d932f44fc7ca2cd6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 688a2a25ef766644697ec94e1640a752, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2017,7 +2017,7 @@ MonoBehaviour:
   videoFileName: BackGVideo4.mp4
   sharedRenderTexture: {fileID: 8400000, guid: 005e50dbd516ceb448a43ab44f4b28e5, type: 2}
   bgMusicSource: {fileID: 558578947}
-  bgMusicClip: {fileID: 8300000, guid: d8e9d54e532ee45479c47cd790f9e579, type: 3}
+  bgMusicClip: {fileID: 8300000, guid: 667279a5b32185749996203cce3b996e, type: 3}
 --- !u!114 &2136083000
 MonoBehaviour:
   m_ObjectHideFlags: 0

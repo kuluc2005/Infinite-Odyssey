@@ -1087,7 +1087,7 @@ MonoBehaviour:
   videoFileName: BackGVideo4.mp4
   sharedRenderTexture: {fileID: 8400000, guid: 005e50dbd516ceb448a43ab44f4b28e5, type: 2}
   bgMusicSource: {fileID: 580512516}
-  bgMusicClip: {fileID: 8300000, guid: d8e9d54e532ee45479c47cd790f9e579, type: 3}
+  bgMusicClip: {fileID: 8300000, guid: 667279a5b32185749996203cce3b996e, type: 3}
 --- !u!328 &807998356
 VideoPlayer:
   m_ObjectHideFlags: 0
