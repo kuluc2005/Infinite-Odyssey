@@ -18587,7 +18587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
+  openCloseWindow: 1
   selectedToolbar: 0
   Members:
   - transform: {fileID: 3773701955100521030}
@@ -21411,9 +21411,9 @@ GameObject:
   - component: {fileID: 8828479935748492309}
   - component: {fileID: 2698604928341719649}
   - component: {fileID: 4379478795416430635}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: hitBox
-  m_TagString: Untagged
+  m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51009,9 +51009,9 @@ GameObject:
   - component: {fileID: 687066845883925812}
   - component: {fileID: 8027458848644089732}
   - component: {fileID: 7828537802710372514}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: hitBox
-  m_TagString: Untagged
+  m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60184,9 +60184,9 @@ GameObject:
   - component: {fileID: 462294016220042689}
   - component: {fileID: 2136364140749119197}
   - component: {fileID: 3290805191416670731}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: hitBox
-  m_TagString: Untagged
+  m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -68596,9 +68596,9 @@ GameObject:
   - component: {fileID: 176937982663285872}
   - component: {fileID: 3301629894352762962}
   - component: {fileID: 5658698925070512588}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: hitBox
-  m_TagString: Untagged
+  m_TagString: Ignore Ragdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

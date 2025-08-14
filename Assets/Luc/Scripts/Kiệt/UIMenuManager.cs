@@ -249,6 +249,12 @@ namespace SlimUI.ModernMenu
         public void OnChangePasswordClicked()
         {
             Time.timeScale = 1f;
+            SceneManager.LoadScene("ChangePasswordScene");
+        }
+
+        public void OnSelected()
+        {
+            Time.timeScale = 1f;
             SceneManager.LoadScene("CharacterSelectScene");
         }
 

@@ -98,6 +98,14 @@ namespace Invector.vCharacterController
             if (cc == null || cc.isDead || DialogueSystemState.IsTalkingWithNPC)
                 return;
 
+            // Chặn mọi xử lý input cận chiến khi UI mở
+            if (GameplayInputGate.IsBlocked)
+            {
+                ResetAttackTriggers();
+                isBlocking = false;
+                return;
+            }
+
             base.InputHandle();
 
             if (MeleeAttackConditions() && !lockMeleeInput)

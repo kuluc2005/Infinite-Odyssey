@@ -328,7 +328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 3
   inputType: 0
   actionInput:
     useInput: 1
@@ -15945,11 +15945,15 @@ MonoBehaviour:
     gemCost: 20
     goldCost: 20
   maxLevel: 3
+  successRate: 0.5
+  consumeOnFail: 1
   resultText: {fileID: 1163361328}
   successColor: {r: 0.2, g: 0.8, b: 0.2, a: 1}
   errorColor: {r: 0.9, g: 0.2, b: 0.2, a: 1}
   messageDuration: 2
   messageFadeOut: 0.35
+  pauseGameTime: 0
+  blockPlayerInput: 1
 --- !u!114 &1745161582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19831,7 +19835,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7426394484189416303, guid: a4305f4b21bee114a8c1282ee93c8151, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnChangeSelectedClicked
+      value: OnSelected
       objectReference: {fileID: 0}
     - target: {fileID: 7426394484189416303, guid: a4305f4b21bee114a8c1282ee93c8151, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName

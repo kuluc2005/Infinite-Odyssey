@@ -5,6 +5,8 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using Invector.vItemManager;
+using Invector.vCharacterController;
+using Invector.vMelee;
 
 [System.Serializable]
 public class UpgradeStats
@@ -48,12 +50,23 @@ public class InventoryUpgradeUI : MonoBehaviour
     public List<UpgradeStats> upgradeTable = new List<UpgradeStats>();
     public int maxLevel = 3;
 
+    [Header("Tỉ lệ nâng cấp")]
+    [Range(0f, 1f)] public float successRate = 0.6f; // 60%
+    [Tooltip("Nếu bật, thất bại vẫn trừ Gem/Gold. Nếu tắt, chỉ trừ khi thành công.")]
+    public bool consumeOnFail = true;
+
     [Header("Thông báo nâng cấp (Toast)")]
     public TMP_Text resultText;
     public Color successColor = new Color(0.2f, 0.8f, 0.2f);
     public Color errorColor = new Color(0.9f, 0.2f, 0.2f);
     [Range(0.5f, 10f)] public float messageDuration = 3f;
     [Range(0f, 2f)] public float messageFadeOut = 0.35f;
+
+    [Header("Chặn input khi mở UI")]
+    [Tooltip("Nếu bật, đóng băng thời gian (Time.timeScale=0) khi mở UI.")]
+    public bool pauseGameTime = false;
+    [Tooltip("Nếu bật, tắt input/movement/attack của Player khi UI mở.")]
+    public bool blockPlayerInput = true;
 
     private vItem currentSelectedItem;
     private int playerGem = 100;
@@ -66,6 +79,10 @@ public class InventoryUpgradeUI : MonoBehaviour
     private CanvasGroup _resultGroup;
 
     private bool _suppressClearMessage = false;
+
+    // freeze-input cache
+    private readonly Dictionary<Behaviour, bool> _prevEnabledMap = new Dictionary<Behaviour, bool>();
+    private float _prevTimeScale = 1f;
 
     void Awake()
     {
@@ -93,13 +110,7 @@ public class InventoryUpgradeUI : MonoBehaviour
             if (upgradeCanvas != null)
             {
                 bool isOpen = upgradeCanvas.activeSelf;
-                upgradeCanvas.SetActive(!isOpen);
-
-                Cursor.lockState = isOpen ? CursorLockMode.Locked : CursorLockMode.None;
-                Cursor.visible = !isOpen;
-
-                if (!isOpen)
-                    ClearMessage();
+                if (isOpen) CloseUpgrade(); else OpenUpgrade();
             }
         }
     }
@@ -192,7 +203,8 @@ public class InventoryUpgradeUI : MonoBehaviour
             if (rightStaminaPreview) rightStaminaPreview.text = "MAX";
         }
 
-        if (successRateText) successRateText.text = "Success rate: 100%";
+        // Hiển thị tỉ lệ
+        if (successRateText) successRateText.text = $"Success rate: {(int)(Mathf.Clamp01(successRate) * 100)}%";
 
         OpenUpgrade();
     }
@@ -222,63 +234,90 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         UpgradeStats stats = upgradeTable[currentLevel - 1];
 
+        // Kiểm tra tài nguyên
         if (playerGem < stats.gemCost)
         {
             ShowMessage("Not enough Gems!", false);
             return;
         }
-
         if (GoldManager.Instance == null)
         {
             ShowMessage("GoldManager chưa sẵn sàng!", false);
             return;
         }
-
-        if (!GoldManager.Instance.SpendCoins(stats.goldCost))
+        int currentGold = GoldManager.Instance.CurrentGold;
+        if (currentGold < stats.goldCost)
         {
             ShowMessage("Not enough Gold!", false);
             return;
         }
 
-        playerGem -= stats.gemCost;
+        bool isSuccess = Random.value < Mathf.Clamp01(successRate);
 
-        var dmgAttr = currentSelectedItem.GetItemAttribute(vItemAttributes.Damage);
-        var staminaAttr = currentSelectedItem.GetItemAttribute(vItemAttributes.StaminaCost);
+        // Trừ tài nguyên theo cấu hình
+        if (consumeOnFail)
+        {
+            playerGem -= stats.gemCost;
+            GoldManager.Instance.SpendCoins(stats.goldCost);
+        }
 
-        if (dmgAttr != null) dmgAttr.value += stats.damageIncrease;
-        if (staminaAttr != null) staminaAttr.value = Mathf.Max(0, staminaAttr.value - stats.staminaDecrease);
+        if (isSuccess)
+        {
+            if (!consumeOnFail)
+            {
+                playerGem -= stats.gemCost;
+                GoldManager.Instance.SpendCoins(stats.goldCost);
+            }
 
-        _suppressClearMessage = true;
-        RefreshInventoryUI();
-        OnItemClicked(currentSelectedItem);
-        _suppressClearMessage = false;
+            var dmgAttr = currentSelectedItem.GetItemAttribute(vItemAttributes.Damage);
+            var staminaAttr = currentSelectedItem.GetItemAttribute(vItemAttributes.StaminaCost);
 
-        ShowMessage($"Upgrade successful → Lv.{currentLevel + 1}", true);
+            if (dmgAttr != null) dmgAttr.value += stats.damageIncrease;
+            if (staminaAttr != null) staminaAttr.value = Mathf.Max(0, staminaAttr.value - stats.staminaDecrease);
 
-        var sync = FindFirstObjectByType<InventorySyncManager>();
-        if (sync != null) sync.SaveInventoryToServer();
+            _suppressClearMessage = true;
+            RefreshInventoryUI();
+            OnItemClicked(currentSelectedItem);
+            _suppressClearMessage = false;
+
+            ShowMessage($"Upgrade successful → Lv.{currentLevel + 1}", true);
+
+            var sync = FindFirstObjectByType<InventorySyncManager>();
+            if (sync != null) sync.SaveInventoryToServer();
+        }
+        else
+        {
+            _suppressClearMessage = true;
+            RefreshInventoryUI();
+            OnItemClicked(currentSelectedItem);
+            _suppressClearMessage = false;
+
+            ShowMessage("Upgrade failed! Try again.", false);
+        }
     }
 
     public void ForceRefresh() => RefreshInventoryUI();
 
     public void OpenUpgrade()
     {
-        if (upgradeCanvas != null)
-        {
-            upgradeCanvas.SetActive(true);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+        if (!upgradeCanvas) return;
+        upgradeCanvas.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        GameplayInputGate.IsBlocked = true;   
+
+        ClearMessage();
     }
 
     public void CloseUpgrade()
     {
-        if (upgradeCanvas != null)
-        {
-            upgradeCanvas.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        if (!upgradeCanvas) return;
+        upgradeCanvas.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        GameplayInputGate.IsBlocked = false;  
     }
 
     private void ShowMessage(string msg, bool isSuccess)
@@ -308,7 +347,7 @@ public class InventoryUpgradeUI : MonoBehaviour
         float timer = 0f;
         while (timer < messageDuration)
         {
-            timer += Time.unscaledDeltaTime;
+            timer += Time.unscaledDeltaTime; // dùng unscaled để vẫn chạy khi pause
             yield return null;
         }
 
@@ -389,5 +428,53 @@ public class InventoryUpgradeUI : MonoBehaviour
     {
         var attribute = item.GetItemAttribute(attr);
         return attribute != null ? attribute.value : 0;
+    }
+
+    // ===== INPUT FREEZE =====
+    private void SetGameplayInputActive(bool active)
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (!player) return;
+
+        // Các component thường gây tấn công/di chuyển
+        ToggleBehaviour<vThirdPersonController>(player, active);
+        ToggleBehaviour<vMeleeManager>(player, active);
+        ToggleBehaviour<PlayerStaffSkillManager>(player, active);
+
+        // Nếu bạn có script khác đọc Input (vd PlayerAttack, PlayerController...), thêm dòng tương tự:
+        // ToggleBehaviour<PlayerAttack>(player, active);
+        // ToggleBehaviour<PlayerController>(player, active);
+    }
+
+    private void ToggleBehaviour<T>(GameObject player, bool active) where T : Behaviour
+    {
+        var comp = player.GetComponentInChildren<T>(true);
+        if (comp == null) return;
+
+        if (!active)
+        {
+            if (!_prevEnabledMap.ContainsKey(comp))
+                _prevEnabledMap[comp] = comp.enabled;
+            comp.enabled = false;
+        }
+        else
+        {
+            if (_prevEnabledMap.TryGetValue(comp, out bool wasEnabled))
+            {
+                comp.enabled = wasEnabled;
+                _prevEnabledMap.Remove(comp);
+            }
+            else
+            {
+                // nếu không có trong map, giữ nguyên trạng thái hiện tại
+            }
+        }
+    }
+
+    void OnDisable()
+    {
+        // Phòng trường hợp tắt object khi UI đang mở
+        if (pauseGameTime) Time.timeScale = _prevTimeScale;
+        if (blockPlayerInput) SetGameplayInputActive(true);
     }
 }
