@@ -4449,9 +4449,9 @@ GameObject:
   - component: {fileID: 3854458787658581149}
   - component: {fileID: 5996276646595959781}
   - component: {fileID: 8951649582882908136}
-  - component: {fileID: 5670189414384318650}
   - component: {fileID: 6067446562084648649}
   - component: {fileID: 5928136053152486324}
+  - component: {fileID: 8869194781584632990}
   m_Layer: 9
   m_Name: minotaur1
   m_TagString: Enemy
@@ -4492,11 +4492,18 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 1ec31ee6b4e699b4c919f9ddd24f6f73, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'pelvis'\n\tTransform 'index_03_l'\n\tTransform
+    'lowerarm_l'\n\tTransform 'pinky_03_l'\n\tTransform 'neck_01'\n\tTransform 'pinky_03_r'\n\tTransform
+    'clavicle_l'\n\tTransform 'ring_02_l'\n\tTransform 'ball_l'\n\tTransform 'hand_l'\n\tand
+    more ...\n\tFrom animation clip 'attack1'\n\tFrom animation clip 'death'\n\tFrom
+    animation clip 'hit_1'\n\tFrom animation clip 'idle'\n\tFrom animation clip 'run'\n\tFrom
+    animation clip 'walk_forward'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -4550,29 +4557,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &5670189414384318650
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8466156050242222475}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6067446562084648649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4607,6 +4591,29 @@ MonoBehaviour:
   healthSlider: {fileID: 467061015232097975}
   hitTrigger: hit_1
   deathTrigger: death
+--- !u!136 &8869194781584632990
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466156050242222475}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.62901306
+  m_Height: 2.367659
+  m_Direction: 1
+  m_Center: {x: -0.008195877, y: 1.0800436, z: 0}
 --- !u!1 &8599359217692148083
 GameObject:
   m_ObjectHideFlags: 0
