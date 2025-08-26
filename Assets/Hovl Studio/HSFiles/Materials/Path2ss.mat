@@ -138,7 +138,7 @@ Material:
     - _Opacity: 1
     - _OpaqueCullMode: 2
     - _PathSet0ifyouuseinPS: 0
-    - _QueueControl: -1
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _RenderQueueType: 3
     - _SrcBlend: 1

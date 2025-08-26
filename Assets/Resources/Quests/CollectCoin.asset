@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ef25a45707a4742a6dd06dd774531d, type: 3}
+  m_Name: CollectCoin
+  m_EditorClassIdentifier: 
+  questID: Quest_1_CollectCoin
+  questName: Collecting ancient coins
+  questDescription: Collect gold coins from monsters
+  targetTag: 
+  targetKillCount: 0
+  objectives:
+  - objectiveDescription: Pick up 2 ancient gold coins
+    type: 1
+    targetID: 14
+    requiredAmount: 2
+    currentAmount: 0
+  goldReward: 100
+  healthIncreaseReward: 0
+  damageIncreaseReward: 0
+  startDialogue: []
+  progressDialogue: []
+  completeDialogue: []
+  nextQuest: {fileID: 0}

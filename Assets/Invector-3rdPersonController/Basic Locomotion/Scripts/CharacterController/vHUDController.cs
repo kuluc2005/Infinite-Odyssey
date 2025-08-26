@@ -9,6 +9,7 @@ namespace Invector.vCharacterController
 
         #region Health/Stamina Variables
         [Header("Health/Stamina")]
+        public int baseHealth = 200; // Giá trị cố định cho thanh máu chính
         public Slider healthSlider;
         public float healthSliderMaxValueSmooth = 10f;
         public float healthSliderValueSmooth = 10;
@@ -77,12 +78,11 @@ namespace Invector.vCharacterController
             damageImage.color = new Color(0f, 0f, 0f, 0f);
             if (healthSlider)
             {
-                if (cc.maxHealth != healthSlider.maxValue)
-                {
-                    healthSlider.maxValue = cc.maxHealth;
-                    healthSlider.onValueChanged.Invoke(healthSlider.value);
-                }
-                healthSlider.value = cc.currentHealth;
+                healthSlider.maxValue = baseHealth;
+                int currentHealth = Mathf.RoundToInt(cc.currentHealth);
+                int maxHealth = Mathf.RoundToInt(cc.maxHealth);
+                float displayHealth = ((float)currentHealth / maxHealth) * baseHealth;
+                healthSlider.value = displayHealth;
             }
             if (staminaSlider)
             {
@@ -153,16 +153,22 @@ namespace Invector.vCharacterController
 
         void UpdateSliders(vThirdPersonController cc)
         {
+            // ----------- XỬ LÝ HEALTH -----------
+            // Luôn giữ max cố định là baseHealth (200)
             if (healthSlider != null)
             {
-                if (cc.maxHealth != healthSlider.maxValue)
-                {
-                    healthSlider.maxValue = Mathf.Lerp(healthSlider.maxValue, cc.maxHealth, healthSliderMaxValueSmooth * Time.fixedDeltaTime);
-                    healthSlider.onValueChanged.Invoke(healthSlider.value);
-                }
-                healthSlider.value = Mathf.Lerp(healthSlider.value, cc.currentHealth, healthSliderValueSmooth * Time.fixedDeltaTime);
+                healthSlider.maxValue = baseHealth;
+
+                int currentHealth = Mathf.RoundToInt(cc.currentHealth);
+                int maxHealth = Mathf.RoundToInt(cc.maxHealth);
+
+                // Hiển thị theo tỷ lệ: current / max thực tế * base (200)
+                float displayHealth = ((float)currentHealth / maxHealth) * baseHealth;
+
+                healthSlider.value = Mathf.Lerp(healthSlider.value, displayHealth, healthSliderValueSmooth * Time.fixedDeltaTime);
             }
-            if (staminaSlider)
+            // ----------- XỬ LÝ STAMINA -----------
+            if (staminaSlider != null)
             {
                 if (cc.maxStamina != staminaSlider.maxValue)
                 {

@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: bc47fa2aeab9b3b46be7fbc1bdc7bc04
+timeCreated: 1523495675
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213441
+  packageName: Bridges In Seconds Prototyping Pack
+  packageVersion: 1.1
+  assetPath: Assets/3DWorldInSeconds/Imp/Editor/BillboardImposterInspector.cs
+  uploadId: 492868

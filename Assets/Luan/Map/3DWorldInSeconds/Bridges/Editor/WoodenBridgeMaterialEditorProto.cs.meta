@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 67611087aa386f44b889ca9976facc5d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213441
+  packageName: Bridges In Seconds Prototyping Pack
+  packageVersion: 1.1
+  assetPath: Assets/3DWorldInSeconds/Bridges/Editor/WoodenBridgeMaterialEditorProto.cs
+  uploadId: 492868

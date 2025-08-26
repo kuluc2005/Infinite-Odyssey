@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 1000011245955268}
   serializedVersion: 2
   m_LocalRotation: {x: 0.047169413, y: 0.000000011664811, z: 0.000000021999634, w: 0.99888694}
-  m_LocalPosition: {x: -0, y: 0.477, z: 0.049}
-  m_LocalScale: {x: 1, y: 0.65450114, z: 1}
+  m_LocalPosition: {x: 0, y: 0.444, z: 0.049}
+  m_LocalScale: {x: 1, y: 0.7241217, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000011430894570}
@@ -70,7 +70,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: -0.09, y: 1.19, z: 0.08}
+  m_Size: {x: 0.09, y: 1.19, z: 0.08}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1000012041143292
 GameObject:
@@ -83,6 +83,7 @@ GameObject:
   - component: {fileID: 4000010356917786}
   - component: {fileID: 33000011818978276}
   - component: {fileID: 23000013407315674}
+  - component: {fileID: 66434899226532130}
   m_Layer: 2
   m_Name: vKanata_Long
   m_TagString: Weapon
@@ -161,6 +162,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &66434899226532130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000012041143292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff4f5a8991d7fa47baed5c5ff25979f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: ae721c767fcd6664ca1cf46b36bb56b7, type: 2}
+  duration: 0.3
+  corner: 1
+  loop: 0
+  points:
+  - {x: -0.0000002390271, y: 0.14812557, z: -0.0000004226331}
+  - {x: -0.00000033169033, y: 0.21290247, z: -0.0000009149143}
+  - {x: -0.0000004242042, y: 0.27757493, z: -0.0000014071707}
+  - {x: -0.0000005084818, y: 0.33648983, z: -0.0000018980543}
+  - {x: -0.0000006014876, y: 0.4015068, z: -0.00000286723}
+  - {x: -0.0000007125023, y: 0.47389925, z: 0.004167057}
+  - {x: -0.0000007076124, y: 0.5447043, z: 0.01145502}
+  - {x: -0.0000007193379, y: 0.62448514, z: 0.020854415}
+  - {x: -0.00000072601813, y: 0.7004863, z: 0.030455992}
+  - {x: -0.000000665624, y: 0.77019465, z: 0.040914446}
+  - {x: -0.0000006843736, y: 0.846454, z: 0.057059184}
+  - {x: -0.00000069970366, y: 0.9192315, z: 0.07407701}
+  - {x: -0.0000005989888, y: 0.99541074, z: 0.09014307}
+  - {x: -0.00000027190816, y: 1.0750035, z: 0.110218845}
 --- !u!1 &1000012667475410
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,7 +246,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4000013842391146
 Transform:
   m_ObjectHideFlags: 0
@@ -360,7 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b02b25f3302cf04fb8e4a1a80f0b12e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openCloseEvents: 0
+  openCloseEvents: 1
   openCloseWindow: 0
   selectedToolbar: 0
   onEquip:

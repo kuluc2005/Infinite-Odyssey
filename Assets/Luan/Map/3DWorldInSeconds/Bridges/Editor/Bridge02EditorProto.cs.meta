@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b1b884ecf848f714cbb39dc491c32a82
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213441
+  packageName: Bridges In Seconds Prototyping Pack
+  packageVersion: 1.1
+  assetPath: Assets/3DWorldInSeconds/Bridges/Editor/Bridge02EditorProto.cs
+  uploadId: 492868
