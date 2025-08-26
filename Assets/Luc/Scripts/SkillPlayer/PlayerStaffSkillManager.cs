@@ -5,12 +5,26 @@ public class PlayerStaffSkillManager : MonoBehaviour
 {
     public Animator animator;
 
+    // ====== NEW: Stamina Costs ======
+    [Header("Stamina Costs")]
+    public float staminaCostSkill1 = 20f; // Fireball
+    public float staminaCostSkill2 = 35f; // Ice AOE
+    public float staminaCostSkill3 = 50f; // Targeted Strike / Burst
+
+    [Tooltip("BẬT để chặn cast khi stamina hiện tại không đủ (đọc bằng reflection).")]
+    public bool requireEnoughStaminaToTrigger = false;
+
+    // NEW: cache motor để trừ stamina
+    private Invector.vCharacterController.vThirdPersonController motor;
+
+    // ──────────────────────────────────────────────────────────────────────────
+
     [Header("Skill 1 (Alpha2) - Fireball")]
     public GameObject fireballPrefab;
     public Transform fireballSpawnPoint;
-    public float fireballSpeed = 20f;
-    public float fireballDamage = 50f;
-    public float skill1Cooldown = 2f;
+    public float fireballSpeed = 30f;
+    public float fireballDamage = 100f;
+    public float skill1Cooldown = 120f;
     float skill1CooldownTimer;
 
     [Header("Skill 2 (Alpha3) - Ice Spikes (AOE)")]
@@ -21,17 +35,10 @@ public class PlayerStaffSkillManager : MonoBehaviour
 
     [Header("Skill 2 Hit Settings")]
     public float skill2Damage = 200f;
-
-    [Tooltip("Kích thước hitbox (X=ngang, Y=độ cao, Z=chiều sâu về phía trước).")]
     public Vector3 skill2HitboxSize = new Vector3(4f, 2f, 7f);
-
-    [Tooltip("Độ lệch tâm hitbox tính theo local của SpawnPoint (đẩy về trước trùng với VFX).")]
     public Vector3 skill2HitboxOffset = new Vector3(0f, 1f, 3.5f);
-
-    [Tooltip("Layer của Enemy để quét va chạm (có thể để ~0 để quét mọi layer).")]
     public LayerMask enemyLayers = ~0;
 
-    // ===== Skill 3 =====
     [Header("Skill 3 (Alpha4) - Targeted Strike")]
     public GameObject skill3EffectPrefab;
     public float skill3Damage = 500f;
@@ -47,7 +54,6 @@ public class PlayerStaffSkillManager : MonoBehaviour
     public float skill3FireballMaxLifetime = 5f;
 
     private Transform skill3LockedTarget;
-
     private vMeleeManager melee;
 
     [Header("Weapon Requirements")]
@@ -55,12 +61,13 @@ public class PlayerStaffSkillManager : MonoBehaviour
     public bool requireTargetInRangeForSkill3 = true;
 
     // ======= AUDIO / SFX =======
+    // Audio — General
     [Header("Audio — General")]
     [Tooltip("AudioSource phát SFX. Nếu để trống sẽ tự tạo.")]
     public AudioSource sfxSource;
 
     [Tooltip("Chỉ phát âm thanh khi Animation Event gọi. Nếu false, code sẽ tự phát SFX ở các thời điểm hợp lý.")]
-    public bool useAnimationEventsOnly = false;
+    public bool useAnimationEventsOnly = true;
 
     [Tooltip("Random pitch ±rng khi phát SFX (0 = tắt).")]
     [Range(0f, 0.5f)] public float randomPitchRange = 0.08f;
@@ -91,6 +98,7 @@ public class PlayerStaffSkillManager : MonoBehaviour
     void Start()
     {
         melee = GetComponent<vMeleeManager>();
+        motor = GetComponent<Invector.vCharacterController.vThirdPersonController>();
     }
 
     void Update()
@@ -100,49 +108,79 @@ public class PlayerStaffSkillManager : MonoBehaviour
         if (skill3CooldownTimer > 0f) skill3CooldownTimer -= Time.deltaTime;
 
         // Skill 1 (Alpha2)
+        // Skill 1
         if (Input.GetKeyDown(KeyCode.Alpha2) && skill1CooldownTimer <= 0f)
         {
-            if (HasStaffEquipped())
+            if (HasStaffEquipped() && CanPayStamina(staminaCostSkill1))           
             {
                 animator.SetTrigger("StaffSkill1");
                 skill1CooldownTimer = skill1Cooldown;
-                if (!useAnimationEventsOnly) SFX_Play(sfxSkill1Cast);
             }
-            else
-            {
-                Debug.LogWarning("Bạn chưa cầm Staff. Hãy rút Staff ra tay để dùng Skill 1.");
-            }
+            else Debug.LogWarning("Không thể dùng Skill 1 (Staff/Stamina).");
         }
 
-        // Skill 2 (Alpha3) — yêu cầu cầm Staff, dùng đúng cooldown của Skill 2
+        // Skill 2
         if (Input.GetKeyDown(KeyCode.Alpha3) && skill2CooldownTimer <= 0f)
         {
-            if (HasStaffEquipped())
+            if (HasStaffEquipped() && CanPayStamina(staminaCostSkill2))        
             {
                 animator.SetTrigger("StaffSkill2");
                 skill2CooldownTimer = skill2Cooldown;
-                if (!useAnimationEventsOnly) SFX_Play(sfxSkill2Cast);
             }
-            else
-            {
-                Debug.LogWarning("Bạn chưa cầm Staff. Hãy rút Staff ra tay để dùng Skill 2.");
-            }
+            else Debug.LogWarning("Không thể dùng Skill 2 (Staff/Stamina).");
         }
 
-        // Skill 3 (Alpha4) — yêu cầu cầm Staff, dùng đúng cooldown của Skill 3
+        // Skill 3
         if (Input.GetKeyDown(KeyCode.Alpha4) && skill3CooldownTimer <= 0f)
         {
-            if (HasStaffEquipped() && (!requireTargetInRangeForSkill3 || IsEnemyInSkill3Range()))
+            if (HasStaffEquipped() &&
+                (!requireTargetInRangeForSkill3 || IsEnemyInSkill3Range()) &&
+                CanPayStamina(staminaCostSkill3))                                 
             {
                 animator.SetTrigger("StaffSkill3");
                 skill3CooldownTimer = skill3Cooldown;
-                if (!useAnimationEventsOnly) SFX_Play(sfxSkill3Cast);
             }
-            else
-            {
-                Debug.LogWarning("Bạn chưa cầm Staff hoặc không có mục tiêu trong tầm để dùng Skill 3.");
-            }
+            else Debug.LogWarning("Không thể dùng Skill 3 (Staff/Target/Stamina).");
         }
+    }
+
+    public void ConsumeStamina_Skill1() { ConsumeNow(staminaCostSkill1); }
+    public void ConsumeStamina_Skill2() { ConsumeNow(staminaCostSkill2); }
+    public void ConsumeStamina_Skill3() { ConsumeNow(staminaCostSkill3); }
+
+    private void ConsumeNow(float cost)
+    {
+        if (!motor) return;
+        motor.ChangeStamina(-Mathf.RoundToInt(cost));
+        TrySetStaminaDelay(1f);
+    }
+
+    private bool CanPayStamina(float cost)
+    {
+        if (!requireEnoughStaminaToTrigger) return true;
+        float cur = TryGetCurrentStamina();
+        return cur >= cost;
+    }
+
+    private float TryGetCurrentStamina()
+    {
+        if (!motor) return float.MaxValue;
+        var t = motor.GetType().BaseType; 
+        var f = t.GetField("currentStamina", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        if (f != null)
+        {
+            object v = f.GetValue(motor);
+            if (v is float fv) return fv;
+        }
+        return float.MaxValue;
+    }
+
+    private void TrySetStaminaDelay(float delay)
+    {
+        var t = motor.GetType().BaseType;
+        var f = t.GetField("currentStaminaRecoveryDelay",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        if (f != null) f.SetValue(motor, delay);
     }
 
     // ===== Skill 1 =====
@@ -177,7 +215,6 @@ public class PlayerStaffSkillManager : MonoBehaviour
 
         go.GetComponent<MaykerStudio.Demo.Projectile>()?.Fire();
 
-        if (!useAnimationEventsOnly) SFX_Play(sfxSkill1Release);
     }
 
     // ===== Skill 2 =====
@@ -196,7 +233,6 @@ public class PlayerStaffSkillManager : MonoBehaviour
 
         DoSkill2Hit();
 
-        if (!useAnimationEventsOnly) SFX_Play(sfxSkill2Impact);
     }
 
     public void SFX_Skill2_Impact() { SFX_Play(sfxSkill2Impact); }
@@ -284,7 +320,6 @@ public class PlayerStaffSkillManager : MonoBehaviour
             Instantiate(skill3EffectPrefab, nearestEnemy.transform.position, Quaternion.identity);
         }
 
-        if (!useAnimationEventsOnly) SFX_Play(sfxSkill3Impact);
     }
 
     public void Skill3_OnStart_LockTarget() // Animation Event

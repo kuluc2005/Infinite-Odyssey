@@ -1,5 +1,4 @@
-﻿// InventoryUpgradeUI.cs
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
@@ -9,11 +8,10 @@ using Invector.vCharacterController;
 using Invector.vMelee;
 
 [System.Serializable]
-public class UpgradeStats
+public class UpgradeStats  
 {
     public int damageIncrease;
     public int staminaDecrease;
-    public int gemCost;
     public int goldCost;
 }
 
@@ -33,13 +31,12 @@ public class InventoryUpgradeUI : MonoBehaviour
     public TMP_Text leftLevelText;
     public TMP_Text rightLevelText;
 
-    public TMP_Text gemCountText;
     public TMP_Text coinText;
     public TMP_Text leftAttack;
     public TMP_Text rightAttackPreview;
     public TMP_Text leftStamina;
     public TMP_Text rightStaminaPreview;
-    public TMP_Text successRateText;
+    public TMP_Text successRateText;     
     public TMP_Text levelDisplayText;
     public Button upgradeButton;
 
@@ -50,10 +47,17 @@ public class InventoryUpgradeUI : MonoBehaviour
     public List<UpgradeStats> upgradeTable = new List<UpgradeStats>();
     public int maxLevel = 3;
 
-    [Header("Tỉ lệ nâng cấp")]
-    [Range(0f, 1f)] public float successRate = 0.6f; // 60%
-    [Tooltip("Nếu bật, thất bại vẫn trừ Gem/Gold. Nếu tắt, chỉ trừ khi thành công.")]
+    [Header("Tỉ lệ nền (base)")]
+    [Range(0f, 1f)] public float successRate = 0.3f; 
+    [Tooltip("Nếu bật, thất bại vẫn trừ Gold. Nếu tắt, chỉ trừ khi thành công.")]
     public bool consumeOnFail = true;
+
+    [Header("Tăng tỉ lệ theo vàng thêm (Extra Gold)")]
+    public TMP_InputField goldExtraInput;    // Ô nhập vàng đầu tư thêm
+    public TMP_Text rateDetailText;          // Tùy chọn: hiển thị base -> effective
+    [Range(0f, 1f)] public float maxRate = 0.95f;     // trần tỉ lệ
+    [Range(0.1f, 5f)] public float curveK = 1.2f;     // độ gắt của đường cong
+    [Range(1f, 10f)] public float maxExtraMultiplier = 3f; // E tối đa = 3*C
 
     [Header("Thông báo nâng cấp (Toast)")]
     public TMP_Text resultText;
@@ -62,27 +66,16 @@ public class InventoryUpgradeUI : MonoBehaviour
     [Range(0.5f, 10f)] public float messageDuration = 3f;
     [Range(0f, 2f)] public float messageFadeOut = 0.35f;
 
-    [Header("Chặn input khi mở UI")]
-    [Tooltip("Nếu bật, đóng băng thời gian (Time.timeScale=0) khi mở UI.")]
-    public bool pauseGameTime = false;
-    [Tooltip("Nếu bật, tắt input/movement/attack của Player khi UI mở.")]
-    public bool blockPlayerInput = true;
-
+    // ==== Nội bộ ====
     private vItem currentSelectedItem;
-    private int playerGem = 100;
-
     private readonly Dictionary<int, int> baseDamageTable = new Dictionary<int, int>();
-
     private Coroutine messageCo;
     private Canvas _upgradeCanvasCmp;
     private Canvas _resultCanvas;
     private CanvasGroup _resultGroup;
-
     private bool _suppressClearMessage = false;
 
-    // freeze-input cache
     private readonly Dictionary<Behaviour, bool> _prevEnabledMap = new Dictionary<Behaviour, bool>();
-    private float _prevTimeScale = 1f;
 
     void Awake()
     {
@@ -99,6 +92,9 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         if (upgradeButton != null)
             upgradeButton.onClick.AddListener(OnUpgradeClicked);
+
+        if (goldExtraInput != null)
+            goldExtraInput.onValueChanged.AddListener(_ => UpdateRatePreview());
 
         ClearMessage();
     }
@@ -126,6 +122,8 @@ public class InventoryUpgradeUI : MonoBehaviour
         List<vItem> items = playerItemManager.items;
         foreach (vItem item in items)
         {
+            if (!IsWeapon(item)) continue; 
+
             GameObject buttonObj = Instantiate(itemButtonPrefab, itemListParent);
 
             foreach (Transform child in buttonObj.GetComponentsInChildren<Transform>(true))
@@ -147,7 +145,8 @@ public class InventoryUpgradeUI : MonoBehaviour
                 baseDamageTable[item.id] = damageVal;
 
             if (attackText != null) attackText.text = "Damage: " + damageVal;
-            if (healthText != null) healthText.text = "StaminaCost: " + staminaVal;
+
+            if (healthText != null) healthText.gameObject.SetActive(false);
 
             int calculatedLevel = CalculateLevel(item.id, damageVal);
             if (levelBadge != null)
@@ -155,6 +154,37 @@ public class InventoryUpgradeUI : MonoBehaviour
 
             buttonObj.GetComponent<Button>().onClick.AddListener(() => OnItemClicked(item));
         }
+    }
+
+    private bool IsWeapon(vItem item)
+    {
+        if (item == null) return false;
+
+        var hasDamageAttr = item.GetItemAttribute(vItemAttributes.Damage) != null;
+        if (hasDamageAttr) return true;
+
+        bool canEquipInHand = false;
+        if (playerItemManager && playerItemManager.inventory && playerItemManager.inventory.equipAreas != null)
+        {
+            foreach (var area in playerItemManager.inventory.equipAreas)
+            {
+                if (area == null || area.equipSlots == null) continue;
+                if (area.equipPointName == "RightArm" || area.equipPointName == "LeftArm")
+                {
+                    if (area.equipSlots.Exists(slot => slot.isValid && slot.itemType.Contains(item.type)))
+                    {
+                        canEquipInHand = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (canEquipInHand) return true;
+
+        if (item.originalObject && item.originalObject.GetComponent<Invector.vMelee.vMeleeWeapon>() != null)
+            return true;
+
+        return false;
     }
 
     void OnItemClicked(vItem item)
@@ -185,7 +215,6 @@ public class InventoryUpgradeUI : MonoBehaviour
         if (currentLevel < maxLevel && upgradeTable != null && upgradeTable.Count >= currentLevel)
         {
             UpgradeStats nextStats = upgradeTable[currentLevel - 1];
-            if (gemCountText) gemCountText.text = $"{playerGem} / {nextStats.gemCost}";
             int have = GoldManager.Instance ? GoldManager.Instance.CurrentGold : 0;
             if (coinText) coinText.text = $"{have} / {nextStats.goldCost}";
 
@@ -197,15 +226,12 @@ public class InventoryUpgradeUI : MonoBehaviour
         }
         else
         {
-            if (gemCountText) gemCountText.text = "MAX LEVEL";
             if (coinText) coinText.text = "MAX";
             if (rightAttackPreview) rightAttackPreview.text = "MAX";
             if (rightStaminaPreview) rightStaminaPreview.text = "MAX";
         }
 
-        // Hiển thị tỉ lệ
-        if (successRateText) successRateText.text = $"Success rate: {(int)(Mathf.Clamp01(successRate) * 100)}%";
-
+        UpdateRatePreview();
         OpenUpgrade();
     }
 
@@ -234,40 +260,36 @@ public class InventoryUpgradeUI : MonoBehaviour
 
         UpgradeStats stats = upgradeTable[currentLevel - 1];
 
-        // Kiểm tra tài nguyên
-        if (playerGem < stats.gemCost)
-        {
-            ShowMessage("Not enough Gems!", false);
-            return;
-        }
+        int extraClamped;
+        float effectiveRate = ComputeEffectiveRate(currentLevel, stats.goldCost, out extraClamped);
+
         if (GoldManager.Instance == null)
         {
             ShowMessage("GoldManager chưa sẵn sàng!", false);
             return;
         }
+
         int currentGold = GoldManager.Instance.CurrentGold;
-        if (currentGold < stats.goldCost)
+        int totalCost = stats.goldCost + extraClamped;
+        if (currentGold < totalCost)
         {
-            ShowMessage("Not enough Gold!", false);
+            ShowMessage("Not enough Gold for total cost!", false);
             return;
         }
 
-        bool isSuccess = Random.value < Mathf.Clamp01(successRate);
+        bool isSuccess = Random.value < effectiveRate;
 
-        // Trừ tài nguyên theo cấu hình
+        void SpendAllGold() => GoldManager.Instance.SpendCoins(totalCost);
+
         if (consumeOnFail)
         {
-            playerGem -= stats.gemCost;
-            GoldManager.Instance.SpendCoins(stats.goldCost);
+            SpendAllGold();
         }
 
         if (isSuccess)
         {
             if (!consumeOnFail)
-            {
-                playerGem -= stats.gemCost;
-                GoldManager.Instance.SpendCoins(stats.goldCost);
-            }
+                SpendAllGold();
 
             var dmgAttr = currentSelectedItem.GetItemAttribute(vItemAttributes.Damage);
             var staminaAttr = currentSelectedItem.GetItemAttribute(vItemAttributes.StaminaCost);
@@ -296,6 +318,72 @@ public class InventoryUpgradeUI : MonoBehaviour
         }
     }
 
+    private float ComputeEffectiveRate(int level, int baseGoldCost, out int extraGoldClamped)
+    {
+        float baseRate = Mathf.Clamp01(successRate);
+        float cap = Mathf.Clamp01(maxRate);
+
+        int extra = 0;
+        if (goldExtraInput && !string.IsNullOrEmpty(goldExtraInput.text))
+            int.TryParse(goldExtraInput.text, out extra);
+
+        int maxExtra = Mathf.RoundToInt(maxExtraMultiplier * Mathf.Max(1, baseGoldCost));
+        extraGoldClamped = Mathf.Clamp(extra, 0, maxExtra);
+
+        if (baseGoldCost <= 0) return baseRate;
+
+        float t = 1f - Mathf.Exp(-curveK * (extraGoldClamped / (float)baseGoldCost));
+        float p = baseRate + t * (cap - baseRate);
+        return Mathf.Clamp01(p);
+    }
+
+    private void UpdateRatePreview()
+    {
+        if (currentSelectedItem == null)
+        {
+            if (successRateText) successRateText.text = "Success: --";
+            if (rateDetailText) rateDetailText.text = ""; 
+            return;
+        }
+
+        int damageVal = GetAttributeValue(currentSelectedItem, vItemAttributes.Damage);
+        int level = CalculateLevel(currentSelectedItem.id, damageVal);
+
+        if (upgradeTable == null || level > upgradeTable.Count || level <= 0)
+        {
+            if (successRateText) successRateText.text = "Success: --";
+            if (rateDetailText) rateDetailText.text = "";
+            return;
+        }
+
+        var stats = upgradeTable[level - 1];
+
+        int extraClamped;
+        float effective = ComputeEffectiveRate(level, stats.goldCost, out extraClamped);
+        int basePct = Mathf.RoundToInt(Mathf.Clamp01(successRate) * 100f);
+        int effPct = Mathf.RoundToInt(effective * 100f);
+        int delta = Mathf.Max(0, effPct - basePct);
+
+        if (successRateText)
+        {
+            if (delta > 0) successRateText.text = $"{effPct}% (+{delta}%)";
+            else successRateText.text = $"{effPct}%";
+        }
+
+        if (coinText)
+        {
+            int have = GoldManager.Instance ? GoldManager.Instance.CurrentGold : 0;
+            int total = stats.goldCost + extraClamped;
+            coinText.text = $"Cost: {total}   Have: {have}";
+        }
+
+        if (rateDetailText)
+        {
+            rateDetailText.text = ""; 
+        }
+    }
+
+
     public void ForceRefresh() => RefreshInventoryUI();
 
     public void OpenUpgrade()
@@ -305,7 +393,7 @@ public class InventoryUpgradeUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        GameplayInputGate.IsBlocked = true;   
+        GameplayInputGate.IsBlocked = true;
 
         ClearMessage();
     }
@@ -317,7 +405,7 @@ public class InventoryUpgradeUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        GameplayInputGate.IsBlocked = false;  
+        GameplayInputGate.IsBlocked = false;
     }
 
     private void ShowMessage(string msg, bool isSuccess)
@@ -347,7 +435,7 @@ public class InventoryUpgradeUI : MonoBehaviour
         float timer = 0f;
         while (timer < messageDuration)
         {
-            timer += Time.unscaledDeltaTime; // dùng unscaled để vẫn chạy khi pause
+            timer += Time.unscaledDeltaTime; 
             yield return null;
         }
 
@@ -431,21 +519,6 @@ public class InventoryUpgradeUI : MonoBehaviour
     }
 
     // ===== INPUT FREEZE =====
-    private void SetGameplayInputActive(bool active)
-    {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (!player) return;
-
-        // Các component thường gây tấn công/di chuyển
-        ToggleBehaviour<vThirdPersonController>(player, active);
-        ToggleBehaviour<vMeleeManager>(player, active);
-        ToggleBehaviour<PlayerStaffSkillManager>(player, active);
-
-        // Nếu bạn có script khác đọc Input (vd PlayerAttack, PlayerController...), thêm dòng tương tự:
-        // ToggleBehaviour<PlayerAttack>(player, active);
-        // ToggleBehaviour<PlayerController>(player, active);
-    }
-
     private void ToggleBehaviour<T>(GameObject player, bool active) where T : Behaviour
     {
         var comp = player.GetComponentInChildren<T>(true);
@@ -464,17 +537,11 @@ public class InventoryUpgradeUI : MonoBehaviour
                 comp.enabled = wasEnabled;
                 _prevEnabledMap.Remove(comp);
             }
-            else
-            {
-                // nếu không có trong map, giữ nguyên trạng thái hiện tại
-            }
         }
     }
 
     void OnDisable()
     {
-        // Phòng trường hợp tắt object khi UI đang mở
-        if (pauseGameTime) Time.timeScale = _prevTimeScale;
-        if (blockPlayerInput) SetGameplayInputActive(true);
+        GameplayInputGate.IsBlocked = false;
     }
 }

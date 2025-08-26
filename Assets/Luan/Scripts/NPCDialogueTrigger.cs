@@ -79,28 +79,25 @@ public class NPCDialogueTrigger : MonoBehaviour
     /// <summary>
     /// Luôn lấy lại reference Player và vItemManager mỗi khi bắt đầu hội thoại để tránh lỗi null khi player spawn động!
     /// </summary>
+    // NPCDialogueTrigger.cs
     private bool EnsurePlayerInventory()
     {
-        var player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        // Ưu tiên: tìm player input của Invector (đây chắc chắn là Player đang điều khiển)
+        var input = FindFirstObjectByType<vThirdPersonInput>();
+        if (input != null)
         {
-            playerInventory = player.GetComponent<vItemManager>();
-            if (playerInventory == null)
-                playerInventory = player.GetComponentInChildren<vItemManager>();
-            if (playerInventory == null)
-            {
-                Debug.LogError("<color=red>[NPC-DEBUG] Không tìm thấy vItemManager trên Player!</color>");
-                return false;
-            }
-            return true;
+            playerInventory = input.GetComponentInChildren<vItemManager>();
+            if (playerInventory != null) return true;
         }
-        else
-        {
-            Debug.LogError("<color=red>[NPC-DEBUG] Không tìm thấy object nào tag Player!</color>");
-            playerInventory = null;
-            return false;
-        }
+
+        // Fallback: tìm bất kỳ vItemManager nào trong scene (phòng khi cấu trúc khác)
+        playerInventory = FindFirstObjectByType<vItemManager>();
+        if (playerInventory != null) return true;
+
+        Debug.LogError("<color=red>[NPC-DEBUG] Không tìm thấy vItemManager của Player (không phụ thuộc tag)!</color>");
+        return false;
     }
+
 
     void Update()
     {

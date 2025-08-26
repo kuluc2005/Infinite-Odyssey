@@ -13015,7 +13015,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 3
   _isDead: 1
   _currentHealth: 100
   isImmortal: 0
@@ -13649,7 +13649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 1
+  openCloseWindow: 0
   selectedToolbar: 0
   defaultDamageEffects: []
   customDamageEffects: []
@@ -13666,7 +13666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
+  openCloseWindow: 1
   selectedToolbar: 0
   holders:
   - {fileID: 8478072263871571154}
@@ -13697,8 +13697,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
-  selectedToolbar: 0
+  openCloseWindow: 1
+  selectedToolbar: 1
   actionTag: LadderTrigger
   climbSpeed: 1.5
   fastClimbSpeed: 3
@@ -14014,7 +14014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
+  openCloseWindow: 1
   selectedToolbar: 0
   inventory: {fileID: 1929500130449752767}
   itemListData: {fileID: 11400000, guid: 96e918a0f3173b14dbbbe08b7523b670, type: 2}
@@ -14290,12 +14290,16 @@ MonoBehaviour:
   useAnimationEventsOnly: 0
   randomPitchRange: 0.08
   sfxSkill1Cast: {fileID: 8300000, guid: 35ce13e44a0c24248a2f4ae7c17937c9, type: 3}
-  sfxSkill1Impact: {fileID: 0}
+  sfxSkill1Impact: {fileID: 8300000, guid: 0704fef11a87d9644924ee538e8859ad, type: 3}
   sfxSkill2Start: {fileID: 8300000, guid: dd95c05909b86bd42bb5ec5123b90f6a, type: 3}
   sfxSkill2Launch: {fileID: 0}
   sfxSkill2Impact: {fileID: 0}
-  sfxSkill3Cast: {fileID: 0}
+  sfxSkill3Cast: {fileID: 8300000, guid: 14eb1432414128d47833e5fc55e40519, type: 3}
   sfxSkill3Impact: {fileID: 8300000, guid: dd484108ef9d6534683cf92f5d4d16e8, type: 3}
+  staminaCostSkill1: 30
+  staminaCostSkill2: 50
+  staminaCostSkill3: 100
+  requireEnoughStaminaToTrigger: 1
 --- !u!114 &-9189656699026346942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34761,7 +34765,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8162124450535212560
 RectTransform:
   m_ObjectHideFlags: 0

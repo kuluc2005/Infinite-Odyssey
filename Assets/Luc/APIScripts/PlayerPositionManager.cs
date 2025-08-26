@@ -17,6 +17,15 @@ public class PlayerPositionManager : MonoBehaviour
         yield return UpdateProfileCoroutine(modifyProfile);
     }
 
+    void Start()
+    {
+        if (characterId <= 0 && ProfileManager.CurrentProfile != null)
+        {
+            characterId = ProfileManager.CurrentProfile.id;
+        }
+    }
+
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))

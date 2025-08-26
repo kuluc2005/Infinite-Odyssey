@@ -19,6 +19,6 @@ public class GoldUI : MonoBehaviour
     {
         if (goldText == null) return;
         if (GoldManager.Instance == null) return;
-        goldText.text = "Gold: " + GoldManager.Instance.CurrentGold.ToString();
+        goldText.text = " " + GoldManager.Instance.CurrentGold.ToString();
     }
 }

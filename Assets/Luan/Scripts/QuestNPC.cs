@@ -79,19 +79,21 @@ public class QuestNPC : MonoBehaviour
     //    }
     //}
 
-
+    // QuestNPC.cs
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        var inv = other.GetComponentInParent<vItemManager>();
+        if (inv != null) 
         {
             playerInRange = true;
-            playerInventory = other.GetComponent<vItemManager>();
+            playerInventory = inv;
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        var inv = other.GetComponentInParent<vItemManager>();
+        if (inv != null)
         {
             playerInRange = false;
             playerInventory = null;

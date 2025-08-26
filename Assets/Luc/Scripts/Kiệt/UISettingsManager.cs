@@ -20,10 +20,15 @@ namespace SlimUI.ModernMenu
         public TMP_Dropdown resolutionDropdown;
 
         [Header("MUSIC SLIDER (BGM)")]
-        public GameObject musicSlider; // Slider chỉnh nhạc nền (BGM)
+        public GameObject musicSlider;
+
+        [Header("MUSIC SLIDER (Combat BGM)")]
+        public GameObject combatMusicSlider;
 
         [Header("SFX SLIDER (NEW)")]
-        public GameObject sfxSlider;   // Slider chỉnh âm thanh hiệu ứng
+        public GameObject sfxSlider;  
+
+
         [Tooltip("Kéo các AudioSource SFX vào đây để chỉnh âm lượng")]
         public AudioSource[] sfxSources;
 
@@ -35,7 +40,12 @@ namespace SlimUI.ModernMenu
         {
             // --- BGM ---
             if (musicSlider)
-                musicSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+                musicSlider.GetComponent<Slider>().value =
+                    PlayerPrefs.GetFloat("MusicVolume", 1f);
+
+            if (combatMusicSlider)
+                combatMusicSlider.GetComponent<Slider>().value =
+                    PlayerPrefs.GetFloat("MusicCombat", 1f);
 
             // --- SFX ---
             if (sfxSlider)
@@ -116,11 +126,18 @@ namespace SlimUI.ModernMenu
 #endif
         }
 
-        // Music Slider (BGM)
+        // Gọi từ Slider OnValueChanged(float)
         public void MusicSlider()
         {
-            if (musicSlider)
-                PlayerPrefs.SetFloat("MusicVolume", musicSlider.GetComponent<Slider>().value);
+            if (!musicSlider) return;
+            PlayerPrefs.SetFloat("MusicVolume", musicSlider.GetComponent<Slider>().value);
+        }
+
+        // Gọi từ Slider OnValueChanged(float) (slider combat)
+        public void CombatMusicSlider()
+        {
+            if (!combatMusicSlider) return;
+            PlayerPrefs.SetFloat("MusicCombat", combatMusicSlider.GetComponent<Slider>().value);
         }
 
         // SFX Slider

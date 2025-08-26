@@ -767,8 +767,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateInfos: []
   tags:
-  - CustomAction
   - LockMovement
+  - CustomAction
 --- !u!1102 &-3511237123176604590
 AnimatorState:
   serializedVersion: 6
@@ -39253,8 +39253,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateInfos: []
   tags:
-  - CustomAction
   - LockMovement
+  - CustomAction
 --- !u!1107 &4502191600449261616
 AnimatorStateMachine:
   serializedVersion: 6
@@ -39708,8 +39708,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateInfos: []
   tags:
-  - CustomAction
   - LockMovement
+  - CustomAction
 --- !u!1107 &8371237820058684046
 AnimatorStateMachine:
   serializedVersion: 6

@@ -12,9 +12,13 @@ namespace SlimUI.ModernMenu
 
         private PlayerPositionManager GetCurrentPlayerPositionManager()
         {
-            var go = GameObject.FindGameObjectWithTag("Player");
-            return go ? go.GetComponent<PlayerPositionManager>() : null;
+            var ppm = FindFirstObjectByType<PlayerPositionManager>();
+            if (ppm != null) return ppm;
+
+            var input = FindFirstObjectByType<Invector.vCharacterController.vThirdPersonInput>();
+            return input ? input.GetComponentInChildren<PlayerPositionManager>() : null;
         }
+
 
         [Header("MENUS")]
         public GameObject mainMenu;
@@ -255,8 +259,18 @@ namespace SlimUI.ModernMenu
         public void OnSelected()
         {
             Time.timeScale = 1f;
-            SceneManager.LoadScene("CharacterSelectScene");
+
+            var ppm = FindFirstObjectByType<PlayerPositionManager>();
+            if (ppm != null)
+                ppm.SavePlayerPosition();   
+
+            if (QuestManager.instance != null)
+                QuestManager.instance.BeginCharacterSwitch();
+
+            UnityEngine.SceneManagement.SceneManager.LoadScene("CharacterSelectScene");
         }
+
+
 
         public void OnLogoutClicked()
         {

@@ -54,8 +54,8 @@ MonoBehaviour:
   id: 16
   description: Magic-Staff
   type: 1
-  icon: {fileID: 21300000, guid: 348f1e08e82a05c4497b33be57a10898, type: 3}
-  stackable: 1
+  icon: {fileID: 21300000, guid: 25897972566c4224b908d6576a052566, type: 3}
+  stackable: 0
   createNewItem: 1
   maxStack: 1
   amount: 0
@@ -63,15 +63,19 @@ MonoBehaviour:
   dropObject: {fileID: 1000010725870802, guid: efc072bf3d171be42a0a602c9ca3c079, type: 3}
   attributes:
   - name: 2
-    value: 200
+    value: 55
+    isOpen: 0
+    isBool: 0
+  - name: 3
+    value: 30
     isOpen: 0
     isBool: 0
   isInEquipArea: 0
   isEquiped: 0
-  destroyAfterUse: 1
+  destroyAfterUse: 0
   canBeEquipped: 1
   canBeUsed: 1
-  canBeDroped: 1
+  canBeDroped: 0
   canBeDestroyed: 1
   EnableAnim: LowBack
   DisableAnim: LowBack
@@ -113,7 +117,7 @@ MonoBehaviour:
   - {fileID: -6981661230815265078}
   - {fileID: -1005415638491454417}
   - {fileID: 114043347838910644}
-  inEdition: 0
+  inEdition: 1
   itemsHidden: 1
 --- !u!114 &11411124
 MonoBehaviour:
@@ -421,7 +425,7 @@ MonoBehaviour:
   dropObject: {fileID: 2197774501603174495, guid: 7dcfb29ec0c968041b99dd41d13cec28, type: 3}
   attributes:
   - name: 2
-    value: 50
+    value: 60
     isOpen: 0
     isBool: 0
   - name: 3
@@ -572,11 +576,11 @@ MonoBehaviour:
   dropObject: {fileID: 880292917891664030, guid: 4ce32edaf6024884898e95f24f9f763a, type: 3}
   attributes:
   - name: 2
-    value: 30
+    value: 40
     isOpen: 0
     isBool: 0
   - name: 3
-    value: 35
+    value: 15
     isOpen: 0
     isBool: 0
   - name: 4
@@ -670,7 +674,7 @@ MonoBehaviour:
   dropObject: {fileID: 819158048279699071, guid: 0f25b0bc9b7934840b324072cedb3325, type: 3}
   attributes:
   - name: 2
-    value: 25
+    value: 40
     isOpen: 0
     isBool: 0
   - name: 3

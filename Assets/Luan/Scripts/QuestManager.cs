@@ -20,6 +20,7 @@ public class PlayerQuestListWrapper
 public class QuestManager : MonoBehaviour
 {
     public bool isLoggingOut = false;
+    public bool isSwitchingCharacter = false;
 
     public static QuestManager instance { get; private set; }
 
@@ -43,6 +44,18 @@ public class QuestManager : MonoBehaviour
             // Không dùng local nữa:
             // LoadQuestProgress();
         }
+    }
+
+    public void BeginCharacterSwitch()
+    {
+        isSwitchingCharacter = true;
+        ResetAllQuests();       
+    }
+
+    public void EndCharacterSwitchAndReload()
+    {
+        isSwitchingCharacter = false;
+        LoadQuestsFromApi();   
     }
 
     // --- Giao diện nhận nhiệm vụ như cũ ---
@@ -160,9 +173,16 @@ public class QuestManager : MonoBehaviour
     {
         int playerId = PlayerPrefs.GetInt("PlayerId", -1);
         int characterId = PlayerPrefs.GetInt("CharacterId", -1);
+
+        if (QuestApiManager.Instance == null)
+        {
+            Debug.LogWarning("[QuestManager] QuestApiManager.Instance is null. Skip loading from API.");
+            return;
+        }
         if (playerId > 0 && characterId > 0)
             StartCoroutine(QuestApiManager.Instance.GetPlayerQuests(playerId, characterId, OnLoadedQuestsFromApi));
     }
+
 
     // Hàm nhận dữ liệu từ API về và map lại vào game
     void OnLoadedQuestsFromApi(string json)
@@ -230,6 +250,13 @@ public class QuestManager : MonoBehaviour
 
     public void SaveQuestToApi(QuestData quest, string status, System.Action<bool> callback = null)
     {
+        if (isLoggingOut || isSwitchingCharacter)
+        {
+            Debug.Log("[SaveQuestToApi] Bị chặn do đang logout/đang đổi nhân vật.");
+            callback?.Invoke(false);
+            return;
+        }
+
         var objectives = quest.objectives.Select(obj => new QuestObjectiveProgress
         {
             type = obj.type.ToString(),

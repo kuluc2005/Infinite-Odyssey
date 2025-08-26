@@ -72,6 +72,9 @@ public class CharacterSelectManager : MonoBehaviour
             Destroy(oldPlayer.gameObject);
         }
 
+        if (QuestManager.instance != null)
+            QuestManager.instance.BeginCharacterSwitch();
+
         PlayerPrefs.SetInt("CharacterId", character.id);
         PlayerPrefs.SetString("CharacterName", character.name);
         StartCoroutine(GoToGameScene(character.id));
@@ -85,6 +88,9 @@ public class CharacterSelectManager : MonoBehaviour
         {
             if (GoldManager.Instance != null)
                 GoldManager.Instance.RefreshGoldFromProfile();
+
+            if (QuestManager.instance != null)
+                QuestManager.instance.EndCharacterSwitchAndReload();
 
             string[] skip = {
             "LoginScene","CharacterSelectScene","CreateCharacterScene",

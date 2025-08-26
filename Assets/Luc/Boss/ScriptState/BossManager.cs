@@ -1,7 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Invector;
 using UnityEngine.AI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BossManager : MonoBehaviour
 {
@@ -20,6 +21,31 @@ public class BossManager : MonoBehaviour
     private Animator animator;
     private vHealthController health;
     private NavMeshAgent agent;
+
+    vHealthController[] GetAlivePlayers()
+    {
+        var gos = GameObject.FindGameObjectsWithTag("Player");
+        var list = new List<vHealthController>();
+        foreach (var go in gos)
+        {
+            var hp = go.GetComponentInParent<vHealthController>();
+            if (hp != null && !hp.isDead) list.Add(hp);
+        }
+        return list.ToArray();
+    }
+
+    vHealthController GetNearestPlayer()
+    {
+        var players = GetAlivePlayers();
+        vHealthController best = null;
+        float bestDist = float.MaxValue;
+        foreach (var hp in players)
+        {
+            float d = (hp.transform.position - transform.position).sqrMagnitude;
+            if (d < bestDist) { bestDist = d; best = hp; }
+        }
+        return best;
+    }
 
     void Awake()
     {
@@ -70,19 +96,17 @@ public class BossManager : MonoBehaviour
     {
         if (health.isDead) return;
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player && skill1Effect)
+        var target = GetNearestPlayer();
+        if (target)
         {
-            Instantiate(skill1Effect, player.transform.position, Quaternion.identity);
-            var hp = player.GetComponent<vHealthController>();
-            if (hp != null)
-            {
-                hp.TakeDamage(new vDamage(skill1Damage));
-            }
+            if (skill1Effect)
+                Instantiate(skill1Effect, target.transform.position, Quaternion.identity);
+            target.TakeDamage(new vDamage(skill1Damage));
         }
 
         skill1UsageCount++;
     }
+
 
     IEnumerator UseSkill2Once()
     {
@@ -102,35 +126,40 @@ public class BossManager : MonoBehaviour
 
         if (agent) agent.enabled = true;
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        var target = GetNearestPlayer();
+        if (target)
         {
-            float distance = Vector3.Distance(transform.position, player.transform.position);
+            float distance = Vector3.Distance(transform.position, target.transform.position);
             if (distance < 10f)
             {
                 animator.SetBool("isChasing", true);
                 animator.SetBool("isAttacking", true);
-                agent.SetDestination(player.transform.position);
+                agent.SetDestination(target.transform.position);
             }
         }
+
     }
 
     public void SpawnSkill2()
     {
         if (health.isDead) return;
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (!player || !skill2Effect) return;
+        var players = GetAlivePlayers();
+        if (players.Length == 0 || !skill2Effect) return;
 
         float radius = 10f;
         int effectCount = 3;
 
-        for (int i = 0; i < effectCount; i++)
+        foreach (var hp in players)
         {
-            float angle = i * (360f / effectCount) + Random.Range(-15f, 15f);
-            Vector3 offset = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * radius;
-            Vector3 pos = player.transform.position + offset;
-            Instantiate(skill2Effect, pos, Quaternion.identity);
+            for (int i = 0; i < effectCount; i++)
+            {
+                float angle = i * (360f / effectCount) + Random.Range(-15f, 15f);
+                Vector3 offset = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * radius;
+                Vector3 pos = hp.transform.position + offset;
+                Instantiate(skill2Effect, pos, Quaternion.identity);
+            }
         }
     }
+
 }

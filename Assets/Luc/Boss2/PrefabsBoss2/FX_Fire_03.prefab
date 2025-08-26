@@ -9746,7 +9746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   lifetime: 5
-  damage: 1
+  damage: 12
 --- !u!114 &852526019770635344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9760,7 +9760,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionEffectPrefab: {fileID: 1638949781681410, guid: 8a5811ae0a0f7804fbff1cf892735c20, type: 3}
-  lifeTime: 5
 --- !u!1 &2972392977518692226
 GameObject:
   m_ObjectHideFlags: 0

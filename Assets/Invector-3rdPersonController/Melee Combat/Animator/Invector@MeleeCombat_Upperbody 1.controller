@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateInfos: []
   tags:
-  - CustomAction
   - LockMovement
+  - CustomAction
 --- !u!1101 &-8899371647058483998
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -711,7 +711,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateInfos: []
   tags:
-  - CustomAction
   - LockMovement
 --- !u!1101 &-4312249511894044287
 AnimatorStateTransition:
@@ -39552,8 +39551,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateInfos: []
   tags:
-  - CustomAction
   - LockMovement
+  - CustomAction
 --- !u!1107 &6275954197518142570
 AnimatorStateMachine:
   serializedVersion: 6

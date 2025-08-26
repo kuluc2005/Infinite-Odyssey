@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using Invector.vMelee;
 
+
 public class PlayerSkillManager : MonoBehaviour
 {
     public Animator animator;
@@ -81,6 +82,17 @@ public class PlayerSkillManager : MonoBehaviour
         public float launchedAt;
     }
 
+    // ====== Stamina Costs ======
+    [Header("Stamina Costs")]
+    public float staminaCostSkill1 = 30f;
+    public float staminaCostSkill2 = 50f;
+    public float staminaCostSkill3 = 100f;
+
+    [Tooltip("BẬT để chặn cast khi stamina hiện tại không đủ (đọc bằng reflection).")]
+    public bool requireEnoughStaminaToTrigger = false;
+
+    private Invector.vCharacterController.vThirdPersonController motor;
+
     void Awake()
     {
         // Chuẩn AudioSource
@@ -96,7 +108,7 @@ public class PlayerSkillManager : MonoBehaviour
     void Start()
     {
         melee = GetComponent<vMeleeManager>();
-        controller = GetComponent<Invector.vCharacterController.vThirdPersonController>();
+        motor = GetComponent<Invector.vCharacterController.vThirdPersonController>(); 
     }
 
     void Update()
@@ -109,47 +121,85 @@ public class PlayerSkillManager : MonoBehaviour
         // --- Skill 1 ---
         if (Input.GetKeyDown(KeyCode.Alpha2) && skill1CooldownTimer <= 0f)
         {
-            if (IsHoldingKatana())
+            if (IsHoldingKatana() && CanPayStamina(staminaCostSkill1))       
             {
                 animator.SetTrigger("Skill1");
                 skill1CooldownTimer = skill1Cooldown;
-                if (!useAnimationEventsOnly) SFX_Play(sfxSkill1Cast);
             }
             else
             {
-                Debug.LogWarning("Bạn chưa cầm Katana. Hãy rút Katana ra tay để dùng Skill 1.");
+                Debug.LogWarning("Không thể dùng Skill 1 (chưa cầm Katana hoặc không đủ Stamina).");
             }
         }
 
         // --- Skill 2 ---
         if (Input.GetKeyDown(KeyCode.Alpha3) && skill2CooldownTimer <= 0f)
         {
-            animator.SetTrigger("Skill2");
-            skill2CooldownTimer = skill2Cooldown;
-            if (!useAnimationEventsOnly) SFX_Play(sfxSkill2Start);
-        }
-
-        // --- Skill 3 (Thêm điều kiện phải cầm Katana) ---
-        if (Input.GetKeyDown(KeyCode.Alpha4) && skill3CooldownTimer <= 0f)
-        {
-            if (IsHoldingKatana())
+            if (CanPayStamina(staminaCostSkill2))                         
             {
-                if (!requireTargetInRangeForSkill3 || IsEnemyInSkill3Range())
-                {
-                    animator.SetTrigger("Skill3");
-                    skill3CooldownTimer = skill3Cooldown;
-                    if (!useAnimationEventsOnly) SFX_Play(sfxSkill3Cast);
-                }
-                else
-                {
-                    Debug.LogWarning("Không có mục tiêu trong tầm để dùng Skill 3.");
-                }
+                animator.SetTrigger("Skill2");
+                skill2CooldownTimer = skill2Cooldown;
             }
             else
             {
-                Debug.LogWarning("Bạn chưa cầm Katana. Hãy rút Katana ra tay để dùng Skill 3.");
+                Debug.LogWarning("Không đủ Stamina cho Skill 2.");
             }
         }
+
+        // --- Skill 3 ---
+        if (Input.GetKeyDown(KeyCode.Alpha4) && skill3CooldownTimer <= 0f)
+        {
+            if (IsHoldingKatana() &&
+                (!requireTargetInRangeForSkill3 || IsEnemyInSkill3Range()) &&
+                CanPayStamina(staminaCostSkill3))                                 
+            {
+                animator.SetTrigger("Skill3");
+                skill3CooldownTimer = skill3Cooldown;
+            }
+            else
+            {
+                Debug.LogWarning("Không thể dùng Skill 3 (vũ khí/mục tiêu/Stamina không đạt).");
+            }
+        }
+    }
+
+    public void ConsumeStamina_Skill1() { ConsumeNow(staminaCostSkill1); }
+    public void ConsumeStamina_Skill2() { ConsumeNow(staminaCostSkill2); }
+    public void ConsumeStamina_Skill3() { ConsumeNow(staminaCostSkill3); }
+
+    private void TrySetStaminaDelay(float delay)
+    {
+        var t = motor.GetType().BaseType; 
+        var f = t.GetField("currentStaminaRecoveryDelay",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        if (f != null) f.SetValue(motor, delay);
+    }
+
+    private void ConsumeNow(float cost)
+    {
+        if (!motor) return;
+        motor.ChangeStamina(-Mathf.RoundToInt(cost));
+        TrySetStaminaDelay(1f);
+    }
+
+    private bool CanPayStamina(float cost)
+    {
+        if (!requireEnoughStaminaToTrigger) return true; 
+        float cur = TryGetCurrentStamina();
+        return cur >= cost;
+    }
+
+    private float TryGetCurrentStamina()
+    {
+        if (!motor) return float.MaxValue; 
+        var t = motor.GetType().BaseType;
+        var f = t.GetField("currentStamina", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        if (f != null)
+        {
+            object v = f.GetValue(motor);
+            if (v is float fv) return fv;
+        }
+        return float.MaxValue; 
     }
 
     // -----------------------------
@@ -163,7 +213,6 @@ public class PlayerSkillManager : MonoBehaviour
             var script = prj.GetComponent<MaykerStudio.Demo.Projectile>();
             if (script != null) script.Fire();
 
-            if (!useAnimationEventsOnly) SFX_Play(sfxSkill1Impact);
         }
     }
 
@@ -261,7 +310,6 @@ public class PlayerSkillManager : MonoBehaviour
 
                     ot.orb.FlyToTarget(target);
 
-                    if (!useAnimationEventsOnly) SFX_Play(sfxSkill2Launch);
 
                     enemyIndex++;
                     yield return new WaitForSeconds(1f);
@@ -330,7 +378,6 @@ public class PlayerSkillManager : MonoBehaviour
                         {
                             ot.target = best;
                             ot.orb.FlyToTarget(best);
-                            if (!useAnimationEventsOnly) SFX_Play(sfxSkill2Launch);
                         }
                     }
                     else
@@ -393,7 +440,6 @@ public class PlayerSkillManager : MonoBehaviour
             // --- Hiệu ứng ---
             Instantiate(skill3EffectPrefab, nearestEnemy.transform.position, Quaternion.identity);
 
-            if (!useAnimationEventsOnly) SFX_Play(sfxSkill3Impact);
         }
     }
 

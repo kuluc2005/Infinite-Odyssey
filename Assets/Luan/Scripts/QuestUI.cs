@@ -34,7 +34,7 @@ public class QuestUI : MonoBehaviour
 
         if (quest != null)
         {
-            string progressText = $"<b>Nhiệm vụ:</b> {quest.questName}\n";
+            string progressText = $"<b>Quest:</b> {quest.questName}\n";
             foreach (var obj in quest.objectives)
             {
                 progressText += $"- {obj.objectiveDescription}: {obj.currentAmount}/{obj.requiredAmount}\n";

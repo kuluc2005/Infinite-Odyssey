@@ -29,8 +29,16 @@ public class QuestApiManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
+        DontDestroyOnLoad(gameObject); 
     }
+
+
 
     public IEnumerator GetPlayerQuests(int playerId, int characterId, Action<string> onResult)
     {

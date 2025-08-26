@@ -1,4 +1,4 @@
-// PlayerStats.cs
+﻿// PlayerStats.cs
 using UnityEngine;
 using System.Collections;
 using Invector.vCharacterController;
@@ -28,26 +28,46 @@ public class PlayerStats : MonoBehaviour
         yield return InitStatsAfterProfileLoaded();
     }
 
+    // Thay nguyên hàm này trong PlayerStats.cs
     IEnumerator InitStatsAfterProfileLoaded()
     {
-        while (ProfileManager.CurrentProfile == null) yield return null;
-        var profile = ProfileManager.CurrentProfile;
-        level = profile.level;
-        maxHP = profile.maxHP;
-        maxMP = profile.maxMP;
-        currentExp = profile.exp;
-        expToLevelUp = 100 + (level - 1) * 50;
-        currentHP = profile.HP <= 0 ? maxHP : profile.HP;
-        currentMP = profile.MP <= 0 ? maxMP : profile.MP;
-        profile.HP = currentHP;
-        profile.MP = currentMP;
+        float t = 0f, timeout = 5f; // chờ tối đa 5s
+        while (ProfileManager.CurrentProfile == null && t < timeout)
+        {
+            t += Time.unscaledDeltaTime;
+            yield return null;
+        }
 
-        var controller = GetComponent<vThirdPersonController>();
-        if (controller != null) ForceUpdateStatsToInvector(controller, maxHP, maxMP, currentHP, currentMP);
+        if (ProfileManager.CurrentProfile == null)
+        {
+            // Fallback offline để EXP/UI vẫn chạy trong build
+            level = 1;
+            maxHP = 100; maxMP = 50;
+            currentHP = maxHP; currentMP = maxMP;
+            currentExp = 0;
+            expToLevelUp = 100;
+        }
+        else
+        {
+            var profile = ProfileManager.CurrentProfile;
+            level = profile.level;
+            maxHP = profile.maxHP;
+            maxMP = profile.maxMP;
+            currentExp = profile.exp;
+            expToLevelUp = 100 + (level - 1) * 50;
+            currentHP = profile.HP <= 0 ? maxHP : profile.HP;
+            currentMP = profile.MP <= 0 ? maxMP : profile.MP;
+            profile.HP = currentHP; profile.MP = currentMP;
+        }
+
+        var controller = GetComponent<Invector.vCharacterController.vThirdPersonController>();
+        if (controller != null)
+            ForceUpdateStatsToInvector(controller, maxHP, maxMP, currentHP, currentMP);
 
         var expUIManager = GetComponentInChildren<ExpUIManager>();
         if (expUIManager != null) expUIManager.UpdateUI();
     }
+
 
     void OnDisable()
     {

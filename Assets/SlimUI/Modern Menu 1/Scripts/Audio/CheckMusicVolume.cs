@@ -1,15 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-namespace SlimUI.ModernMenu{
-	public class CheckMusicVolume : MonoBehaviour {
-		public void  Start (){
-			// remember volume level from last time
-			GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("MusicVolume");
-		}
+namespace SlimUI.ModernMenu
+{
+    [RequireComponent(typeof(AudioSource))]
+    public class CheckMusicVolume : MonoBehaviour
+    {
+        AudioSource audioSrc;
 
-		public void UpdateVolume (){
-			GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("MusicVolume");
-		}
-	}
+        void Awake()
+        {
+            audioSrc = GetComponent<AudioSource>();
+            if (!PlayerPrefs.HasKey("MusicVolume"))
+                PlayerPrefs.SetFloat("MusicVolume", 1f);
+
+            audioSrc.volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        }
+
+        void Start()
+        {
+            if (!audioSrc.isPlaying) audioSrc.Play();
+        }
+
+        public void UpdateVolume()
+        {
+            audioSrc.volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        }
+    }
 }

@@ -19118,7 +19118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
+  openCloseWindow: 1
   selectedToolbar: 0
   inventory: {fileID: 0}
   itemListData: {fileID: 11400000, guid: 96e918a0f3173b14dbbbe08b7523b670, type: 2}
@@ -19454,6 +19454,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 9037384593741861254}
+  staminaCostSkill1: 30
+  staminaCostSkill2: 100
+  staminaCostSkill3: 120
+  requireEnoughStaminaToTrigger: 1
   fireballPrefab: {fileID: 3806039598199004532, guid: b9d5bbfd1e01094499b147eb37a4cd88, type: 3}
   fireballSpawnPoint: {fileID: 8046355216038901992}
   fireballSpeed: 10
@@ -19485,10 +19489,10 @@ MonoBehaviour:
   randomPitchRange: 0.08
   sfxSkill1Cast: {fileID: 8300000, guid: 8ec25f7ffebaa244d8b41b104cdd2b5b, type: 3}
   sfxSkill1Release: {fileID: 0}
-  sfxSkill2Cast: {fileID: 0}
-  sfxSkill2Impact: {fileID: 8300000, guid: dd484108ef9d6534683cf92f5d4d16e8, type: 3}
-  sfxSkill3Cast: {fileID: 0}
-  sfxSkill3Impact: {fileID: 8300000, guid: dd484108ef9d6534683cf92f5d4d16e8, type: 3}
+  sfxSkill2Cast: {fileID: 8300000, guid: dd484108ef9d6534683cf92f5d4d16e8, type: 3}
+  sfxSkill2Impact: {fileID: 0}
+  sfxSkill3Cast: {fileID: 8300000, guid: dd484108ef9d6534683cf92f5d4d16e8, type: 3}
+  sfxSkill3Impact: {fileID: 0}
 --- !u!114 &2853779603113675449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36897,7 +36901,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5927270718285268022
 RectTransform:
   m_ObjectHideFlags: 0

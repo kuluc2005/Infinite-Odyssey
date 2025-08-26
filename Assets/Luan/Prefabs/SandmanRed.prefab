@@ -1843,8 +1843,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6759ce2190ab1eb46bee21c9071b7770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expReward: 25
-  goldReward: 100
+  expReward: 50
+  goldReward: 50
 --- !u!1 &2262021695510121656
 GameObject:
   m_ObjectHideFlags: 0
